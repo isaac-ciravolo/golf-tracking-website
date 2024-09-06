@@ -1,0 +1,27 @@
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  
+  header nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  header nav ul li {
+    display: inline;
+    margin: 0 15px;
+  }
+
+  .counter {
+    margin: auto;
+    box-shadow: 10px 5px 5px black;
+    width: 100px;
+  }
+   
