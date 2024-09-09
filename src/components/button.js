@@ -7,7 +7,7 @@ function Button(){
         <div className="counter">
         <p>This button has been clicked {count} times</p>
         <button onClick={() => setCount(count + 1)}> 
-        click 
+        <img src="pics/cookie.jpg"></img>
         </button>
         </div>
 
