@@ -5,8 +5,10 @@ import { PieChart } from "react-minimal-pie-chart";
 
 import Header from "./components/header.js";
 import Button from "./components/button.js";
+import FirestoreGames from "./components/games.js";
 
 import "./styles.css";
+
 
 function App() {
   const [games, setGames] = useState([]);
@@ -59,9 +61,10 @@ function App() {
       <Button />
 
       <ul>
-        {games.map((game) => {
+        <FirestoreGames/>
+        {/* {games.map((game) => {
           return <li key={game.id}>{game.title}</li>;
-        })}
+        })} */}
       </ul>
 
       <div style={{ width: "500px" }}>
