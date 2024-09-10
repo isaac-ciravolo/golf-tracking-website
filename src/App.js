@@ -1,6 +1,3 @@
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "./firebase";
-import { useState, useEffect } from "react";
 import { PieChart } from "react-minimal-pie-chart";
 
 import Header from "./components/header.js";
@@ -9,44 +6,7 @@ import FirestoreGames from "./components/games.js";
 
 import "./styles.css";
 
-
 function App() {
-  const [games, setGames] = useState([]);
-
-  const fetchUsersAndGames = async () => {
-    try {
-      // Step 1: Get all users from the 'users' collection
-      const usersCollection = collection(db, "users");
-      const usersSnapshot = await getDocs(usersCollection);
-
-      // Step 2: Loop through each user document
-      usersSnapshot.forEach(async (userDoc) => {
-        const userId = userDoc.id; // Get user ID
-        const userData = userDoc.data(); // Get user data (if needed)
-
-        // Step 3: Get the 'games' subcollection for each user
-        const gamesCollection = collection(db, "users", userId, "games");
-        const gamesSnapshot = await getDocs(gamesCollection);
-
-        // Step 4: Loop through each document in the 'games' subcollection
-        const gamesList = gamesSnapshot.docs.map((doc) => ({
-          ...doc.data(),
-        }));
-        setGames(gamesList);
-      });
-    } catch (error) {
-      console.error("Error fetching users and games:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUsersAndGames();
-  }, []);
-
-  useEffect(() => {
-    console.log(games.length);
-  }, [games]);
-
   return (
     <div className="App">
       <Header />
@@ -60,12 +20,7 @@ function App() {
       <hr></hr>
       <Button />
 
-      <ul>
-        <FirestoreGames/>
-        {/* {games.map((game) => {
-          return <li key={game.id}>{game.title}</li>;
-        })} */}
-      </ul>
+      <FirestoreGames />
 
       <div style={{ width: "500px" }}>
         <PieChart

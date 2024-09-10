@@ -1,41 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../firebase.js"; // import Firestore config
+import { db } from "../firebase.js"; // Import Firestore config
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 
 const FirestoreGames = () => {
-  const [games, setGames] = useState([]);
-  
+  const [users, setUsers] = useState({});
+  const [data, setData] = useState({});
+
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const allGames = [];
-        
-        // List of document IDs (e.g., user IDs or game IDs)
-        // const documentIds = ["id1", "id2", "id3"]; // Replace with your document IDs
         const usersCollection = collection(db, "users");
         const usersSnapshot = await getDocs(usersCollection);
 
-        for (const docId of usersSnapshot) {
-          // Reference to the document (e.g., user document)
-          const userDocRef = doc(db, "users", docId);  // Assuming "users" collection
-          
-          // Get the document to check if it exists
-          const userDocSnapshot = await getDoc(userDocRef);
-          
-          if (userDocSnapshot.exists()) {
-            // Access the "games" subcollection for each document
-            const gamesCollectionRef = collection(userDocRef, "games");
-            const gamesSnapshot = await getDocs(gamesCollectionRef);
-            
-            gamesSnapshot.forEach((gameDoc) => {
-              allGames.push({ id: gameDoc.id, ...gameDoc.data(), userId: docId });
-            });
-          } else {
-            console.log(`Document with ID ${docId} does not exist.`);
-          }
-        }
+        usersSnapshot.forEach(async (userDoc) => {
+          const userGames = [];
+          const gamesCollectionRef = collection(userDoc.ref, "games");
+          const gamesSnapshot = await getDocs(gamesCollectionRef);
+          setUsers((prevUsers) => ({
+            ...prevUsers,
+            [userDoc.id]: userDoc.data(),
+          }));
 
-        setGames(allGames);  // Set the state with all the fetched games
+          gamesSnapshot.forEach((gameDoc) => {
+            userGames.push({
+              id: gameDoc.id,
+              ...gameDoc.data(),
+              userId: userDoc.id,
+            });
+          });
+          setData((prevData) => ({
+            ...prevData,
+            [userDoc.id]: userGames,
+          }));
+        });
       } catch (error) {
         console.error("Error fetching games: ", error);
       }
@@ -46,11 +43,25 @@ const FirestoreGames = () => {
 
   return (
     <div>
-      <h1>Games List</h1>
+      <h1>Data List</h1>
       <ul>
-        {games.map((game) => (
-          <li key={game.id}>{game.title}</li>  /* Display the title, or "Untitled Game" if no title */
-        ))}
+        {Object.keys(data).map((userId) => {
+          return (
+            <li key={userId}>
+              <h2>Name: {users[userId].name}</h2>
+              <ul>
+                {data[userId].map((game) => {
+                  return (
+                    <li key={game.id}>
+                      <p>Game Name: {game.title}</p>
+                      <p>Game Created Date: {game.createdDate}</p>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
