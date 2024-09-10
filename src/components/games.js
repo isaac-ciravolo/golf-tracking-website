@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase.js"; // Import Firestore config
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
+import formatDateFromMilliseconds from "../util/DateConverter.js";
 
 const FirestoreGames = () => {
   const [users, setUsers] = useState({});
@@ -54,7 +55,10 @@ const FirestoreGames = () => {
                   return (
                     <li key={game.id}>
                       <p>Game Name: {game.title}</p>
-                      <p>Game Created Date: {game.createdDate}</p>
+                      <p>
+                        Game Created Date:{" "}
+                        {formatDateFromMilliseconds(game.gameDate)}
+                      </p>
                     </li>
                   );
                 })}
