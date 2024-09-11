@@ -1,39 +1,44 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
-import { PieChart } from 'react-minimal-pie-chart';
+import { PieChart } from "react-minimal-pie-chart";
 
 const GameView = (game) => {
   const [GIRtrue, setGIRtrue] = useState(0);
   const [GIRfalse, setGIRfalse] = useState(0);
-  useEffect(()=> {
+  const [showHoles, setShowHoles] = useState(false); // State to track visibility of holes
+
+  useEffect(() => {
     let trueCount = 0;
     let falseCount = 0;
-    for (let i=0; i<game.game.holes.length; i++){
-      
-      if (game.game.holes.gir){
+    for (let i = 0; i < game.game.holes.length; i++) {
+      if (game.game.holes[i].gir) {
         trueCount++;
-      }
-      else{
+      } else {
         falseCount++;
       }
     }
     setGIRtrue(trueCount);
     setGIRfalse(falseCount);
-    console.log(trueCount)
-  }, [])
-  // useEffect(() => {
-  //   console.log(GIRtrue)
-  // }, [setGIRtrue])
-  // useEffect(() => {
-  //   console.log(GIRfalse)
-  // }, [setGIRfalse])
+  }, [game]);
+
+  // Function to toggle hole visibility
+  const toggleHolesVisibility = () => {
+    setShowHoles((prevState) => !prevState);
+  };
 
   return (
     <div>
       <p>Game Name: {game.game.title}</p>
       <p>Game Created Date: {formatDateFromMilliseconds(game.game.gameDate)}</p>
-      {game.game.holes.map((hole) => {
-        return (
+
+      {/* Button to toggle hole visibility */}
+      <button onClick={toggleHolesVisibility}>
+        {showHoles ? "Hide Holes" : "Show Holes"}
+      </button>
+
+      {/* Conditionally render the holes list */}
+      {showHoles &&
+        game.game.holes.map((hole) => (
           <div key={hole.id}>
             <p>Holes:</p>
             <p>Par: {hole.par}</p>
@@ -53,15 +58,15 @@ const GameView = (game) => {
             <p>Total Putts: {hole.totalPutts}</p>
             <p>First Putt Distance: {hole.firstPuttDist}</p>
           </div>
-        );
-      })}
+        ))}
+
       <div style={{ width: "500px" }}>
-      <PieChart
-      data={[
-        { title: "GIR True", value: GIRtrue, color: "#E38627" },
-        { title: "GIR False", value: GIRfalse, color: "#C13C37" },
-      ]}
-      />
+        <PieChart
+          data={[
+            { title: "GIR True", value: GIRtrue, color: "#E38627" },
+            { title: "GIR False", value: GIRfalse, color: "#C13C37" },
+          ]}
+        />
       </div>
     </div>
   );
