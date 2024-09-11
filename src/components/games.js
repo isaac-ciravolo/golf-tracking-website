@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
-import formatDateFromMilliseconds from "../util/DateConverter.js";
+import GameView from "./GameView.js";
 
 const FirestoreGames = () => {
   const [users, setUsers] = useState({});
@@ -45,59 +45,17 @@ const FirestoreGames = () => {
   return (
     <div>
       <h1>Data List</h1>
-      <ul>
-        {Object.keys(data).map((userId) => {
-          return (
-            <li key={userId}>
-              <h2>Name: {users[userId].name}</h2>
-              <ul>
-                {data[userId].map((game) => {
-                  return (
-                    <li>
-                      <p>Game Name: {game.title}</p>
-                      <p>
-                        Game Created Date:{" "}
-                        {formatDateFromMilliseconds(game.gameDate)}
-                      </p>
-                      <p>Holes:</p>
-                      <li>
-                        <ul>
-                          {game.holes.map((hole) => {
-                            return (
-                              <li>
-                                <p>Par: {hole.par}</p>
-                                <p>Yardage: {hole.yardage}</p>
-                                <p>Score: {hole.score}</p>
-                                <h1>Tee Shot</h1>
-                                <p>Club: {hole.club}</p>
-                                <p>Fairway: {hole.fairway ? "Yes" : "No"}</p>
-                                <p>Miss: {hole.missTee}</p>
-                                <h1>Approach</h1>
-                                <p>Club Hit: {hole.clubHit}</p>
-                                <p>
-                                  Green in Regulation: {hole.gir ? "Yes" : "No"}
-                                </p>
-                                <p>Miss: {hole.missApproach}</p>
-                                <h1>Short Game</h1>
-                                <p>
-                                  Up and Down: {hole.upAndDown ? "Yes" : "No"}
-                                </p>
-                                <h1>Putts</h1>
-                                <p>Total Putts: {hole.totalPutts}</p>
-                                <p>First Putt Distance: {hole.firstPuttDist}</p>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </li>
-                    </li>
-                  );
-                })}
-              </ul>
-            </li>
-          );
-        })}
-      </ul>
+      {Object.keys(data).map((userId) => {
+        return (
+          <div>
+            <h2>Name: {users[userId].name}</h2>
+            {data[userId].map((game) => {
+              if (game && game.holes) return <GameView game={game} />;
+              else return null;
+            })}
+          </div>
+        );
+      })}
     </div>
   );
 };
