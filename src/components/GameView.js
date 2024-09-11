@@ -1,7 +1,33 @@
-import React from "react";
+import React, {useState, useEffect} from 'react';
 import formatDateFromMilliseconds from "../util/DateConverter.js";
+import { PieChart } from 'react-minimal-pie-chart';
 
 const GameView = (game) => {
+  const [GIRtrue, setGIRtrue] = useState(0);
+  const [GIRfalse, setGIRfalse] = useState(0);
+  useEffect(()=> {
+    let trueCount = 0;
+    let falseCount = 0;
+    for (let i=0; i<game.game.holes.length; i++){
+      
+      if (game.game.holes.gir){
+        trueCount++;
+      }
+      else{
+        falseCount++;
+      }
+    }
+    setGIRtrue(trueCount);
+    setGIRfalse(falseCount);
+    console.log(trueCount)
+  }, [])
+  // useEffect(() => {
+  //   console.log(GIRtrue)
+  // }, [setGIRtrue])
+  // useEffect(() => {
+  //   console.log(GIRfalse)
+  // }, [setGIRfalse])
+
   return (
     <div>
       <p>Game Name: {game.game.title}</p>
@@ -29,6 +55,14 @@ const GameView = (game) => {
           </div>
         );
       })}
+      <div style={{ width: "500px" }}>
+      <PieChart
+      data={[
+        { title: "GIR True", value: GIRtrue, color: "#E38627" },
+        { title: "GIR False", value: GIRfalse, color: "#C13C37" },
+      ]}
+      />
+      </div>
     </div>
   );
 };
