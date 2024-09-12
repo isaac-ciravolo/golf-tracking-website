@@ -18,19 +18,11 @@ function App() {
       <br></br>
       <br></br>
       <hr></hr>
-      <Button />
+      {/* <Button /> */}
 
-      <FirestoreGames />
+      <FirestoreGames/>
 
-      <div style={{ width: "500px" }}>
-        <PieChart
-          data={[
-            { title: "One", value: 1, color: "#E38627" },
-            { title: "Two", value: 20, color: "#C13C37" },
-            { title: "Three", value: 20, color: "#6A2135" },
-          ]}
-        />
-      </div>
+      
     </div>
   );
 }

@@ -61,10 +61,12 @@ const GameView = (game) => {
         ))}
 
       <div style={{ width: "500px" }}>
+        <p style= {{ fontSize: "20px"}}><strong>GIR</strong></p>
+        <p>True: Blue | False: Red</p>
         <PieChart
           data={[
-            { title: "GIR True", value: GIRtrue, color: "#E38627" },
-            { title: "GIR False", value: GIRfalse, color: "#C13C37" },
+            { title: "GIR True", value: GIRtrue, color: "#4287f5" },
+            { title: "GIR False", value: GIRfalse, color: "#94042b" },
           ]}
         />
       </div>

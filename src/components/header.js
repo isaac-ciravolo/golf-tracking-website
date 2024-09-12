@@ -6,10 +6,7 @@ function Header() {
         <ul>
           <li>Swing Analysis</li>
           <li>Club Use</li>
-          <li>Monkey Balls</li>
-          <li>Fortnite Monkey</li>
-          <li>pp balls</li>
-          <li>pp balls but better</li>
+          
         </ul>
       </nav>
     </header>
