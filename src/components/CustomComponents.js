@@ -82,7 +82,7 @@ export const CustomSelect = ({ name, onChange, defaultValue, options }) => {
         <TextField
           className={classes.smallInput}
           select
-          value={defaultValue}
+          defaultValue={defaultValue}
           onChange={onChange}
           fullWidth
         >

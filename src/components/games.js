@@ -61,6 +61,8 @@ const FirestoreGames = () => {
       />
 
       {Object.keys(data).map((userId) => {
+        if (selectedUser !== "-" && users[userId].name !== selectedUser)
+          return null;
         return (
           <Box sx={{ p: 3 }}>
             <Typography
