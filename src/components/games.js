@@ -3,9 +3,13 @@ import { db } from "../firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
 import GameView from "./GameView.js";
 
+import { Box, Typography } from "@mui/material";
+import { CustomSelect } from "./CustomComponents.js";
+
 const FirestoreGames = () => {
   const [users, setUsers] = useState({});
   const [data, setData] = useState({});
+  const [selectedUser, setSelectedUser] = useState("");
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -43,20 +47,37 @@ const FirestoreGames = () => {
   }, []);
 
   return (
-    <div class="games">
-      <h1>Data List</h1>
+    <Box className="games" sx={{ p: 3 }}>
+      <CustomSelect
+        name={"Select User"}
+        onChange={(e) => setSelectedUser(e.target.value)}
+        defaultValue={"-"}
+        options={[
+          { value: "-", label: "-" }, // Placeholder option
+          ...Object.keys(users).map((userId) => {
+            return { value: users[userId].name, label: users[userId].name };
+          }),
+        ]}
+      />
+
       {Object.keys(data).map((userId) => {
         return (
-          <div style={{ width: "100%", textAlign: "center" }}>
-            <h2>Name: {users[userId].name}</h2>
+          <Box sx={{ p: 3 }}>
+            <Typography
+              textAlign="center"
+              variant="h2"
+              sx={{ fontWeight: "bold" }}
+            >
+              {users[userId].name}
+            </Typography>
             {data[userId].map((game) => {
               if (game && game.holes) return <GameView game={game} />;
               else return null;
             })}
-          </div>
+          </Box>
         );
       })}
-    </div>
+    </Box>
   );
 };
 
