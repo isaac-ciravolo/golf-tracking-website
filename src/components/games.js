@@ -43,11 +43,11 @@ const FirestoreGames = () => {
   }, []);
 
   return (
-    <div>
+    <div class="games">
       <h1>Data List</h1>
       {Object.keys(data).map((userId) => {
         return (
-          <div>
+          <div style={{ width: "100%", textAlign: "center" }}>
             <h2>Name: {users[userId].name}</h2>
             {data[userId].map((game) => {
               if (game && game.holes) return <GameView game={game} />;

@@ -1,9 +1,3 @@
-if gir is true
-hide the short game
-
-add the penalty strokes and shots inside 100
-
-add percents on pie charts
 
 gir
 fairway
