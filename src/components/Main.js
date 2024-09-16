@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
-import GameView from "./GameView.js";
+import UserView from "./UserView.js";
 
 import { Box, Typography } from "@mui/material";
 import { CustomSelect } from "./CustomComponents.js";
 
-const FirestoreGames = () => {
+const Main = () => {
   const [users, setUsers] = useState({});
   const [data, setData] = useState({});
   const [selectedUser, setSelectedUser] = useState("");
@@ -61,26 +61,17 @@ const FirestoreGames = () => {
       />
 
       {Object.keys(data).map((userId) => {
-        if (selectedUser !== "-" && users[userId].name !== selectedUser)
-          return null;
+        if (users[userId].name !== selectedUser) return null;
         return (
-          <Box sx={{ p: 3 }}>
-            <Typography
-              textAlign="center"
-              variant="h2"
-              sx={{ fontWeight: "bold" }}
-            >
-              {users[userId].name}
-            </Typography>
-            {data[userId].map((game) => {
-              if (game && game.holes) return <GameView game={game} />;
-              else return null;
-            })}
-          </Box>
+          <UserView
+            key={userId}
+            userData={users[userId]}
+            gameData={data[userId]}
+          />
         );
       })}
     </Box>
   );
 };
 
-export default FirestoreGames;
+export default Main;
