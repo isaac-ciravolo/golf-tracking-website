@@ -71,32 +71,33 @@ export const CustomCheckBox = ({ name, onChange, defaultValue }) => {
 export const CustomSelect = ({ name, onChange, defaultValue, options }) => {
   const classes = useStyles();
   return (
-    <Box display="flex" alignItems="center" gap={2} sx={{ height: "30px" }}>
-      <Box className={classes.labelContainer}>
-        <Typography className={classes.label}>{name}</Typography>
-      </Box>
-      <Box
-        className={classes.labelContainer}
-        sx={{ display: "flex", justifyContent: "center" }}
+    <Box
+      sx={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      gap={2}
+    >
+      <Typography fontWeight="bold">{name}</Typography>
+      <TextField
+        className={classes.smallInput}
+        select
+        defaultValue={defaultValue}
+        onChange={onChange}
+        sx={{ width: "500px" }}
       >
-        <TextField
-          className={classes.smallInput}
-          select
-          defaultValue={defaultValue}
-          onChange={onChange}
-          fullWidth
-        >
-          {options.map((option) => (
-            <MenuItem
-              key={option.value}
-              value={option.value}
-              sx={{ fontSize: "12px" }}
-            >
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-      </Box>
+        {options.map((option) => (
+          <MenuItem
+            key={option.value}
+            value={option.value}
+            sx={{ fontSize: "12px" }}
+          >
+            {option.label}
+          </MenuItem>
+        ))}
+      </TextField>
     </Box>
   );
 };

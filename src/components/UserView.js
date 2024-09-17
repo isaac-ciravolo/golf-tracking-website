@@ -20,7 +20,6 @@ const UserView = ({ userData, gameData }) => {
   const [SR, setSR] = useState(0);
   const [L, setL] = useState(0);
   const [LR, setLR] = useState(0);
-  const [showHoles, setShowHoles] = useState(false); // State to track visibility of holes
   const [currentSelection, setCurrentSelection] = useState([]);
 
   useEffect(() => {
@@ -105,15 +104,41 @@ const UserView = ({ userData, gameData }) => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography textAlign="center" variant="h2" sx={{ fontWeight: "bold" }}>
-        {userData.name}
-      </Typography>
-      {gameData.map((game) => {
-        if (game && game.holes) return <GameView key={game.id} game={game} />;
-        else return null;
-      })}
+      <Grid2 container spacing={3}>
+        <Typography
+          textAlign="center"
+          variant="h2"
+          sx={{ fontWeight: "bold", width: "100%" }}
+        >
+          {userData.name}
+        </Typography>
+        <CustomSelect
+          name="Select Game"
+          options={[
+            { value: gameData, label: "All Games" },
+            ...gameData.map((game) => {
+              return {
+                value: game.id,
+                label:
+                  game.title +
+                  " - " +
+                  formatDateFromMilliseconds(game.gameDate),
+              };
+            }),
+          ]}
+          onChange={(e) => {
+            if (e.target.value == gameData) {
+              setCurrentSelection(gameData);
+              return;
+            }
+            const selectedGame = gameData.find(
+              (game) => game.id == e.target.value
+            );
+            setCurrentSelection([selectedGame]);
+          }}
+          defaultValue={gameData}
+        />
 
-      <Box sx={{ p: 3 }}>
         <Grid2 container spacing={3}>
           <PieChartView
             title="GIR"
@@ -209,7 +234,13 @@ const UserView = ({ userData, gameData }) => {
             ]}
           />
         </Grid2>
-      </Box>
+
+        {currentSelection &&
+          currentSelection.length > 0 &&
+          currentSelection != gameData && (
+            <GameView game={currentSelection[0]} />
+          )}
+      </Grid2>
     </Box>
   );
 };
