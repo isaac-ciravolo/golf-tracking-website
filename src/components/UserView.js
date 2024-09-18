@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
-import GameView from "./GameView.js";
+import HolesView from "./HolesView.js";
 import { Box, Typography, Grid2 } from "@mui/material";
 import PieChartView from "./PieChartView.js";
 import { CustomSelect } from "./CustomComponents.js";
@@ -238,7 +238,7 @@ const UserView = ({ userData, gameData }) => {
         {currentSelection &&
           currentSelection.length > 0 &&
           currentSelection != gameData && (
-            <GameView game={currentSelection[0]} />
+            <HolesView game={currentSelection[0]} />
           )}
       </Grid2>
     </Box>
