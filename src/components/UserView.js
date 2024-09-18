@@ -22,6 +22,20 @@ const UserView = ({ userData, gameData }) => {
   const [LR, setLR] = useState(0);
   const [currentSelection, setCurrentSelection] = useState([]);
 
+  const par5clubs = [];
+  const par4clubs = [];
+  const par3clubs = [];
+
+  const countOccurrences = (array) => {
+    const count = {};
+    array.forEach((item) => {
+      count[item] = (count[item] || 0) + 1;
+    });
+    return count;
+  };
+
+  // const dataCount = countOccurrences(stringArray);
+
   useEffect(() => {
     setCurrentSelection(gameData);
   }, []);
@@ -83,9 +97,18 @@ const UserView = ({ userData, gameData }) => {
         if (hole.missApproach == "Long Right") {
           LRCount++;
         }
+        if (hole.par == 4) {
+          par4clubs.push(hole.club);
+        }
+        if (hole.par == 3) {
+          par3clubs.push(hole.club);
+        }
+        if (hole.par == 5) {
+          par5clubs.push(hole.club);
+        }
       }
     }
-
+    console.log(countOccurrences(par4clubs));
     setGIRtrue(girTrueCount);
     setGIRfalse(girFalseCount);
     setUDtrue(udTrueCount);
