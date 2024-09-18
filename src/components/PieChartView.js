@@ -16,7 +16,7 @@ const PieChartView = ({ title, data }) => {
             data,
           },
         ]}
-        width={300}
+        width={400}
         height={200}
       />
     </Grid2>
