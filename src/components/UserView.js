@@ -20,6 +20,7 @@ const UserView = ({ userData, gameData }) => {
   const [SR, setSR] = useState(0);
   const [L, setL] = useState(0);
   const [LR, setLR] = useState(0);
+  const [par4data, setPar4data] = useState(0);
   const [currentSelection, setCurrentSelection] = useState([]);
 
   const par5clubs = [];
@@ -33,8 +34,6 @@ const UserView = ({ userData, gameData }) => {
     });
     return count;
   };
-
-  // const dataCount = countOccurrences(stringArray);
 
   useEffect(() => {
     setCurrentSelection(gameData);
@@ -104,11 +103,26 @@ const UserView = ({ userData, gameData }) => {
           par3clubs.push(hole.club);
         }
         if (hole.par == 5) {
-          par5clubs.push(hole.club);
+          par4clubs.push(hole.club);
         }
       }
     }
-    console.log(countOccurrences(par4clubs));
+
+    const par4dc = countOccurrences(par4clubs);
+    const par4labels = Object.keys(par4dc);
+    const par4dv = Object.values(par4dc);
+
+    const par4d = {
+      labels: par4labels, // Labels for the Pie chart
+      datasets: [
+        {
+          label: "String Count",
+          data: par4dv, // Values for each label
+        },
+      ],
+    };
+
+    setPar4data(par4d);
     setGIRtrue(girTrueCount);
     setGIRfalse(girFalseCount);
     setUDtrue(udTrueCount);
@@ -256,6 +270,7 @@ const UserView = ({ userData, gameData }) => {
               },
             ]}
           />
+          <PieChartView title="Club Hit from Tee on Par 3" data={par4data} />
         </Grid2>
 
         {currentSelection &&
