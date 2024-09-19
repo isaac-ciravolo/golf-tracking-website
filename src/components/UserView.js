@@ -22,6 +22,7 @@ const UserView = ({ userData, gameData }) => {
   const [LR, setLR] = useState(0);
   const [par4data, setPar4data] = useState(0);
   const [currentSelection, setCurrentSelection] = useState([]);
+  const [girSelection, setGirSelection] = useState("Both");
 
   const par5clubs = [];
   const par4clubs = [];
@@ -58,6 +59,12 @@ const UserView = ({ userData, gameData }) => {
     for (let i = 0; i < currentSelection.length; i++) {
       for (let j = 0; j < currentSelection[i].holes.length; j++) {
         const hole = currentSelection[i].holes[j];
+        if (girSelection == "True" && !hole.gir) {
+          continue;
+        }
+        if (girSelection == "False" && hole.gir) {
+          continue;
+        }
         if (hole.gir) {
           girTrueCount++;
         } else {
@@ -137,7 +144,7 @@ const UserView = ({ userData, gameData }) => {
     setL(LCount);
     setLL(LLCount);
     setLR(LRCount);
-  }, [currentSelection]);
+  }, [currentSelection, girSelection]);
 
   return (
     <Box sx={{ p: 3 }}>
@@ -174,6 +181,19 @@ const UserView = ({ userData, gameData }) => {
             setCurrentSelection([selectedGame]);
           }}
           defaultValue={gameData}
+        />
+
+        <CustomSelect
+          name="Select GIR"
+          options={[
+            { value: "Both", label: "Both" },
+            { value: "True", label: "True" },
+            { value: "False", label: "False" },
+          ]}
+          onChange={(e) => {
+            setGirSelection(e.target.value);
+          }}
+          defaultValue="Both"
         />
 
         <Grid2 container spacing={3}>
@@ -270,7 +290,7 @@ const UserView = ({ userData, gameData }) => {
               },
             ]}
           />
-          <PieChartView title="Club Hit from Tee on Par 3" data={par4data} />
+          {/* <PieChartView title="Club Hit from Tee on Par 3" data={par4data} /> */}
         </Grid2>
 
         {currentSelection &&
