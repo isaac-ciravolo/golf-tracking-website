@@ -31,26 +31,11 @@ const clubs = [
 ];
 
 const UserView = ({ userData, gameData }) => {
-  const [par3d, setPar3d] = useState([]);
-  const [par4d, setPar4d] = useState([]);
-  const [par5d, setPar5d] = useState([]);
   const [currentHoles, setCurrentHoles] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
   const [girSelection, setGirSelection] = useState("Both");
   const [totalPutts, setTotalPutts] = useState(0);
   const [firstPuttDistAvg, setFirstPuttDistAvg] = useState(0);
-
-  const par5clubs = [];
-  const par4clubs = [];
-  const par3clubs = [];
-
-  const countOccurrences = (array) => {
-    const count = {};
-    array.forEach((item) => {
-      count[item] = (count[item] || 0) + 1;
-    });
-    return count;
-  };
 
   useEffect(() => {
     setSelectedGames(gameData);
@@ -63,71 +48,9 @@ const UserView = ({ userData, gameData }) => {
     let fPuttDistAvg = 0;
     for (let i = 0; i < currentHoles.length; i++) {
       const hole = currentHoles[i];
-      if (hole.par == 4) {
-        par4clubs.push(hole.club);
-      }
-      if (hole.par == 3) {
-        par3clubs.push(hole.club);
-      }
-      if (hole.par == 5) {
-        par4clubs.push(hole.club);
-      }
-
       tPutts += hole.totalPutts;
       fPuttDistAvg += hole.firstPuttDist;
     }
-
-    // par 4 per club
-    const par4dc = countOccurrences(par4clubs);
-    const par4labels = Object.keys(par4dc);
-    const par4dv = Object.values(par4dc);
-
-    let par4data = [];
-
-    for (let i = 0; i < par4labels.length; i++) {
-      const par4dataHole = {
-        id: i,
-        label: par4labels[i],
-        value: par4dv[i],
-      };
-      par4data.push(par4dataHole);
-    }
-
-    // par 3 per club
-    const par3dc = countOccurrences(par3clubs);
-    const par3labels = Object.keys(par3dc);
-    const par3dv = Object.values(par3dc);
-
-    let par3data = [];
-
-    for (let i = 0; i < par3labels.length; i++) {
-      const par3dataHole = {
-        id: i,
-        label: par3labels[i],
-        value: par3dv[i],
-      };
-      par3data.push(par3dataHole);
-    }
-
-    // par 5 per club
-    const par5dc = countOccurrences(par5clubs);
-    const par5labels = Object.keys(par5dc);
-    const par5dv = Object.values(par5dc);
-
-    let par5data = [];
-
-    for (let i = 0; i < par5labels.length; i++) {
-      const par5dataHole = {
-        id: i,
-        label: par5labels[i],
-        value: par5dv[i],
-      };
-      par5data.push(par5dataHole);
-    }
-
-    setPar5d(par5data);
-    setPar4d(par4data);
-    setPar3d(par3data);
 
     setTotalPutts(tPutts);
     setFirstPuttDistAvg(fPuttDistAvg / numHoles);
@@ -147,10 +70,10 @@ const UserView = ({ userData, gameData }) => {
     setCurrentHoles(newSelection);
   }, [selectedGames, girSelection]);
 
-  const getCount = (conditions) => {
+  const getCount = (currHoles, conditions) => {
     let count = 0;
 
-    currentHoles.forEach((hole) => {
+    currHoles.forEach((hole) => {
       if (conditions.gir != undefined && hole.gir !== conditions.gir) return;
       if (
         conditions.upAndDown != undefined &&
@@ -176,7 +99,6 @@ const UserView = ({ userData, gameData }) => {
       if (conditions.par != undefined && hole.par !== conditions.par) return;
       count++;
     });
-
     return count;
   };
 
@@ -236,18 +158,17 @@ const UserView = ({ userData, gameData }) => {
 
         <Grid2 container spacing={3}>
           <PieChartView
-            title="GIR"
             data={[
               {
                 id: 0,
                 label: "Yes",
-                value: getCount({ gir: true }),
+                value: getCount(currentHoles, { gir: true }),
                 color: "#468f15",
               },
               {
                 id: 1,
                 label: "No",
-                value: getCount({ gir: false }),
+                value: getCount(currentHoles, { gir: false }),
                 color: "#94042b",
               },
             ]}
@@ -258,13 +179,13 @@ const UserView = ({ userData, gameData }) => {
               {
                 id: 0,
                 label: "Yes",
-                value: getCount({ upAndDown: true }),
+                value: getCount(currentHoles, { upAndDown: true }),
                 color: "#468f15",
               },
               {
                 id: 1,
                 label: "No",
-                value: getCount({ upAndDown: false }),
+                value: getCount(currentHoles, { upAndDown: false }),
                 color: "#94042b",
               },
             ]}
@@ -275,13 +196,13 @@ const UserView = ({ userData, gameData }) => {
               {
                 id: 0,
                 label: "Yes",
-                value: getCount({ fairway: true }),
+                value: getCount(currentHoles, { fairway: true }),
                 color: "#468f15",
               },
               {
                 id: 1,
                 label: "No",
-                value: getCount({ fairway: false }),
+                value: getCount(currentHoles, { fairway: false }),
                 color: "#94042b",
               },
             ]}
@@ -292,13 +213,13 @@ const UserView = ({ userData, gameData }) => {
               {
                 id: 0,
                 label: "Left",
-                value: getCount({ missTee: "Left" }),
+                value: getCount(currentHoles, { missTee: "Left" }),
                 color: "#468f15",
               },
               {
                 id: 1,
                 label: "Right",
-                value: getCount({ missTee: "Right" }),
+                value: getCount(currentHoles, { missTee: "Right" }),
                 color: "#94042b",
               },
             ]}
@@ -316,7 +237,7 @@ const UserView = ({ userData, gameData }) => {
               return {
                 id: miss,
                 label: miss,
-                value: getCount({ missApproach: miss }),
+                value: getCount(currentHoles, { missApproach: miss }),
               };
             })}
           />
@@ -326,10 +247,9 @@ const UserView = ({ userData, gameData }) => {
               return {
                 id: club,
                 label: club,
-                value: getCount({ club: club, par: 3 }),
+                value: getCount(currentHoles, { club: club, par: 3 }),
               };
             })}
-            showLabel={false}
           />
           <PieChartView
             title="Club Hit from Tee on Par 4"
@@ -337,10 +257,9 @@ const UserView = ({ userData, gameData }) => {
               return {
                 id: club,
                 label: club,
-                value: getCount({ club: club, par: 4 }),
+                value: getCount(currentHoles, { club: club, par: 4 }),
               };
             })}
-            showLabel={false}
           />
           <PieChartView
             title="Club Hit from Tee on Par 5"
@@ -348,10 +267,9 @@ const UserView = ({ userData, gameData }) => {
               return {
                 id: club,
                 label: club,
-                value: getCount({ club: club, par: 5 }),
+                value: getCount(currentHoles, { club: club, par: 5 }),
               };
             })}
-            showLabel={false}
           />
         </Grid2>
 

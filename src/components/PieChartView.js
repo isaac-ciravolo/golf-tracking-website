@@ -1,21 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Grid2 } from "@mui/material";
 import { PieChart } from "@mui/x-charts";
-const PieChartView = ({ title, data, showLabel = true }) => {
+const PieChartView = ({ title, data }) => {
+  const [pieChartData, setPieChartData] = useState([]);
+  useEffect(() => {
+    const newData = [];
+    let isEmpty = true;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].value > 0) {
+        newData.push(data[i]);
+        isEmpty = false;
+      }
+    }
+    setPieChartData(newData);
+  }, [data]);
+
   return (
     <Grid2
       size={6}
-      sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
     >
       <Typography textAlign={"center"} variant="h6">
         {title}
       </Typography>
-      <PieChart
-        series={[{ data }]}
-        width={400}
-        height={200}
-        slotProps={{ legend: { hidden: !showLabel } }}
-      />
+      {pieChartData.length === 0 ? (
+        <Typography sx={{ marginTop: "80px" }}>No data</Typography>
+      ) : (
+        <PieChart series={[{ data: pieChartData }]} width={400} height={200} />
+      )}
     </Grid2>
   );
 };
