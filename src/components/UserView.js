@@ -20,7 +20,9 @@ const UserView = ({ userData, gameData }) => {
   const [SR, setSR] = useState(0);
   const [L, setL] = useState(0);
   const [LR, setLR] = useState(0);
-  const [par4data, setPar4data] = useState(0);
+  const [par3d, setPar3d] = useState([]);
+  const [par4d, setPar4d] = useState([]);
+  const [par5d, setPar5d] = useState([]);
   const [currentSelection, setCurrentSelection] = useState([]);
   const [girSelection, setGirSelection] = useState("Both");
 
@@ -115,21 +117,58 @@ const UserView = ({ userData, gameData }) => {
       }
     }
 
+    // par 4 per club
     const par4dc = countOccurrences(par4clubs);
     const par4labels = Object.keys(par4dc);
     const par4dv = Object.values(par4dc);
 
-    const par4d = {
-      labels: par4labels, // Labels for the Pie chart
-      datasets: [
-        {
-          label: "String Count",
-          data: par4dv, // Values for each label
-        },
-      ],
-    };
+    let par4data = [];
 
-    setPar4data(par4d);
+    for (let i = 0; i < par4labels.length; i++) {
+      const par4dataHole = {
+        id: i,
+        label: par4labels[i],
+        value: par4dv[i],
+      };
+      par4data.push(par4dataHole);
+    }
+
+    // par 3 per club
+    const par3dc = countOccurrences(par3clubs);
+    const par3labels = Object.keys(par3dc);
+    const par3dv = Object.values(par3dc);
+
+    let par3data = [];
+
+    for (let i = 0; i < par3labels.length; i++) {
+      const par3dataHole = {
+        id: i,
+        label: par3labels[i],
+        value: par3dv[i],
+      };
+      par3data.push(par3dataHole);
+    }
+
+    // par 5 per club
+    const par5dc = countOccurrences(par5clubs);
+    const par5labels = Object.keys(par5dc);
+    const par5dv = Object.values(par5dc);
+
+    let par5data = [];
+
+    for (let i = 0; i < par5labels.length; i++) {
+      const par5dataHole = {
+        id: i,
+        label: par5labels[i],
+        value: par5dv[i],
+      };
+      par5data.push(par5dataHole);
+    }
+
+    setPar5d(par5data);
+    setPar4d(par4data);
+    setPar3d(par3data);
+
     setGIRtrue(girTrueCount);
     setGIRfalse(girFalseCount);
     setUDtrue(udTrueCount);
@@ -290,7 +329,9 @@ const UserView = ({ userData, gameData }) => {
               },
             ]}
           />
-          {/* <PieChartView title="Club Hit from Tee on Par 3" data={par4data} /> */}
+          <PieChartView title="Club Hit from Tee on Par 3" data={par3d} />
+          <PieChartView title="Club Hit from Tee on Par 4" data={par4d} />
+          <PieChartView title="Club Hit from Tee on Par 5" data={par5d} />
         </Grid2>
 
         {currentSelection &&
