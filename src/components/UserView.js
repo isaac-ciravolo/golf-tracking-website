@@ -232,13 +232,13 @@ const UserView = ({ userData, gameData }) => {
           ]}
           onChange={(e) => {
             if (e.target.value == gameData) {
-              setCurrentHoles(gameData);
+              setSelectedGames(gameData);
               return;
             }
             const selectedGame = gameData.find(
               (game) => game.id == e.target.value
             );
-            setCurrentHoles([selectedGame]);
+            setSelectedGames([selectedGame]);
           }}
           defaultValue={gameData}
         />
@@ -255,6 +255,10 @@ const UserView = ({ userData, gameData }) => {
           }}
           defaultValue={girSelection}
         />
+
+        <Typography textAlign="center" variant="h4" sx={{ width: "100%" }}>
+          Number of Holes: {currentHoles.length}
+        </Typography>
 
         <Grid2 container spacing={3}>
           <PieChartView
