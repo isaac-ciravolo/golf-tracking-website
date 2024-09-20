@@ -72,32 +72,13 @@ const UserView = ({ userData, gameData }) => {
 
   const getCount = (currHoles, conditions) => {
     let count = 0;
-
     currHoles.forEach((hole) => {
-      if (conditions.gir != undefined && hole.gir !== conditions.gir) return;
-      if (
-        conditions.upAndDown != undefined &&
-        hole.upAndDown !== conditions.upAndDown
-      )
-        return;
-      if (
-        conditions.fairway != undefined &&
-        hole.fairway !== conditions.fairway
-      )
-        return;
-      if (
-        conditions.missTee != undefined &&
-        hole.missTee !== conditions.missTee
-      )
-        return;
-      if (
-        conditions.missApproach != undefined &&
-        hole.missApproach !== conditions.missApproach
-      )
-        return;
-      if (conditions.club != undefined && hole.club !== conditions.club) return;
-      if (conditions.par != undefined && hole.par !== conditions.par) return;
-      count++;
+      let add = 1;
+      Object.keys(hole).forEach((key) => {
+        if (conditions[key] !== undefined && conditions[key] !== hole[key])
+          add = 0;
+      });
+      count += add;
     });
     return count;
   };
@@ -290,7 +271,7 @@ const UserView = ({ userData, gameData }) => {
         </Typography>
 
         {selectedGames && selectedGames.length === 1 && (
-          <HolesView game={selectedGames[0]} />
+          <HolesView holes={currentHoles} />
         )}
       </Grid2>
     </Box>

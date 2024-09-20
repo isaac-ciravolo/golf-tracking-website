@@ -5,13 +5,8 @@ const PieChartView = ({ title, data }) => {
   const [pieChartData, setPieChartData] = useState([]);
   useEffect(() => {
     const newData = [];
-    let isEmpty = true;
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].value > 0) {
-        newData.push(data[i]);
-        isEmpty = false;
-      }
-    }
+    for (let i = 0; i < data.length; i++)
+      if (data[i].value > 0) newData.push(data[i]);
     setPieChartData(newData);
   }, [data]);
 
@@ -30,7 +25,12 @@ const PieChartView = ({ title, data }) => {
       {pieChartData.length === 0 ? (
         <Typography sx={{ marginTop: "80px" }}>No data</Typography>
       ) : (
-        <PieChart series={[{ data: pieChartData }]} width={400} height={200} />
+        <PieChart
+          series={[{ data: pieChartData }]}
+          width={400}
+          height={200}
+          slotProps={{ legend: { hidden: pieChartData.length > 5 } }}
+        />
       )}
     </Grid2>
   );

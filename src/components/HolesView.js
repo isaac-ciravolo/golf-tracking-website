@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
-import formatDateFromMilliseconds from "../util/DateConverter.js";
+import React from "react";
 import { Grid2, Box, Typography } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material";
 
 const Cell = ({ text, bold = false, color = "white" }) => {
   return (
@@ -32,10 +30,10 @@ const Cell = ({ text, bold = false, color = "white" }) => {
   );
 };
 
-const HolesView = (game) => {
+const HolesView = ({ holes }) => {
   return (
     <Grid2 container sx={{ width: "100%" }}>
-      <Grid2 size={(12 / (game.game.holes.length + 3)) * 3}>
+      <Grid2 size={(12 / (holes.length + 3)) * 3}>
         <Cell text={""} />
         <Cell text={""} color="purple" />
         <Cell text={"PAR"} bold color="lightGray" />
@@ -62,8 +60,8 @@ const HolesView = (game) => {
         <Cell text={"PENALTY STROKES"} bold />
         <Cell text={"SHOTS INSIDE 100 YARDS"} bold color="lightGray" />
       </Grid2>
-      {game.game.holes.map((hole, i) => (
-        <Grid2 size={12 / (game.game.holes.length + 3)} key={hole.id}>
+      {holes.map((hole, i) => (
+        <Grid2 size={12 / (holes.length + 3)} key={hole.id}>
           <Cell text={i + 1} bold />
           <Cell text={""} color="purple" />
           <Cell text={hole.par} color={"lightGray"} />
