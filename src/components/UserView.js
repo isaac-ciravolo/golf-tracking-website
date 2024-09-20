@@ -23,8 +23,11 @@ const UserView = ({ userData, gameData }) => {
   const [par3d, setPar3d] = useState([]);
   const [par4d, setPar4d] = useState([]);
   const [par5d, setPar5d] = useState([]);
-  const [currentSelection, setCurrentSelection] = useState([]);
+  const [currentHoles, setCurrentHoles] = useState([]);
+  const [selectedGames, setSelectedGames] = useState([]);
   const [girSelection, setGirSelection] = useState("Both");
+  const [totalPutts, setTotalPutts] = useState(0);
+  const [firstPuttDistAvg, setFirstPuttDistAvg] = useState(0);
 
   const par5clubs = [];
   const par4clubs = [];
@@ -39,10 +42,12 @@ const UserView = ({ userData, gameData }) => {
   };
 
   useEffect(() => {
-    setCurrentSelection(gameData);
+    setSelectedGames(gameData);
   }, []);
 
   useEffect(() => {
+    let numHoles = 0;
+
     let girTrueCount = 0;
     let girFalseCount = 0;
     let udTrueCount = 0;
@@ -58,63 +63,62 @@ const UserView = ({ userData, gameData }) => {
     let LCount = 0;
     let LRCount = 0;
 
-    for (let i = 0; i < currentSelection.length; i++) {
-      for (let j = 0; j < currentSelection[i].holes.length; j++) {
-        const hole = currentSelection[i].holes[j];
-        if (girSelection == "True" && !hole.gir) {
-          continue;
-        }
-        if (girSelection == "False" && hole.gir) {
-          continue;
-        }
-        if (hole.gir) {
-          girTrueCount++;
-        } else {
-          girFalseCount++;
-        }
-        if (hole.upAndDown) {
-          udTrueCount++;
-        } else {
-          udFalseCount++;
-        }
-        if (hole.fairway) {
-          FTrueCount++;
-        } else {
-          FFalseCount++;
-          if (hole.missTee == "Left") {
-            FLeftCount++;
-          } else if (hole.missTee == "Right") {
-            FRightCount++;
-          }
-        }
-        if (hole.missApproach == "Short Left") {
-          SLCount++;
-        }
-        if (hole.missApproach == "Short Right") {
-          SRCount++;
-        }
-        if (hole.missApproach == "Short") {
-          SCount++;
-        }
-        if (hole.missApproach == "Long") {
-          LCount++;
-        }
-        if (hole.missApproach == "Long Left") {
-          LLCount++;
-        }
-        if (hole.missApproach == "Long Right") {
-          LRCount++;
-        }
-        if (hole.par == 4) {
-          par4clubs.push(hole.club);
-        }
-        if (hole.par == 3) {
-          par3clubs.push(hole.club);
-        }
-        if (hole.par == 5) {
-          par4clubs.push(hole.club);
+    let tPutts = 0;
+    let fPuttDistAvg = 0;
+
+    for (let i = 0; i < currentHoles.length; i++) {
+      const hole = currentHoles[i];
+      numHoles++;
+      if (hole.gir) {
+        girTrueCount++;
+      } else {
+        girFalseCount++;
+      }
+      if (hole.upAndDown) {
+        udTrueCount++;
+      } else {
+        udFalseCount++;
+      }
+      if (hole.fairway) {
+        FTrueCount++;
+      } else {
+        FFalseCount++;
+        if (hole.missTee == "Left") {
+          FLeftCount++;
+        } else if (hole.missTee == "Right") {
+          FRightCount++;
         }
       }
+      if (hole.missApproach == "Short Left") {
+        SLCount++;
+      }
+      if (hole.missApproach == "Short Right") {
+        SRCount++;
+      }
+      if (hole.missApproach == "Short") {
+        SCount++;
+      }
+      if (hole.missApproach == "Long") {
+        LCount++;
+      }
+      if (hole.missApproach == "Long Left") {
+        LLCount++;
+      }
+      if (hole.missApproach == "Long Right") {
+        LRCount++;
+      }
+      if (hole.par == 4) {
+        par4clubs.push(hole.club);
+      }
+      if (hole.par == 3) {
+        par3clubs.push(hole.club);
+      }
+      if (hole.par == 5) {
+        par4clubs.push(hole.club);
+      }
+
+      tPutts += hole.totalPutts;
+      fPuttDistAvg += hole.firstPuttDist;
     }
 
     // par 4 per club
@@ -183,7 +187,24 @@ const UserView = ({ userData, gameData }) => {
     setL(LCount);
     setLL(LLCount);
     setLR(LRCount);
-  }, [currentSelection, girSelection]);
+
+    setTotalPutts(tPutts);
+    setFirstPuttDistAvg(fPuttDistAvg / numHoles);
+  }, [currentHoles]);
+
+  useEffect(() => {
+    const newSelection = [];
+
+    selectedGames.forEach((game) => {
+      for (let i = 0; i < game.holes.length; i++) {
+        if (girSelection == "True" && !game.holes[i].gir) continue;
+        if (girSelection == "False" && game.holes[i].gir) continue;
+        newSelection.push(game.holes[i]);
+      }
+    });
+
+    setCurrentHoles(newSelection);
+  }, [selectedGames, girSelection]);
 
   return (
     <Box sx={{ p: 3 }}>
@@ -211,13 +232,13 @@ const UserView = ({ userData, gameData }) => {
           ]}
           onChange={(e) => {
             if (e.target.value == gameData) {
-              setCurrentSelection(gameData);
+              setCurrentHoles(gameData);
               return;
             }
             const selectedGame = gameData.find(
               (game) => game.id == e.target.value
             );
-            setCurrentSelection([selectedGame]);
+            setCurrentHoles([selectedGame]);
           }}
           defaultValue={gameData}
         />
@@ -232,7 +253,7 @@ const UserView = ({ userData, gameData }) => {
           onChange={(e) => {
             setGirSelection(e.target.value);
           }}
-          defaultValue="Both"
+          defaultValue={girSelection}
         />
 
         <Grid2 container spacing={3}>
@@ -334,11 +355,25 @@ const UserView = ({ userData, gameData }) => {
           <PieChartView title="Club Hit from Tee on Par 5" data={par5d} />
         </Grid2>
 
-        {currentSelection &&
-          currentSelection.length > 0 &&
-          currentSelection != gameData && (
-            <HolesView game={currentSelection[0]} />
-          )}
+        <Typography
+          textAlign="center"
+          variant="h4"
+          sx={{ width: "100%", fontWeight: "bold" }}
+        >
+          Total Putts: {totalPutts}
+        </Typography>
+
+        <Typography
+          textAlign="center"
+          variant="h4"
+          sx={{ width: "100%", fontWeight: "bold" }}
+        >
+          Average First Putt Distance: {firstPuttDistAvg.toFixed(2)}
+        </Typography>
+
+        {selectedGames && selectedGames.length === 1 && (
+          <HolesView game={selectedGames[0]} />
+        )}
       </Grid2>
     </Box>
   );

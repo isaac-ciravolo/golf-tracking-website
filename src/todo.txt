@@ -1,18 +1,5 @@
-
-gir
-fairway
-up and down
-total putts: number
 if gir putts per hole
 if not gir putts per hole
-
-across all rounds:
-same stuff as above
-tee shot
-left and right missed
-misses (sr sl ...)
-average first putt distance for gir
-average first putt distance for non gir
 
 average first putt distance for gir per club
 fairway hit or miss per club
