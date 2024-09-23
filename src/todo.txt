@@ -10,7 +10,3 @@ same thing for fairway no
 if fairway true get rid of miss
 
 add club dropdown stuff
-
-
-
-

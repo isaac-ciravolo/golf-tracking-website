@@ -42,8 +42,6 @@ const UserView = ({ userData, gameData }) => {
   }, []);
 
   useEffect(() => {
-    let numHoles = 0;
-
     let tPutts = 0;
     let fPuttDistAvg = 0;
     for (let i = 0; i < currentHoles.length; i++) {
@@ -53,7 +51,7 @@ const UserView = ({ userData, gameData }) => {
     }
 
     setTotalPutts(tPutts);
-    setFirstPuttDistAvg(fPuttDistAvg / numHoles);
+    setFirstPuttDistAvg(fPuttDistAvg / currentHoles.length);
   }, [currentHoles]);
 
   useEffect(() => {
@@ -139,6 +137,7 @@ const UserView = ({ userData, gameData }) => {
 
         <Grid2 container spacing={3}>
           <PieChartView
+            title="Green in Regulation"
             data={[
               {
                 id: 0,
@@ -222,36 +221,39 @@ const UserView = ({ userData, gameData }) => {
               };
             })}
           />
-          <PieChartView
-            title="Club Hit from Tee on Par 3"
-            data={clubs.map((club) => {
-              return {
-                id: club,
-                label: club,
-                value: getCount(currentHoles, { club: club, par: 3 }),
-              };
-            })}
-          />
-          <PieChartView
-            title="Club Hit from Tee on Par 4"
-            data={clubs.map((club) => {
-              return {
-                id: club,
-                label: club,
-                value: getCount(currentHoles, { club: club, par: 4 }),
-              };
-            })}
-          />
-          <PieChartView
-            title="Club Hit from Tee on Par 5"
-            data={clubs.map((club) => {
-              return {
-                id: club,
-                label: club,
-                value: getCount(currentHoles, { club: club, par: 5 }),
-              };
-            })}
-          />
+
+          {[3, 4, 5].map((par) => {
+            return (
+              <PieChartView
+                title={`Club Hit from Tee on Par ${par}`}
+                data={clubs.map((club) => {
+                  return {
+                    id: club,
+                    label: club,
+                    value: getCount(currentHoles, { club: club, par: par }),
+                  };
+                })}
+              />
+            );
+          })}
+
+          {[3, 4, 5].map((par) => {
+            return (
+              <PieChartView
+                title={`Putts per Hole on Par ${par}`}
+                data={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((putt) => {
+                  return {
+                    id: putt,
+                    label: putt.toString(),
+                    value: getCount(currentHoles, {
+                      totalPutts: putt,
+                      par: par,
+                    }),
+                  };
+                })}
+              />
+            );
+          })}
         </Grid2>
 
         <Typography
