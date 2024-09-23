@@ -225,6 +225,7 @@ const UserView = ({ userData, gameData }) => {
           {[3, 4, 5].map((par) => {
             return (
               <PieChartView
+                key={par}
                 title={`Club Hit from Tee on Par ${par}`}
                 data={clubs.map((club) => {
                   return {
@@ -240,6 +241,7 @@ const UserView = ({ userData, gameData }) => {
           {[3, 4, 5].map((par) => {
             return (
               <PieChartView
+                key={par}
                 title={`Putts per Hole on Par ${par}`}
                 data={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((putt) => {
                   return {
