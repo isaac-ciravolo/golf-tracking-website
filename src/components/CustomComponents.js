@@ -78,9 +78,10 @@ export const CustomSelect = ({ name, onChange, defaultValue, options }) => {
         justifyContent: "center",
         alignItems: "center",
       }}
-      gap={2}
     >
-      <Typography fontWeight="bold">{name}</Typography>
+      <Typography fontWeight="bold" textAlign={"left"} sx={{ width: "150px" }}>
+        {name}
+      </Typography>
       <TextField
         className={classes.smallInput}
         select

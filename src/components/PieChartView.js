@@ -12,7 +12,7 @@ const PieChartView = ({ title, data }) => {
 
   return (
     <Grid2
-      size={6}
+      size={4}
       sx={{
         display: "flex",
         alignItems: "center",
@@ -27,7 +27,7 @@ const PieChartView = ({ title, data }) => {
       ) : (
         <PieChart
           series={[{ data: pieChartData }]}
-          width={400}
+          width={350}
           height={200}
           slotProps={{ legend: { hidden: pieChartData.length > 5 } }}
         />

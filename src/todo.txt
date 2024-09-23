@@ -1,12 +1,3 @@
-if gir putts per hole
-if not gir putts per hole
-
 average first putt distance for gir per club
 fairway hit or miss per club
 fairway miss left or right per club
-if fairway is yes gir yes or no percentage
-same thing for fairway no
-
-if fairway true get rid of miss
-
-add club dropdown stuff

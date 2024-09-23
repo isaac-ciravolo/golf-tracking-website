@@ -34,6 +34,7 @@ const UserView = ({ userData, gameData }) => {
   const [currentHoles, setCurrentHoles] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
   const [girSelection, setGirSelection] = useState("Both");
+  const [fairwaySelection, setFairwaySelection] = useState("Both");
   const [totalPutts, setTotalPutts] = useState(0);
   const [firstPuttDistAvg, setFirstPuttDistAvg] = useState(0);
 
@@ -61,12 +62,14 @@ const UserView = ({ userData, gameData }) => {
       for (let i = 0; i < game.holes.length; i++) {
         if (girSelection == "True" && !game.holes[i].gir) continue;
         if (girSelection == "False" && game.holes[i].gir) continue;
+        if (fairwaySelection == "True" && !game.holes[i].fairway) continue;
+        if (fairwaySelection == "False" && game.holes[i].fairway) continue;
         newSelection.push(game.holes[i]);
       }
     });
 
     setCurrentHoles(newSelection);
-  }, [selectedGames, girSelection]);
+  }, [selectedGames, girSelection, fairwaySelection]);
 
   const getCount = (currHoles, conditions) => {
     let count = 0;
@@ -91,49 +94,87 @@ const UserView = ({ userData, gameData }) => {
         >
           {userData.name}
         </Typography>
-        <CustomSelect
-          name="Select Game"
-          options={[
-            { value: gameData, label: "All Games" },
-            ...gameData.map((game) => {
-              return {
-                value: game.id,
-                label:
-                  game.title +
-                  " - " +
-                  formatDateFromMilliseconds(game.gameDate),
-              };
-            }),
-          ]}
-          onChange={(e) => {
-            if (e.target.value == gameData) {
-              setSelectedGames(gameData);
-              return;
-            }
-            const selectedGame = gameData.find(
-              (game) => game.id == e.target.value
-            );
-            setSelectedGames([selectedGame]);
-          }}
-          defaultValue={gameData}
-        />
 
-        <CustomSelect
-          name="Select GIR"
-          options={[
-            { value: "Both", label: "Both" },
-            { value: "True", label: "True" },
-            { value: "False", label: "False" },
-          ]}
-          onChange={(e) => {
-            setGirSelection(e.target.value);
-          }}
-          defaultValue={girSelection}
-        />
+        <Box sx={{ width: "100%" }}>
+          <Typography
+            textAlign="center"
+            variant="h6"
+            sx={{ width: "100%", fontWeight: "bold" }}
+          >
+            Number of Holes: {currentHoles.length}
+          </Typography>
 
-        <Typography textAlign="center" variant="h4" sx={{ width: "100%" }}>
-          Number of Holes: {currentHoles.length}
-        </Typography>
+          <Typography
+            textAlign="center"
+            variant="h6"
+            sx={{ width: "100%", fontWeight: "bold" }}
+          >
+            Total Putts: {totalPutts}
+          </Typography>
+
+          <Typography
+            textAlign="center"
+            variant="h6"
+            sx={{ width: "100%", fontWeight: "bold" }}
+          >
+            Average First Putt Distance: {firstPuttDistAvg.toFixed(2)}
+          </Typography>
+        </Box>
+
+        <Box sx={{ width: "100%" }}>
+          <CustomSelect
+            name="Select Game"
+            options={[
+              { value: gameData, label: "All Games" },
+              ...gameData.map((game) => {
+                return {
+                  value: game.id,
+                  label:
+                    game.title +
+                    " - " +
+                    formatDateFromMilliseconds(game.gameDate),
+                };
+              }),
+            ]}
+            onChange={(e) => {
+              if (e.target.value == gameData) {
+                setSelectedGames(gameData);
+                return;
+              }
+              const selectedGame = gameData.find(
+                (game) => game.id == e.target.value
+              );
+              setSelectedGames([selectedGame]);
+            }}
+            defaultValue={gameData}
+          />
+
+          <CustomSelect
+            name="Select GIR"
+            options={[
+              { value: "Both", label: "Both" },
+              { value: "True", label: "True" },
+              { value: "False", label: "False" },
+            ]}
+            onChange={(e) => {
+              setGirSelection(e.target.value);
+            }}
+            defaultValue={girSelection}
+          />
+
+          <CustomSelect
+            name="Select Fairway"
+            options={[
+              { value: "Both", label: "Both" },
+              { value: "True", label: "True" },
+              { value: "False", label: "False" },
+            ]}
+            onChange={(e) => {
+              setFairwaySelection(e.target.value);
+            }}
+            defaultValue={fairwaySelection}
+          />
+        </Box>
 
         <Grid2 container spacing={3}>
           <PieChartView
@@ -257,22 +298,6 @@ const UserView = ({ userData, gameData }) => {
             );
           })}
         </Grid2>
-
-        <Typography
-          textAlign="center"
-          variant="h4"
-          sx={{ width: "100%", fontWeight: "bold" }}
-        >
-          Total Putts: {totalPutts}
-        </Typography>
-
-        <Typography
-          textAlign="center"
-          variant="h4"
-          sx={{ width: "100%", fontWeight: "bold" }}
-        >
-          Average First Putt Distance: {firstPuttDistAvg.toFixed(2)}
-        </Typography>
 
         {selectedGames && selectedGames.length === 1 && (
           <HolesView holes={currentHoles} />
