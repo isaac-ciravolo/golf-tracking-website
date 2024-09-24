@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
 import HolesView from "./HolesView.js";
-import { Box, Typography, Grid2 } from "@mui/material";
+import { Box, Typography, Grid2, Checkbox } from "@mui/material";
 import PieChartView from "./PieChartView.js";
-import { CustomSelect } from "./CustomComponents.js";
+import { CustomCheckBox, CustomSelect } from "./CustomComponents.js";
 
 const clubs = [
   "-",
@@ -35,6 +35,9 @@ const UserView = ({ userData, gameData }) => {
   const [selectedGames, setSelectedGames] = useState([]);
   const [girSelection, setGirSelection] = useState("Both");
   const [fairwaySelection, setFairwaySelection] = useState("Both");
+  const [par3Selection, setPar3Selection] = useState(true);
+  const [par4Selection, setPar4Selection] = useState(true);
+  const [par5Selection, setPar5Selection] = useState(true);
   const [totalPutts, setTotalPutts] = useState(0);
   const [firstPuttDistAvg, setFirstPuttDistAvg] = useState(0);
 
@@ -174,6 +177,8 @@ const UserView = ({ userData, gameData }) => {
             }}
             defaultValue={fairwaySelection}
           />
+
+          < 
         </Box>
 
         <Grid2 container spacing={3}>
