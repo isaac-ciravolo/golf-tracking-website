@@ -7,6 +7,7 @@ import {
   MenuItem,
   FormControl,
   Select,
+  Button,
 } from "@mui/material";
 
 import { makeStyles } from "@mui/styles";
@@ -137,6 +138,11 @@ export const CustomCheckboxDropdown = ({
     setSelectedItems(value);
   };
 
+  const handleSelectAll = () => {
+    if (selectedItems.length === items.length) setSelectedItems([]);
+    else setSelectedItems(items);
+  };
+
   return (
     <Box display="flex" alignItems="center" gap={2} sx={{ height: "30px" }}>
       <Box className={classes.labelContainer}>
@@ -165,6 +171,33 @@ export const CustomCheckboxDropdown = ({
                 />
               </MenuItem>
             ))}
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ width: "95%", margin: "5px" }}>
+                <Button
+                  variant="contained"
+                  onClick={() => setSelectedItems(items)}
+                  fullWidth
+                >
+                  Select All
+                </Button>
+              </Box>
+              <Box sx={{ width: "95%", margin: "5px" }}>
+                <Button
+                  variant="contained"
+                  onClick={() => setSelectedItems([])}
+                  fullWidth
+                >
+                  Deselect All
+                </Button>
+              </Box>
+            </Box>
           </Select>
         </FormControl>
       </Box>

@@ -1,3 +1,0 @@
-average first putt distance for gir per club
-fairway hit or miss per club
-fairway miss left or right per club
