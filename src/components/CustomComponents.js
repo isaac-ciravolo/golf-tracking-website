@@ -1,11 +1,20 @@
-import React from "react";
-import { Box, TextField, Checkbox, Typography, MenuItem } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  TextField,
+  Checkbox,
+  Typography,
+  MenuItem,
+  FormControl,
+  Select,
+} from "@mui/material";
+
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
   smallInput: {
     "& .MuiInputBase-root": {
-      height: "30px",
+      height: "30px !important",
       padding: "1px 1px",
       fontSize: "14px",
     },
@@ -41,7 +50,7 @@ export const CustomNumberInput = ({
         <TextField
           className={classes.smallInput}
           type="number"
-          value={defaultValue}
+          defaultValue={structuredClone(defaultValue)}
           onChange={onChange}
           fullWidth
           slotProps={{ htmlInput: { step: stepValue } }}
@@ -51,7 +60,38 @@ export const CustomNumberInput = ({
   );
 };
 
-export const CustomCheckBox = ({ name, onChange, defaultValue }) => {
+export const CustomCheckBox = ({
+  name,
+  onChange,
+  defaultValue,
+  isDynamic = true,
+}) => {
+  const classes = useStyles();
+  return (
+    <Box
+      display="flex"
+      alignItems="center"
+      gap={2}
+      sx={{ width: "100%", height: "30px" }}
+    >
+      <Box className={classes.labelContainer}>
+        <Typography className={classes.label}>{name}</Typography>
+      </Box>
+      <Box
+        className={classes.labelContainer}
+        sx={{ display: "flex", justifyContent: "center" }}
+      >
+        {isDynamic ? (
+          <Checkbox onChange={onChange} checked={defaultValue} />
+        ) : (
+          <Checkbox onChange={onChange} defaultChecked={defaultValue} />
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+export const CustomSelect = ({ name, onChange, defaultValue, options }) => {
   const classes = useStyles();
   return (
     <Box display="flex" alignItems="center" gap={2} sx={{ height: "30px" }}>
@@ -62,43 +102,72 @@ export const CustomCheckBox = ({ name, onChange, defaultValue }) => {
         className={classes.labelContainer}
         sx={{ display: "flex", justifyContent: "center" }}
       >
-        <Checkbox onChange={onChange} checked={defaultValue} />
+        <TextField
+          className={classes.smallInput}
+          select
+          value={defaultValue}
+          onChange={onChange}
+          fullWidth
+        >
+          {options.map((option) => (
+            <MenuItem
+              key={option.value}
+              value={option.value}
+              sx={{ fontSize: "12px" }}
+            >
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
       </Box>
     </Box>
   );
 };
 
-export const CustomSelect = ({ name, onChange, defaultValue, options }) => {
+export const CustomCheckboxDropdown = ({
+  name,
+  selectedItems,
+  setSelectedItems,
+  items,
+}) => {
   const classes = useStyles();
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setSelectedItems(value);
+  };
+
   return (
-    <Box
-      sx={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Typography fontWeight="bold" textAlign={"left"} sx={{ width: "150px" }}>
-        {name}
-      </Typography>
-      <TextField
-        className={classes.smallInput}
-        select
-        defaultValue={defaultValue}
-        onChange={onChange}
-        sx={{ width: "500px" }}
+    <Box display="flex" alignItems="center" gap={2} sx={{ height: "30px" }}>
+      <Box className={classes.labelContainer}>
+        <Typography className={classes.label}>{name}</Typography>
+      </Box>
+      <Box
+        className={classes.labelContainer}
+        sx={{ display: "flex", justifyContent: "center" }}
       >
-        {options.map((option) => (
-          <MenuItem
-            key={option.value}
-            value={option.value}
-            sx={{ fontSize: "12px" }}
+        <FormControl fullWidth>
+          <Select
+            className={classes.smallInput}
+            sx={{ height: "30px", fontSize: "14px" }}
+            multiple
+            value={selectedItems}
+            onChange={handleChange}
+            renderValue={(selected) => `${selected.length} selected`}
           >
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
+            {items.map((item) => (
+              <MenuItem key={item} value={item} sx={{ width: "100%" }}>
+                <CustomCheckBox
+                  name={item}
+                  onChange={() => {}}
+                  defaultValue={selectedItems.indexOf(item) > -1}
+                  isDynamic={true}
+                />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
     </Box>
   );
 };

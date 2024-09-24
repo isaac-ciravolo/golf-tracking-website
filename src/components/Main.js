@@ -3,7 +3,7 @@ import { db } from "../firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
 import UserView from "./UserView.js";
 
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Grid2 } from "@mui/material";
 import { CustomSelect } from "./CustomComponents.js";
 
 const Main = () => {
@@ -48,17 +48,21 @@ const Main = () => {
 
   return (
     <Box className="games" sx={{ p: 3 }}>
-      <CustomSelect
-        name={"Select User"}
-        onChange={(e) => setSelectedUser(e.target.value)}
-        defaultValue={"-"}
-        options={[
-          { value: "-", label: "-" }, // Placeholder option
-          ...Object.keys(users).map((userId) => {
-            return { value: users[userId].name, label: users[userId].name };
-          }),
-        ]}
-      />
+      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <Box sx={{ width: "500px" }}>
+          <CustomSelect
+            name={"Select User"}
+            onChange={(e) => setSelectedUser(e.target.value)}
+            defaultValue={"-"}
+            options={[
+              { value: "-", label: "-" }, // Placeholder option
+              ...Object.keys(users).map((userId) => {
+                return { value: users[userId].name, label: users[userId].name };
+              }),
+            ]}
+          />
+        </Box>
+      </Box>
 
       {Object.keys(data).map((userId) => {
         if (users[userId].name !== selectedUser) return null;

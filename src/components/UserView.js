@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
 import HolesView from "./HolesView.js";
-import { Box, Typography, Grid2, Checkbox } from "@mui/material";
+import { Box, Typography, Grid2, Stack } from "@mui/material";
 import PieChartView from "./PieChartView.js";
-import { CustomCheckBox, CustomSelect } from "./CustomComponents.js";
+import {
+  CustomCheckBox,
+  CustomSelect,
+  CustomNumberInput,
+  CustomCheckboxDropdown,
+} from "./CustomComponents.js";
 
 const clubs = [
   "-",
@@ -30,16 +35,51 @@ const clubs = [
   "Sand Wedge",
 ];
 
+const missTees = ["-", "Left", "Right"];
+const missApproaches = [
+  "-",
+  "Short Left",
+  "Short",
+  "Short Right",
+  "Long Left",
+  "Long",
+  "Long Right",
+];
+const arr0to9 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
 const UserView = ({ userData, gameData }) => {
   const [currentHoles, setCurrentHoles] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
-  const [girSelection, setGirSelection] = useState("Both");
-  const [fairwaySelection, setFairwaySelection] = useState("Both");
-  const [par3Selection, setPar3Selection] = useState(true);
-  const [par4Selection, setPar4Selection] = useState(true);
-  const [par5Selection, setPar5Selection] = useState(true);
   const [totalPutts, setTotalPutts] = useState(0);
   const [firstPuttDistAvg, setFirstPuttDistAvg] = useState(0);
+  const [selectedPars, setSelectedPars] = useState([3, 4, 5]);
+  const [minYardage, setMinYardage] = useState(0);
+  const [maxYardage, setMaxYardage] = useState(1000);
+  const [minScore, setMinScore] = useState(0);
+  const [maxScore, setMaxScore] = useState(100);
+  const [selectedTeeShotClubs, setSelectedTeeShotClubs] = useState(
+    structuredClone(clubs)
+  );
+  const [fairwaySelection, setFairwaySelection] = useState("Both");
+  const [selectedMissTee, setSelectedMissTee] = useState(
+    structuredClone(missTees)
+  );
+  const [selectedApproachClubs, setSelectedApproachClubs] = useState(
+    structuredClone(clubs)
+  );
+  const [girSelection, setGirSelection] = useState("Both");
+  const [selectedApproachMiss, setSelectedApproachMiss] = useState(
+    structuredClone(missApproaches)
+  );
+  const [upAndDownSelection, setUpAndDownSelection] = useState("Both");
+  const [selectedPutts, setSelectedPutts] = useState(structuredClone(arr0to9));
+  const [minFirstPuttDist, setMinFirstPuttDist] = useState(0);
+  const [maxFirstPuttDist, setMaxFirstPuttDist] = useState(100);
+  const [selectedPenaltyStrokes, setSelectedPenaltyStrokes] = useState(
+    structuredClone(arr0to9)
+  );
+  const [selectedShotsInside100Yards, setSelectedShotsInside100Yards] =
+    useState(structuredClone(arr0to9));
 
   useEffect(() => {
     setSelectedGames(gameData);
@@ -63,16 +103,59 @@ const UserView = ({ userData, gameData }) => {
 
     selectedGames.forEach((game) => {
       for (let i = 0; i < game.holes.length; i++) {
-        if (girSelection == "True" && !game.holes[i].gir) continue;
-        if (girSelection == "False" && game.holes[i].gir) continue;
+        if (selectedPars.indexOf(game.holes[i].par) === -1) continue;
+        if (game.holes[i].yardage < minYardage) continue;
+        if (game.holes[i].yardage > maxYardage) continue;
+        if (game.holes[i].score < minScore) continue;
+        if (game.holes[i].score > maxScore) continue;
+        if (selectedTeeShotClubs.indexOf(game.holes[i].club) === -1) continue;
         if (fairwaySelection == "True" && !game.holes[i].fairway) continue;
         if (fairwaySelection == "False" && game.holes[i].fairway) continue;
+        if (selectedMissTee.indexOf(game.holes[i].missTee) === -1) continue;
+        // if (selectedApproachClubs.indexOf(game.holes[i].clubHit) === -1) continue;
+        if (girSelection == "True" && !game.holes[i].gir) continue;
+        if (girSelection == "False" && game.holes[i].gir) continue;
+        if (selectedApproachMiss.indexOf(game.holes[i].missApproach) === -1)
+          continue;
+        if (upAndDownSelection == "True" && !game.holes[i].upAndDown) continue;
+        if (upAndDownSelection == "False" && game.holes[i].upAndDown) continue;
+        if (selectedPutts.indexOf(game.holes[i].totalPutts) === -1) continue;
+        if (game.holes[i].firstPuttDist < minFirstPuttDist) continue;
+        if (game.holes[i].firstPuttDist > maxFirstPuttDist) continue;
+        if (selectedPenaltyStrokes.indexOf(game.holes[i].penaltyStrokes) === -1)
+          continue;
+        if (
+          selectedShotsInside100Yards.indexOf(game.holes[i].shotsInside100) ===
+          -1
+        )
+          continue;
         newSelection.push(game.holes[i]);
       }
     });
 
+    console.log(newSelection[0]);
+
     setCurrentHoles(newSelection);
-  }, [selectedGames, girSelection, fairwaySelection]);
+  }, [
+    selectedGames,
+    selectedPars,
+    minYardage,
+    maxYardage,
+    minScore,
+    maxScore,
+    selectedTeeShotClubs,
+    fairwaySelection,
+    selectedMissTee,
+    selectedApproachClubs,
+    girSelection,
+    selectedApproachMiss,
+    upAndDownSelection,
+    selectedPutts,
+    minFirstPuttDist,
+    maxFirstPuttDist,
+    selectedPenaltyStrokes,
+    selectedShotsInside100Yards,
+  ]);
 
   const getCount = (currHoles, conditions) => {
     let count = 0;
@@ -124,62 +207,169 @@ const UserView = ({ userData, gameData }) => {
           </Typography>
         </Box>
 
-        <Box sx={{ width: "100%" }}>
-          <CustomSelect
-            name="Select Game"
-            options={[
-              { value: gameData, label: "All Games" },
-              ...gameData.map((game) => {
-                return {
-                  value: game.id,
-                  label:
-                    game.title +
-                    " - " +
-                    formatDateFromMilliseconds(game.gameDate),
-                };
-              }),
-            ]}
-            onChange={(e) => {
-              if (e.target.value == gameData) {
-                setSelectedGames(gameData);
-                return;
-              }
-              const selectedGame = gameData.find(
-                (game) => game.id == e.target.value
-              );
-              setSelectedGames([selectedGame]);
-            }}
-            defaultValue={gameData}
-          />
-
-          <CustomSelect
-            name="Select GIR"
-            options={[
-              { value: "Both", label: "Both" },
-              { value: "True", label: "True" },
-              { value: "False", label: "False" },
-            ]}
-            onChange={(e) => {
-              setGirSelection(e.target.value);
-            }}
-            defaultValue={girSelection}
-          />
-
-          <CustomSelect
-            name="Select Fairway"
-            options={[
-              { value: "Both", label: "Both" },
-              { value: "True", label: "True" },
-              { value: "False", label: "False" },
-            ]}
-            onChange={(e) => {
-              setFairwaySelection(e.target.value);
-            }}
-            defaultValue={fairwaySelection}
-          />
-
-          < 
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+          <Box sx={{ width: "500px" }}>
+            <CustomSelect
+              name="Select Game"
+              options={[
+                { value: gameData, label: "All Games" },
+                ...gameData.map((game) => {
+                  return {
+                    value: game.id,
+                    label:
+                      game.title +
+                      " - " +
+                      formatDateFromMilliseconds(game.gameDate),
+                  };
+                }),
+              ]}
+              onChange={(e) => {
+                if (e.target.value == gameData) {
+                  setSelectedGames(gameData);
+                  return;
+                }
+                const selectedGame = gameData.find(
+                  (game) => game.id == e.target.value
+                );
+                setSelectedGames([selectedGame]);
+              }}
+              defaultValue={gameData}
+            />
+          </Box>
         </Box>
+
+        <Grid2 container spacing={5} sx={{ width: "100%" }}>
+          <Grid2 size={3}>
+            <Stack spacing={1}>
+              <CustomCheckboxDropdown
+                name="Select Pars"
+                items={[3, 4, 5]}
+                selectedItems={selectedPars}
+                setSelectedItems={setSelectedPars}
+              />
+              <CustomNumberInput
+                name="Min Yardage"
+                defaultValue={minYardage}
+                onChange={(e) => setMinYardage(Number(e.target.value))}
+              />
+              <CustomNumberInput
+                name="Max Yardage"
+                defaultValue={maxYardage}
+                onChange={(e) => setMaxYardage(Number(e.target.value))}
+              />
+              <CustomNumberInput
+                name="Min Score"
+                defaultValue={minScore}
+                onChange={(e) => setMinScore(Number(e.target.value))}
+              />
+              <CustomNumberInput
+                name="Max Score"
+                defaultValue={maxScore}
+                onChange={(e) => setMaxScore(Number(e.target.value))}
+              />
+            </Stack>
+          </Grid2>
+          <Grid2 size={3}>
+            <Stack spacing={1}>
+              <CustomCheckboxDropdown
+                name="Select Tee Shot Clubs"
+                items={clubs}
+                selectedItems={selectedTeeShotClubs}
+                setSelectedItems={setSelectedTeeShotClubs}
+              />
+              <CustomCheckboxDropdown
+                name="Select Miss Tee"
+                items={structuredClone(missTees)}
+                selectedItems={selectedMissTee}
+                setSelectedItems={setSelectedMissTee}
+              />
+              <CustomSelect
+                name="Select Fairway"
+                options={[
+                  { value: "Both", label: "Both" },
+                  { value: "True", label: "True" },
+                  { value: "False", label: "False" },
+                ]}
+                onChange={(e) => {
+                  setFairwaySelection(e.target.value);
+                }}
+                defaultValue={fairwaySelection}
+              />
+              <CustomCheckboxDropdown
+                name="Select Approach Clubs"
+                items={clubs}
+                selectedItems={selectedApproachClubs}
+                setSelectedItems={setSelectedApproachClubs}
+              />
+              <CustomSelect
+                name="Select GIR"
+                options={[
+                  { value: "Both", label: "Both" },
+                  { value: "True", label: "True" },
+                  { value: "False", label: "False" },
+                ]}
+                onChange={(e) => {
+                  setGirSelection(e.target.value);
+                }}
+                defaultValue={girSelection}
+              />
+            </Stack>
+          </Grid2>
+          <Grid2 size={3}>
+            <Stack spacing={1}>
+              <CustomCheckboxDropdown
+                name="Select Approach Miss"
+                items={missApproaches}
+                selectedItems={selectedApproachMiss}
+                setSelectedItems={setSelectedApproachMiss}
+              />
+              <CustomSelect
+                name="Select Up and Down"
+                options={[
+                  { value: "Both", label: "Both" },
+                  { value: "True", label: "True" },
+                  { value: "False", label: "False" },
+                ]}
+                onChange={(e) => {
+                  setUpAndDownSelection(e.target.value);
+                }}
+                defaultValue={upAndDownSelection}
+              />
+              <CustomCheckboxDropdown
+                name="Select Putts"
+                items={arr0to9}
+                selectedItems={selectedPutts}
+                setSelectedItems={setSelectedPutts}
+              />
+              <CustomNumberInput
+                name="Min First Putt Distance"
+                defaultValue={minFirstPuttDist}
+                onChange={(e) => setMinFirstPuttDist(Number(e.target.value))}
+              />
+              <CustomNumberInput
+                name="Max First Putt Distance"
+                defaultValue={maxFirstPuttDist}
+                onChange={(e) => setMaxFirstPuttDist(Number(e.target.value))}
+              />
+            </Stack>
+          </Grid2>
+          <Grid2 size={3}>
+            <Stack spacing={1}>
+              <CustomCheckboxDropdown
+                name="Select Penalty Strokes"
+                items={arr0to9}
+                selectedItems={selectedPenaltyStrokes}
+                setSelectedItems={setSelectedPenaltyStrokes}
+              />
+              <CustomCheckboxDropdown
+                name="Select Shots Inside 100 Yards"
+                items={arr0to9}
+                selectedItems={selectedShotsInside100Yards}
+                setSelectedItems={setSelectedShotsInside100Yards}
+              />
+            </Stack>
+          </Grid2>
+        </Grid2>
 
         <Grid2 container spacing={3}>
           <PieChartView
