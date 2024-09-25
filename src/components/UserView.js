@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
 import HolesView from "./HolesView.js";
+<<<<<<< HEAD
 import { Box, Typography, Grid2 } from "@mui/material";
+=======
+import { Box, Typography, Grid2, Stack } from "@mui/material";
+>>>>>>> 95f4f90806b7badcf5d883de026309607fcb514d
 import PieChartView from "./PieChartView.js";
-import { CustomCheckBox, CustomSelect } from "./CustomComponents.js";
+import {
+  CustomSelect,
+  CustomNumberInput,
+  CustomCheckboxDropdown,
+} from "./CustomComponents.js";
 
 const clubs = [
   "-",
@@ -30,49 +38,127 @@ const clubs = [
   "Sand Wedge",
 ];
 
+const missTees = ["-", "Left", "Right"];
+const missApproaches = [
+  "-",
+  "Short Left",
+  "Left",
+  "Short Right",
+  "Long Left",
+  "Right",
+  "Long Right",
+];
+const arr0to9 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
 const UserView = ({ userData, gameData }) => {
   const [currentHoles, setCurrentHoles] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
-  const [girSelection, setGirSelection] = useState("Both");
-  const [fairwaySelection, setFairwaySelection] = useState("Both");
-  const [par3Selection, setPar3Selection] = useState(true);
-  const [par4Selection, setPar4Selection] = useState(true);
-  const [par5Selection, setPar5Selection] = useState(true);
+  const [parSum, setParSum] = useState(0);
+  const [yardAverage, setYardAverage] = useState(0);
   const [totalPutts, setTotalPutts] = useState(0);
   const [firstPuttDistAvg, setFirstPuttDistAvg] = useState(0);
+  const [selectedPars, setSelectedPars] = useState([3, 4, 5]);
+  const [minYardage, setMinYardage] = useState(0);
+  const [maxYardage, setMaxYardage] = useState(1000);
+  const [minScore, setMinScore] = useState(0);
+  const [maxScore, setMaxScore] = useState(100);
+  const [selectedTeeShotClubs, setSelectedTeeShotClubs] = useState(
+    structuredClone(clubs)
+  );
+  const [fairwaySelection, setFairwaySelection] = useState("Both");
+  const [selectedMissTee, setSelectedMissTee] = useState(
+    structuredClone(missTees)
+  );
+  const [selectedApproachClubs, setSelectedApproachClubs] = useState(
+    structuredClone(clubs)
+  );
+  const [girSelection, setGirSelection] = useState("Both");
+  const [selectedApproachMiss, setSelectedApproachMiss] = useState(
+    structuredClone(missApproaches)
+  );
+  const [upAndDownSelection, setUpAndDownSelection] = useState("Both");
+  const [selectedPutts, setSelectedPutts] = useState(structuredClone(arr0to9));
+  const [minFirstPuttDist, setMinFirstPuttDist] = useState(0);
+  const [maxFirstPuttDist, setMaxFirstPuttDist] = useState(100);
+  const [selectedPenaltyStrokes, setSelectedPenaltyStrokes] = useState(
+    structuredClone(arr0to9)
+  );
+  const [selectedShotsInside100Yards, setSelectedShotsInside100Yards] =
+    useState(structuredClone(arr0to9));
 
   useEffect(() => {
     setSelectedGames(gameData);
-  }, []);
+  }, [gameData]);
 
   useEffect(() => {
+    let pSum = 0;
     let tPutts = 0;
     let fPuttDistAvg = 0;
+    let yAvg = 0;
     for (let i = 0; i < currentHoles.length; i++) {
       const hole = currentHoles[i];
+      pSum += hole.par;
       tPutts += hole.totalPutts;
       fPuttDistAvg += hole.firstPuttDist;
+      yAvg += hole.yardage;
     }
 
+    setParSum(pSum);
+    setYardAverage(yAvg / currentHoles.length);
     setTotalPutts(tPutts);
     setFirstPuttDistAvg(fPuttDistAvg / currentHoles.length);
   }, [currentHoles]);
 
   useEffect(() => {
     const newSelection = [];
-
+    console.log(selectedGames);
     selectedGames.forEach((game) => {
-      for (let i = 0; i < game.holes.length; i++) {
-        if (girSelection == "True" && !game.holes[i].gir) continue;
-        if (girSelection == "False" && game.holes[i].gir) continue;
-        if (fairwaySelection == "True" && !game.holes[i].fairway) continue;
-        if (fairwaySelection == "False" && game.holes[i].fairway) continue;
-        newSelection.push(game.holes[i]);
-      }
+      game.holes.forEach((hole) => {
+        if (selectedPars.indexOf(hole.par) === -1) return;
+        if (minYardage > hole.yardage) return;
+        if (maxYardage < hole.yardage) return;
+        if (minScore > hole.score) return;
+        if (maxScore < hole.score) return;
+        if (selectedTeeShotClubs.indexOf(hole.club) === -1) return;
+        if (fairwaySelection === "True" && !hole.fairway) return;
+        if (fairwaySelection === "False" && hole.fairway) return;
+        if (selectedMissTee.indexOf(hole.missTee) === -1) return;
+        if (selectedApproachClubs.indexOf(hole.clubHit) === -1) return;
+        if (girSelection === "True" && !hole.gir) return;
+        if (girSelection === "False" && !hole.gir) return;
+        if (selectedApproachMiss.indexOf(hole.missApproach) === -1) return;
+        if (upAndDownSelection === "True" && !hole.upAndDown) return;
+        if (upAndDownSelection === "False" && hole.upAndDown) return;
+        if (selectedPutts.indexOf(hole.totalPutts) === -1) return;
+        if (minFirstPuttDist > hole.firstPuttDist) return;
+        if (maxFirstPuttDist < hole.firstPuttDist) return;
+        if (selectedPenaltyStrokes.indexOf(hole.penaltyStrokes) === -1) return;
+        if (selectedShotsInside100Yards.indexOf(hole.shotsInside100) === -1)
+          return;
+        newSelection.push(hole);
+      });
     });
-
     setCurrentHoles(newSelection);
-  }, [selectedGames, girSelection, fairwaySelection]);
+  }, [
+    selectedGames,
+    selectedPars,
+    minYardage,
+    maxYardage,
+    minScore,
+    maxScore,
+    selectedTeeShotClubs,
+    fairwaySelection,
+    selectedMissTee,
+    selectedApproachClubs,
+    girSelection,
+    selectedApproachMiss,
+    upAndDownSelection,
+    selectedPutts,
+    minFirstPuttDist,
+    maxFirstPuttDist,
+    selectedPenaltyStrokes,
+    selectedShotsInside100Yards,
+  ]);
 
   const getCount = (currHoles, conditions) => {
     let count = 0;
@@ -104,7 +190,23 @@ const UserView = ({ userData, gameData }) => {
             variant="h6"
             sx={{ width: "100%", fontWeight: "bold" }}
           >
+            Pars: {parSum}
+          </Typography>
+
+          <Typography
+            textAlign="center"
+            variant="h6"
+            sx={{ width: "100%", fontWeight: "bold" }}
+          >
             Number of Holes: {currentHoles.length}
+          </Typography>
+
+          <Typography
+            textAlign="center"
+            variant="h6"
+            sx={{ width: "100%", fontWeight: "bold" }}
+          >
+            Average Yardage: {yardAverage.toFixed(2)}
           </Typography>
 
           <Typography
@@ -124,6 +226,7 @@ const UserView = ({ userData, gameData }) => {
           </Typography>
         </Box>
 
+<<<<<<< HEAD
         <Box sx={{ width: "100%" }}>
           <CustomSelect
             name="Select Game"
@@ -177,42 +280,183 @@ const UserView = ({ userData, gameData }) => {
             }}
             defaultValue={fairwaySelection}
           />
+=======
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+          <Box sx={{ width: "500px" }}>
+            <CustomCheckboxDropdown
+              name="Select Games"
+              items={gameData}
+              selectedItems={selectedGames}
+              setSelectedItems={setSelectedGames}
+            />
+          </Box>
+>>>>>>> 95f4f90806b7badcf5d883de026309607fcb514d
         </Box>
+
+        <Grid2 container spacing={5} sx={{ width: "100%" }}>
+          <Grid2 size={3}>
+            <Stack spacing={1}>
+              <CustomCheckboxDropdown
+                name="Select Pars"
+                items={[3, 4, 5]}
+                selectedItems={selectedPars}
+                setSelectedItems={setSelectedPars}
+              />
+              <CustomNumberInput
+                name="Min Yardage"
+                defaultValue={minYardage}
+                onChange={(e) => setMinYardage(Number(e.target.value))}
+              />
+              <CustomNumberInput
+                name="Max Yardage"
+                defaultValue={maxYardage}
+                onChange={(e) => setMaxYardage(Number(e.target.value))}
+              />
+              <CustomNumberInput
+                name="Min Score"
+                defaultValue={minScore}
+                onChange={(e) => setMinScore(Number(e.target.value))}
+              />
+              <CustomNumberInput
+                name="Max Score"
+                defaultValue={maxScore}
+                onChange={(e) => setMaxScore(Number(e.target.value))}
+              />
+            </Stack>
+          </Grid2>
+          <Grid2 size={3}>
+            <Stack spacing={1}>
+              <CustomCheckboxDropdown
+                name="Select Tee Shot Clubs"
+                items={clubs}
+                selectedItems={selectedTeeShotClubs}
+                setSelectedItems={setSelectedTeeShotClubs}
+              />
+              <CustomCheckboxDropdown
+                name="Select Miss Tee"
+                items={missTees}
+                selectedItems={selectedMissTee}
+                setSelectedItems={setSelectedMissTee}
+              />
+              <CustomSelect
+                name="Select Fairway"
+                options={[
+                  { value: "Both", label: "Both" },
+                  { value: "True", label: "True" },
+                  { value: "False", label: "False" },
+                ]}
+                onChange={(e) => {
+                  setFairwaySelection(e.target.value);
+                }}
+                defaultValue={fairwaySelection}
+              />
+              <CustomCheckboxDropdown
+                name="Select Approach Clubs"
+                items={clubs}
+                selectedItems={selectedApproachClubs}
+                setSelectedItems={setSelectedApproachClubs}
+              />
+              <CustomSelect
+                name="Select GIR"
+                options={[
+                  { value: "Both", label: "Both" },
+                  { value: "True", label: "True" },
+                  { value: "False", label: "False" },
+                ]}
+                onChange={(e) => {
+                  setGirSelection(e.target.value);
+                }}
+                defaultValue={girSelection}
+              />
+            </Stack>
+          </Grid2>
+          <Grid2 size={3}>
+            <Stack spacing={1}>
+              <CustomCheckboxDropdown
+                name="Select Approach Miss"
+                items={missApproaches}
+                selectedItems={selectedApproachMiss}
+                setSelectedItems={setSelectedApproachMiss}
+              />
+              <CustomSelect
+                name="Select Up and Down"
+                options={[
+                  { value: "Both", label: "Both" },
+                  { value: "True", label: "True" },
+                  { value: "False", label: "False" },
+                ]}
+                onChange={(e) => {
+                  setUpAndDownSelection(e.target.value);
+                }}
+                defaultValue={upAndDownSelection}
+              />
+              <CustomCheckboxDropdown
+                name="Select Putts"
+                items={arr0to9}
+                selectedItems={selectedPutts}
+                setSelectedItems={setSelectedPutts}
+              />
+              <CustomNumberInput
+                name="Min First Putt Distance"
+                defaultValue={minFirstPuttDist}
+                onChange={(e) => setMinFirstPuttDist(Number(e.target.value))}
+              />
+              <CustomNumberInput
+                name="Max First Putt Distance"
+                defaultValue={maxFirstPuttDist}
+                onChange={(e) => setMaxFirstPuttDist(Number(e.target.value))}
+              />
+            </Stack>
+          </Grid2>
+          <Grid2 size={3}>
+            <Stack spacing={1}>
+              <CustomCheckboxDropdown
+                name="Select Penalty Strokes"
+                items={arr0to9}
+                selectedItems={selectedPenaltyStrokes}
+                setSelectedItems={setSelectedPenaltyStrokes}
+              />
+              <CustomCheckboxDropdown
+                name="Select Shots Inside 100 Yards"
+                items={arr0to9}
+                selectedItems={selectedShotsInside100Yards}
+                setSelectedItems={setSelectedShotsInside100Yards}
+              />
+            </Stack>
+          </Grid2>
+        </Grid2>
 
         <Grid2 container spacing={3}>
           <PieChartView
-            title="Green in Regulation"
-            data={[
-              {
-                id: 0,
-                label: "Yes",
-                value: getCount(currentHoles, { gir: true }),
-                color: "#468f15",
-              },
-              {
-                id: 1,
-                label: "No",
-                value: getCount(currentHoles, { gir: false }),
-                color: "#94042b",
-              },
-            ]}
+            title="Pars"
+            data={[3, 4, 5].map((par) => {
+              return {
+                id: par,
+                label: par.toString(),
+                value: getCount(currentHoles, { par: par }),
+              };
+            })}
           />
           <PieChartView
-            title="Up and Down"
-            data={[
-              {
-                id: 0,
-                label: "Yes",
-                value: getCount(currentHoles, { upAndDown: true }),
-                color: "#468f15",
-              },
-              {
-                id: 1,
-                label: "No",
-                value: getCount(currentHoles, { upAndDown: false }),
-                color: "#94042b",
-              },
-            ]}
+            title="Scores"
+            data={arr0to9.map((score) => {
+              return {
+                id: score,
+                label: score.toString(),
+                value: getCount(currentHoles, { score: score }),
+              };
+            })}
+          />
+
+          <PieChartView
+            title={`Club Hit from Tee`}
+            data={clubs.map((club) => {
+              return {
+                id: club,
+                label: club,
+                value: getCount(currentHoles, { club: club }),
+              };
+            })}
           />
           <PieChartView
             title="Fairway"
@@ -233,31 +477,44 @@ const UserView = ({ userData, gameData }) => {
           />
           <PieChartView
             title="Fairway Miss Direction"
+            data={missTees.map((miss) => {
+              return {
+                id: miss,
+                label: miss,
+                value: getCount(currentHoles, { missTee: miss }),
+              };
+            })}
+          />
+          <PieChartView
+            title={`Club Hit from Approach`}
+            data={clubs.map((club) => {
+              return {
+                id: club,
+                label: club,
+                value: getCount(currentHoles, { clubHit: club }),
+              };
+            })}
+          />
+          <PieChartView
+            title="Green in Regulation"
             data={[
               {
                 id: 0,
-                label: "Left",
-                value: getCount(currentHoles, { missTee: "Left" }),
+                label: "Yes",
+                value: getCount(currentHoles, { gir: true }),
                 color: "#468f15",
               },
               {
                 id: 1,
-                label: "Right",
-                value: getCount(currentHoles, { missTee: "Right" }),
+                label: "No",
+                value: getCount(currentHoles, { gir: false }),
                 color: "#94042b",
               },
             ]}
           />
           <PieChartView
             title="Approach Miss Direction"
-            data={[
-              "Short Left",
-              "Short",
-              "Short Right",
-              "Long Left",
-              "Long",
-              "Long Right",
-            ].map((miss) => {
+            data={missApproaches.map((miss) => {
               return {
                 id: miss,
                 label: miss,
@@ -265,41 +522,61 @@ const UserView = ({ userData, gameData }) => {
               };
             })}
           />
+          <PieChartView
+            title="Up and Down"
+            data={[
+              {
+                id: 0,
+                label: "Yes",
+                value: getCount(currentHoles, { upAndDown: true }),
+                color: "#468f15",
+              },
+              {
+                id: 1,
+                label: "No",
+                value: getCount(currentHoles, { upAndDown: false }),
+                color: "#94042b",
+              },
+            ]}
+          />
 
-          {[3, 4, 5].map((par) => {
-            return (
-              <PieChartView
-                key={par}
-                title={`Club Hit from Tee on Par ${par}`}
-                data={clubs.map((club) => {
-                  return {
-                    id: club,
-                    label: club,
-                    value: getCount(currentHoles, { club: club, par: par }),
-                  };
-                })}
-              />
-            );
-          })}
+          <PieChartView
+            title={`Putts per Hole`}
+            data={arr0to9.map((putt) => {
+              return {
+                id: putt,
+                label: putt.toString(),
+                value: getCount(currentHoles, {
+                  totalPutts: putt,
+                }),
+              };
+            })}
+          />
 
-          {[3, 4, 5].map((par) => {
-            return (
-              <PieChartView
-                key={par}
-                title={`Putts per Hole on Par ${par}`}
-                data={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((putt) => {
-                  return {
-                    id: putt,
-                    label: putt.toString(),
-                    value: getCount(currentHoles, {
-                      totalPutts: putt,
-                      par: par,
-                    }),
-                  };
-                })}
-              />
-            );
-          })}
+          <PieChartView
+            title="Penalty Strokes"
+            data={arr0to9.map((penalty) => {
+              return {
+                id: penalty,
+                label: penalty.toString(),
+                value: getCount(currentHoles, {
+                  penaltyStrokes: penalty,
+                }),
+              };
+            })}
+          />
+          <PieChartView
+            title="Shots Inside 100 Yards"
+            data={arr0to9.map((shots) => {
+              return {
+                id: shots,
+                label: shots.toString(),
+                value: getCount(currentHoles, {
+                  shotsInside100: shots,
+                }),
+              };
+            })}
+          />
         </Grid2>
 
         {selectedGames && selectedGames.length === 1 && (

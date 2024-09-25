@@ -1,6 +1,6 @@
 function Header() {
   return (
-    <header style={{ zIndex: 1500 }}>
+    <header style={{ zIndex: 1 }}>
       <nav>
         <h1>Golf Website</h1>
         <ul>

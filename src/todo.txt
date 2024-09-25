@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 
@@ -17,3 +18,5 @@ fairway miss left or right per club
 Group everything by driving, approach, green, advanced, scorecard
 only put used clubs into dropdowns
 put select and deselect alls at top of dropdowns
+=======
+>>>>>>> 95f4f90806b7badcf5d883de026309607fcb514d
