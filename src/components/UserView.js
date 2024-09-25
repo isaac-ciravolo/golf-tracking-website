@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
 import HolesView from "./HolesView.js";
-import { Box, Typography, Grid2, Checkbox } from "@mui/material";
+import { Box, Typography, Grid2 } from "@mui/material";
 import PieChartView from "./PieChartView.js";
 import { CustomCheckBox, CustomSelect } from "./CustomComponents.js";
 
@@ -177,8 +177,6 @@ const UserView = ({ userData, gameData }) => {
             }}
             defaultValue={fairwaySelection}
           />
-
-          < 
         </Box>
 
         <Grid2 container spacing={3}>

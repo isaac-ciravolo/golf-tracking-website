@@ -4,8 +4,11 @@ function Header() {
       <nav>
         <h1>Golf Website</h1>
         <ul>
-          <li>Swing Analysis</li>
-          <li>Club Use</li>
+          <li>Driving</li>
+          <li>Approach</li>
+          <li>Short Game</li>
+          <li>Advanced</li>
+          <li>Scorecard</li>
         </ul>
       </nav>
     </header>
