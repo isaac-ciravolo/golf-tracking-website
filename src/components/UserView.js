@@ -4,7 +4,6 @@ import HolesView from "./HolesView.js";
 import { Box, Typography, Grid2, Stack } from "@mui/material";
 import PieChartView from "./PieChartView.js";
 import {
-  CustomCheckBox,
   CustomSelect,
   CustomNumberInput,
   CustomCheckboxDropdown,
@@ -39,10 +38,10 @@ const missTees = ["-", "Left", "Right"];
 const missApproaches = [
   "-",
   "Short Left",
-  "Short",
+  "Left",
   "Short Right",
   "Long Left",
-  "Long",
+  "Right",
   "Long Right",
 ];
 const arr0to9 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -50,6 +49,8 @@ const arr0to9 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const UserView = ({ userData, gameData }) => {
   const [currentHoles, setCurrentHoles] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
+  const [parSum, setParSum] = useState(0);
+  const [yardAverage, setYardAverage] = useState(0);
   const [totalPutts, setTotalPutts] = useState(0);
   const [firstPuttDistAvg, setFirstPuttDistAvg] = useState(0);
   const [selectedPars, setSelectedPars] = useState([3, 4, 5]);
@@ -83,17 +84,23 @@ const UserView = ({ userData, gameData }) => {
 
   useEffect(() => {
     setSelectedGames(gameData);
-  }, []);
+  }, [gameData]);
 
   useEffect(() => {
+    let pSum = 0;
     let tPutts = 0;
     let fPuttDistAvg = 0;
+    let yAvg = 0;
     for (let i = 0; i < currentHoles.length; i++) {
       const hole = currentHoles[i];
+      pSum += hole.par;
       tPutts += hole.totalPutts;
       fPuttDistAvg += hole.firstPuttDist;
+      yAvg += hole.yardage;
     }
 
+    setParSum(pSum);
+    setYardAverage(yAvg / currentHoles.length);
     setTotalPutts(tPutts);
     setFirstPuttDistAvg(fPuttDistAvg / currentHoles.length);
   }, [currentHoles]);
@@ -109,16 +116,17 @@ const UserView = ({ userData, gameData }) => {
         if (game.holes[i].score < minScore) continue;
         if (game.holes[i].score > maxScore) continue;
         if (selectedTeeShotClubs.indexOf(game.holes[i].club) === -1) continue;
-        if (fairwaySelection == "True" && !game.holes[i].fairway) continue;
-        if (fairwaySelection == "False" && game.holes[i].fairway) continue;
+        if (fairwaySelection === "True" && !game.holes[i].fairway) continue;
+        if (fairwaySelection === "False" && game.holes[i].fairway) continue;
         if (selectedMissTee.indexOf(game.holes[i].missTee) === -1) continue;
-        // if (selectedApproachClubs.indexOf(game.holes[i].clubHit) === -1) continue;
-        if (girSelection == "True" && !game.holes[i].gir) continue;
-        if (girSelection == "False" && game.holes[i].gir) continue;
+        if (selectedApproachClubs.indexOf(game.holes[i].clubHit) === -1)
+          continue;
+        if (girSelection === "True" && !game.holes[i].gir) continue;
+        if (girSelection === "False" && !game.holes[i].gir) continue;
         if (selectedApproachMiss.indexOf(game.holes[i].missApproach) === -1)
           continue;
-        if (upAndDownSelection == "True" && !game.holes[i].upAndDown) continue;
-        if (upAndDownSelection == "False" && game.holes[i].upAndDown) continue;
+        if (upAndDownSelection === "True" && !game.holes[i].upAndDown) continue;
+        if (upAndDownSelection === "False" && game.holes[i].upAndDown) continue;
         if (selectedPutts.indexOf(game.holes[i].totalPutts) === -1) continue;
         if (game.holes[i].firstPuttDist < minFirstPuttDist) continue;
         if (game.holes[i].firstPuttDist > maxFirstPuttDist) continue;
@@ -132,9 +140,6 @@ const UserView = ({ userData, gameData }) => {
         newSelection.push(game.holes[i]);
       }
     });
-
-    console.log(newSelection[0]);
-
     setCurrentHoles(newSelection);
   }, [
     selectedGames,
@@ -187,7 +192,23 @@ const UserView = ({ userData, gameData }) => {
             variant="h6"
             sx={{ width: "100%", fontWeight: "bold" }}
           >
+            Pars: {parSum}
+          </Typography>
+
+          <Typography
+            textAlign="center"
+            variant="h6"
+            sx={{ width: "100%", fontWeight: "bold" }}
+          >
             Number of Holes: {currentHoles.length}
+          </Typography>
+
+          <Typography
+            textAlign="center"
+            variant="h6"
+            sx={{ width: "100%", fontWeight: "bold" }}
+          >
+            Average Yardage: {yardAverage.toFixed(2)}
           </Typography>
 
           <Typography
@@ -224,12 +245,12 @@ const UserView = ({ userData, gameData }) => {
                 }),
               ]}
               onChange={(e) => {
-                if (e.target.value == gameData) {
+                if (e.target.value === gameData) {
                   setSelectedGames(gameData);
                   return;
                 }
                 const selectedGame = gameData.find(
-                  (game) => game.id == e.target.value
+                  (game) => game.id === e.target.value
                 );
                 setSelectedGames([selectedGame]);
               }}
@@ -373,38 +394,35 @@ const UserView = ({ userData, gameData }) => {
 
         <Grid2 container spacing={3}>
           <PieChartView
-            title="Green in Regulation"
-            data={[
-              {
-                id: 0,
-                label: "Yes",
-                value: getCount(currentHoles, { gir: true }),
-                color: "#468f15",
-              },
-              {
-                id: 1,
-                label: "No",
-                value: getCount(currentHoles, { gir: false }),
-                color: "#94042b",
-              },
-            ]}
+            title="Pars"
+            data={[3, 4, 5].map((par) => {
+              return {
+                id: par,
+                label: par.toString(),
+                value: getCount(currentHoles, { par: par }),
+              };
+            })}
           />
           <PieChartView
-            title="Up and Down"
-            data={[
-              {
-                id: 0,
-                label: "Yes",
-                value: getCount(currentHoles, { upAndDown: true }),
-                color: "#468f15",
-              },
-              {
-                id: 1,
-                label: "No",
-                value: getCount(currentHoles, { upAndDown: false }),
-                color: "#94042b",
-              },
-            ]}
+            title="Scores"
+            data={arr0to9.map((score) => {
+              return {
+                id: score,
+                label: score.toString(),
+                value: getCount(currentHoles, { score: score }),
+              };
+            })}
+          />
+
+          <PieChartView
+            title={`Club Hit from Tee`}
+            data={clubs.map((club) => {
+              return {
+                id: club,
+                label: club,
+                value: getCount(currentHoles, { club: club }),
+              };
+            })}
           />
           <PieChartView
             title="Fairway"
@@ -425,31 +443,44 @@ const UserView = ({ userData, gameData }) => {
           />
           <PieChartView
             title="Fairway Miss Direction"
+            data={missTees.map((miss) => {
+              return {
+                id: miss,
+                label: miss,
+                value: getCount(currentHoles, { missTee: miss }),
+              };
+            })}
+          />
+          <PieChartView
+            title={`Club Hit from Approach`}
+            data={clubs.map((club) => {
+              return {
+                id: club,
+                label: club,
+                value: getCount(currentHoles, { clubHit: club }),
+              };
+            })}
+          />
+          <PieChartView
+            title="Green in Regulation"
             data={[
               {
                 id: 0,
-                label: "Left",
-                value: getCount(currentHoles, { missTee: "Left" }),
+                label: "Yes",
+                value: getCount(currentHoles, { gir: true }),
                 color: "#468f15",
               },
               {
                 id: 1,
-                label: "Right",
-                value: getCount(currentHoles, { missTee: "Right" }),
+                label: "No",
+                value: getCount(currentHoles, { gir: false }),
                 color: "#94042b",
               },
             ]}
           />
           <PieChartView
             title="Approach Miss Direction"
-            data={[
-              "Short Left",
-              "Short",
-              "Short Right",
-              "Long Left",
-              "Long",
-              "Long Right",
-            ].map((miss) => {
+            data={missApproaches.map((miss) => {
               return {
                 id: miss,
                 label: miss,
@@ -457,41 +488,61 @@ const UserView = ({ userData, gameData }) => {
               };
             })}
           />
+          <PieChartView
+            title="Up and Down"
+            data={[
+              {
+                id: 0,
+                label: "Yes",
+                value: getCount(currentHoles, { upAndDown: true }),
+                color: "#468f15",
+              },
+              {
+                id: 1,
+                label: "No",
+                value: getCount(currentHoles, { upAndDown: false }),
+                color: "#94042b",
+              },
+            ]}
+          />
 
-          {[3, 4, 5].map((par) => {
-            return (
-              <PieChartView
-                key={par}
-                title={`Club Hit from Tee on Par ${par}`}
-                data={clubs.map((club) => {
-                  return {
-                    id: club,
-                    label: club,
-                    value: getCount(currentHoles, { club: club, par: par }),
-                  };
-                })}
-              />
-            );
-          })}
+          <PieChartView
+            title={`Putts per Hole`}
+            data={arr0to9.map((putt) => {
+              return {
+                id: putt,
+                label: putt.toString(),
+                value: getCount(currentHoles, {
+                  totalPutts: putt,
+                }),
+              };
+            })}
+          />
 
-          {[3, 4, 5].map((par) => {
-            return (
-              <PieChartView
-                key={par}
-                title={`Putts per Hole on Par ${par}`}
-                data={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((putt) => {
-                  return {
-                    id: putt,
-                    label: putt.toString(),
-                    value: getCount(currentHoles, {
-                      totalPutts: putt,
-                      par: par,
-                    }),
-                  };
-                })}
-              />
-            );
-          })}
+          <PieChartView
+            title="Penalty Strokes"
+            data={arr0to9.map((penalty) => {
+              return {
+                id: penalty,
+                label: penalty.toString(),
+                value: getCount(currentHoles, {
+                  penaltyStrokes: penalty,
+                }),
+              };
+            })}
+          />
+          <PieChartView
+            title="Shots Inside 100 Yards"
+            data={arr0to9.map((shots) => {
+              return {
+                id: shots,
+                label: shots.toString(),
+                value: getCount(currentHoles, {
+                  shotsInside100: shots,
+                }),
+              };
+            })}
+          />
         </Grid2>
 
         {selectedGames && selectedGames.length === 1 && (

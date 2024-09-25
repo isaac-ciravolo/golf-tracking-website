@@ -6,7 +6,9 @@ const PieChartView = ({ title, data }) => {
   useEffect(() => {
     const newData = [];
     for (let i = 0; i < data.length; i++)
-      if (data[i].value > 0) newData.push(data[i]);
+      if (data[i].value > 0) {
+        newData.push(data[i]);
+      }
     setPieChartData(newData);
   }, [data]);
 
@@ -26,10 +28,26 @@ const PieChartView = ({ title, data }) => {
         <Typography sx={{ marginTop: "80px" }}>No data</Typography>
       ) : (
         <PieChart
-          series={[{ data: pieChartData }]}
+          series={[
+            {
+              arcLabel: (item) => item.value.toString(),
+              arcLabelMinAngle: 40,
+              arcLabelRadius: "60%",
+              data: pieChartData,
+            },
+          ]}
           width={350}
           height={200}
-          slotProps={{ legend: { hidden: pieChartData.length > 5 } }}
+          slotProps={{
+            legend: {
+              itemGap: 2,
+              labelStyle: {
+                fontSize: 14,
+              },
+              itemMarkWidth: 10,
+              itemMarkHeight: 10,
+            },
+          }}
         />
       )}
     </Grid2>

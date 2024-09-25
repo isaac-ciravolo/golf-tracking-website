@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Box,
   TextField,
@@ -136,11 +136,6 @@ export const CustomCheckboxDropdown = ({
   const handleChange = (event) => {
     const value = event.target.value;
     setSelectedItems(value);
-  };
-
-  const handleSelectAll = () => {
-    if (selectedItems.length === items.length) setSelectedItems([]);
-    else setSelectedItems(items);
   };
 
   return (

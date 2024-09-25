@@ -3,13 +3,13 @@ import { db } from "../firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
 import UserView from "./UserView.js";
 
-import { Box, Typography, Grid2 } from "@mui/material";
+import { Box } from "@mui/material";
 import { CustomSelect } from "./CustomComponents.js";
 
 const Main = () => {
   const [users, setUsers] = useState({});
   const [data, setData] = useState({});
-  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedUser, setSelectedUser] = useState("-");
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -53,7 +53,7 @@ const Main = () => {
           <CustomSelect
             name={"Select User"}
             onChange={(e) => setSelectedUser(e.target.value)}
-            defaultValue={"-"}
+            defaultValue={selectedUser}
             options={[
               { value: "-", label: "-" }, // Placeholder option
               ...Object.keys(users).map((userId) => {
