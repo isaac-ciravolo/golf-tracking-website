@@ -159,7 +159,7 @@ export const CustomCheckboxDropdown = ({
             {items.map((item) => (
               <MenuItem key={item} value={item} sx={{ width: "100%" }}>
                 <CustomCheckBox
-                  name={item}
+                  name={item.title ? item.title : item}
                   onChange={() => {}}
                   defaultValue={selectedItems.indexOf(item) > -1}
                   isDynamic={true}

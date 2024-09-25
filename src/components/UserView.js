@@ -107,38 +107,32 @@ const UserView = ({ userData, gameData }) => {
 
   useEffect(() => {
     const newSelection = [];
-
+    console.log(selectedGames);
     selectedGames.forEach((game) => {
-      for (let i = 0; i < game.holes.length; i++) {
-        if (selectedPars.indexOf(game.holes[i].par) === -1) continue;
-        if (game.holes[i].yardage < minYardage) continue;
-        if (game.holes[i].yardage > maxYardage) continue;
-        if (game.holes[i].score < minScore) continue;
-        if (game.holes[i].score > maxScore) continue;
-        if (selectedTeeShotClubs.indexOf(game.holes[i].club) === -1) continue;
-        if (fairwaySelection === "True" && !game.holes[i].fairway) continue;
-        if (fairwaySelection === "False" && game.holes[i].fairway) continue;
-        if (selectedMissTee.indexOf(game.holes[i].missTee) === -1) continue;
-        if (selectedApproachClubs.indexOf(game.holes[i].clubHit) === -1)
-          continue;
-        if (girSelection === "True" && !game.holes[i].gir) continue;
-        if (girSelection === "False" && !game.holes[i].gir) continue;
-        if (selectedApproachMiss.indexOf(game.holes[i].missApproach) === -1)
-          continue;
-        if (upAndDownSelection === "True" && !game.holes[i].upAndDown) continue;
-        if (upAndDownSelection === "False" && game.holes[i].upAndDown) continue;
-        if (selectedPutts.indexOf(game.holes[i].totalPutts) === -1) continue;
-        if (game.holes[i].firstPuttDist < minFirstPuttDist) continue;
-        if (game.holes[i].firstPuttDist > maxFirstPuttDist) continue;
-        if (selectedPenaltyStrokes.indexOf(game.holes[i].penaltyStrokes) === -1)
-          continue;
-        if (
-          selectedShotsInside100Yards.indexOf(game.holes[i].shotsInside100) ===
-          -1
-        )
-          continue;
-        newSelection.push(game.holes[i]);
-      }
+      game.holes.forEach((hole) => {
+        if (selectedPars.indexOf(hole.par) === -1) return;
+        if (minYardage > hole.yardage) return;
+        if (maxYardage < hole.yardage) return;
+        if (minScore > hole.score) return;
+        if (maxScore < hole.score) return;
+        if (selectedTeeShotClubs.indexOf(hole.club) === -1) return;
+        if (fairwaySelection === "True" && !hole.fairway) return;
+        if (fairwaySelection === "False" && hole.fairway) return;
+        if (selectedMissTee.indexOf(hole.missTee) === -1) return;
+        if (selectedApproachClubs.indexOf(hole.clubHit) === -1) return;
+        if (girSelection === "True" && !hole.gir) return;
+        if (girSelection === "False" && !hole.gir) return;
+        if (selectedApproachMiss.indexOf(hole.missApproach) === -1) return;
+        if (upAndDownSelection === "True" && !hole.upAndDown) return;
+        if (upAndDownSelection === "False" && hole.upAndDown) return;
+        if (selectedPutts.indexOf(hole.totalPutts) === -1) return;
+        if (minFirstPuttDist > hole.firstPuttDist) return;
+        if (maxFirstPuttDist < hole.firstPuttDist) return;
+        if (selectedPenaltyStrokes.indexOf(hole.penaltyStrokes) === -1) return;
+        if (selectedShotsInside100Yards.indexOf(hole.shotsInside100) === -1)
+          return;
+        newSelection.push(hole);
+      });
     });
     setCurrentHoles(newSelection);
   }, [
@@ -230,31 +224,11 @@ const UserView = ({ userData, gameData }) => {
 
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <Box sx={{ width: "500px" }}>
-            <CustomSelect
-              name="Select Game"
-              options={[
-                { value: gameData, label: "All Games" },
-                ...gameData.map((game) => {
-                  return {
-                    value: game.id,
-                    label:
-                      game.title +
-                      " - " +
-                      formatDateFromMilliseconds(game.gameDate),
-                  };
-                }),
-              ]}
-              onChange={(e) => {
-                if (e.target.value === gameData) {
-                  setSelectedGames(gameData);
-                  return;
-                }
-                const selectedGame = gameData.find(
-                  (game) => game.id === e.target.value
-                );
-                setSelectedGames([selectedGame]);
-              }}
-              defaultValue={gameData}
+            <CustomCheckboxDropdown
+              name="Select Games"
+              items={gameData}
+              selectedItems={selectedGames}
+              setSelectedItems={setSelectedGames}
             />
           </Box>
         </Box>
@@ -300,7 +274,7 @@ const UserView = ({ userData, gameData }) => {
               />
               <CustomCheckboxDropdown
                 name="Select Miss Tee"
-                items={structuredClone(missTees)}
+                items={missTees}
                 selectedItems={selectedMissTee}
                 setSelectedItems={setSelectedMissTee}
               />
