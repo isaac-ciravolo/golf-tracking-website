@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/header.js";
-import Main from "./components/Main.js";
 import "./styles.css";
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Tab, Tabs, Typography, Grid2 } from "@mui/material";
 import { db } from "./firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
-import UserView from "./components/UserView.js";
+import AdvancedView from "./components/AdvancedView.js";
 import { CustomSelect } from "./components/CustomComponents.js";
+import ParScoreBarChart from "./components/ParScoreBarChart.js";
 function App() {
   const [value, setValue] = useState(0);
   const [users, setUsers] = useState({});
   const [data, setData] = useState({});
-  const [selectedUser, setSelectedUser] = useState("-");
+  const [selectedUserID, setSelectedUserID] = useState("-");
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -50,52 +50,72 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
-      <div style={{ height: "100px" }}></div>
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Box sx={{ width: "200px", marginRight: "50px" }}>
-          <CustomSelect
-            name={"Select User"}
-            onChange={(e) => setSelectedUser(e.target.value)}
-            defaultValue={selectedUser}
-            options={[
-              { value: "-", label: "-" }, // Placeholder option
-              ...Object.keys(users).map((userId) => {
-                return { value: users[userId].name, label: users[userId].name };
-              }),
-            ]}
-          />
-        </Box>
-        <Tabs value={value} onChange={(event, newValue) => setValue(newValue)}>
-          <Tab label="Overview" index={0} />
-          <Tab label="Tee Shot" index={1} />
-          <Tab label="Approach" index={2} />
-          <Tab label="Short Game" index={3} />
-          <Tab label="Advanced" index={4} />
-        </Tabs>
-      </Box>
-
-      {value === 4 &&
-        selectedUser !== "-" &&
-        Object.keys(data).map((userId) => {
-          if (users[userId].name !== selectedUser) return null;
-          return (
-            <UserView
-              key={userId}
-              userData={users[userId]}
-              gameData={data[userId]}
+      <Grid2 spacing={1} container>
+        <Header />
+        <div style={{ height: "100px" }}></div>
+        <ParScoreBarChart />
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+          <Box sx={{ width: 500 }}>
+            <CustomSelect
+              name={"Select User"}
+              onChange={(e) => {
+                Object.keys(data).forEach((userId) => {
+                  if (users[userId].name === e.target.value) {
+                    setSelectedUserID(userId);
+                  }
+                });
+              }}
+              defaultValue={selectedUserID}
+              options={[
+                { value: "-", label: "-" }, // Placeholder option
+                ...Object.keys(users).map((userId) => {
+                  return {
+                    value: users[userId].name,
+                    label: users[userId].name,
+                  };
+                }),
+              ]}
             />
-          );
-        })}
-
-      {/* <Main /> */}
+          </Box>
+        </Box>
+        {selectedUserID !== "-" && (
+          <>
+            <Typography
+              sx={{ width: "100%" }}
+              textAlign="center"
+              variant="h1"
+              fontWeight={"bold"}
+            >
+              {selectedUserID !== "-" && users[selectedUserID].name}
+            </Typography>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Tabs
+                value={value}
+                onChange={(event, newValue) => setValue(newValue)}
+              >
+                <Tab label="Overview" index={0} />
+                <Tab label="Tee Shot" index={1} />
+                <Tab label="Approach" index={2} />
+                <Tab label="Short Game" index={3} />
+                <Tab label="Advanced" index={4} />
+              </Tabs>
+            </Box>
+            {value === 4 && (
+              <AdvancedView
+                userData={users[selectedUserID]}
+                gameData={data[selectedUserID]}
+              />
+            )}
+          </>
+        )}
+      </Grid2>
     </div>
   );
 }

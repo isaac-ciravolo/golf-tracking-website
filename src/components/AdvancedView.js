@@ -47,7 +47,7 @@ const approachShots = [
 ];
 const arr0to9 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-const UserView = ({ userData, gameData }) => {
+const AdvancedView = ({ userData, gameData }) => {
   const [currentHoles, setCurrentHoles] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
   const [parSum, setParSum] = useState(0);
@@ -164,14 +164,6 @@ const UserView = ({ userData, gameData }) => {
   return (
     <Box sx={{ p: 3 }}>
       <Grid2 container spacing={3}>
-        <Typography
-          textAlign="center"
-          variant="h2"
-          sx={{ fontWeight: "bold", width: "100%" }}
-        >
-          {userData.name}
-        </Typography>
-
         <Box sx={{ width: "100%" }}>
           <Typography
             textAlign="center"
@@ -467,4 +459,4 @@ const UserView = ({ userData, gameData }) => {
   );
 };
 
-export default UserView;
+export default AdvancedView;
