@@ -1,12 +1,3 @@
-App Side:
-Course Name isntead of game Name
-date instead of game date
-require johns
-add up and down club
-change dropdowns for misses to area selectors
-    fairway is toggle then left or right box
-    gir is circle with 6 sectors outside 
-
 Web side:
 average first putt distance for gir per club
 fairway hit or miss per club
