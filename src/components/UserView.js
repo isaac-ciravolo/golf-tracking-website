@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
 import HolesView from "./HolesView.js";
-<<<<<<< HEAD
-import { Box, Typography, Grid2 } from "@mui/material";
-=======
 import { Box, Typography, Grid2, Stack } from "@mui/material";
->>>>>>> 95f4f90806b7badcf5d883de026309607fcb514d
 import PieChartView from "./PieChartView.js";
 import {
   CustomSelect,
@@ -38,9 +34,10 @@ const clubs = [
   "Sand Wedge",
 ];
 
-const missTees = ["-", "Left", "Right"];
-const missApproaches = [
+const teeShots = ["-", "Fairway", "Left", "Right"];
+const approachShots = [
   "-",
+  "GIR",
   "Short Left",
   "Left",
   "Short Right",
@@ -62,19 +59,17 @@ const UserView = ({ userData, gameData }) => {
   const [maxYardage, setMaxYardage] = useState(1000);
   const [minScore, setMinScore] = useState(0);
   const [maxScore, setMaxScore] = useState(100);
-  const [selectedTeeShotClubs, setSelectedTeeShotClubs] = useState(
+  const [selectedTeeClubs, setSelectedTeeClubs] = useState(
     structuredClone(clubs)
   );
-  const [fairwaySelection, setFairwaySelection] = useState("Both");
-  const [selectedMissTee, setSelectedMissTee] = useState(
-    structuredClone(missTees)
+  const [selectedTeeShots, setSelectedTeeShots] = useState(
+    structuredClone(teeShots)
   );
   const [selectedApproachClubs, setSelectedApproachClubs] = useState(
     structuredClone(clubs)
   );
-  const [girSelection, setGirSelection] = useState("Both");
-  const [selectedApproachMiss, setSelectedApproachMiss] = useState(
-    structuredClone(missApproaches)
+  const [selectedApproachShots, setSelectedApproachShots] = useState(
+    structuredClone(approachShots)
   );
   const [upAndDownSelection, setUpAndDownSelection] = useState("Both");
   const [selectedPutts, setSelectedPutts] = useState(structuredClone(arr0to9));
@@ -111,7 +106,6 @@ const UserView = ({ userData, gameData }) => {
 
   useEffect(() => {
     const newSelection = [];
-    console.log(selectedGames);
     selectedGames.forEach((game) => {
       game.holes.forEach((hole) => {
         if (selectedPars.indexOf(hole.par) === -1) return;
@@ -119,16 +113,12 @@ const UserView = ({ userData, gameData }) => {
         if (maxYardage < hole.yardage) return;
         if (minScore > hole.score) return;
         if (maxScore < hole.score) return;
-        if (selectedTeeShotClubs.indexOf(hole.club) === -1) return;
-        if (fairwaySelection === "True" && !hole.fairway) return;
-        if (fairwaySelection === "False" && hole.fairway) return;
-        if (selectedMissTee.indexOf(hole.missTee) === -1) return;
-        if (selectedApproachClubs.indexOf(hole.clubHit) === -1) return;
-        if (girSelection === "True" && !hole.gir) return;
-        if (girSelection === "False" && !hole.gir) return;
-        if (selectedApproachMiss.indexOf(hole.missApproach) === -1) return;
-        if (upAndDownSelection === "True" && !hole.upAndDown) return;
-        if (upAndDownSelection === "False" && hole.upAndDown) return;
+        if (selectedTeeClubs.indexOf(hole.teeClub) === -1) return;
+        if (selectedTeeShots.indexOf(hole.teeShot) === -1) return;
+        if (selectedApproachClubs.indexOf(hole.approachClub) === -1) return;
+        if (selectedApproachShots.indexOf(hole.approachShot) === -1) return;
+        if (upAndDownSelection === "True" && hole.upAndDown === "No") return;
+        if (upAndDownSelection === "False" && hole.upAndDown === "Yes") return;
         if (selectedPutts.indexOf(hole.totalPutts) === -1) return;
         if (minFirstPuttDist > hole.firstPuttDist) return;
         if (maxFirstPuttDist < hole.firstPuttDist) return;
@@ -146,12 +136,10 @@ const UserView = ({ userData, gameData }) => {
     maxYardage,
     minScore,
     maxScore,
-    selectedTeeShotClubs,
-    fairwaySelection,
-    selectedMissTee,
+    selectedTeeClubs,
+    selectedTeeShots,
     selectedApproachClubs,
-    girSelection,
-    selectedApproachMiss,
+    selectedApproachShots,
     upAndDownSelection,
     selectedPutts,
     minFirstPuttDist,
@@ -226,61 +214,6 @@ const UserView = ({ userData, gameData }) => {
           </Typography>
         </Box>
 
-<<<<<<< HEAD
-        <Box sx={{ width: "100%" }}>
-          <CustomSelect
-            name="Select Game"
-            options={[
-              { value: gameData, label: "All Games" },
-              ...gameData.map((game) => {
-                return {
-                  value: game.id,
-                  label:
-                    game.title +
-                    " - " +
-                    formatDateFromMilliseconds(game.gameDate),
-                };
-              }),
-            ]}
-            onChange={(e) => {
-              if (e.target.value == gameData) {
-                setSelectedGames(gameData);
-                return;
-              }
-              const selectedGame = gameData.find(
-                (game) => game.id == e.target.value
-              );
-              setSelectedGames([selectedGame]);
-            }}
-            defaultValue={gameData}
-          />
-
-          <CustomSelect
-            name="Select GIR"
-            options={[
-              { value: "Both", label: "Both" },
-              { value: "True", label: "True" },
-              { value: "False", label: "False" },
-            ]}
-            onChange={(e) => {
-              setGirSelection(e.target.value);
-            }}
-            defaultValue={girSelection}
-          />
-
-          <CustomSelect
-            name="Select Fairway"
-            options={[
-              { value: "Both", label: "Both" },
-              { value: "True", label: "True" },
-              { value: "False", label: "False" },
-            ]}
-            onChange={(e) => {
-              setFairwaySelection(e.target.value);
-            }}
-            defaultValue={fairwaySelection}
-          />
-=======
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <Box sx={{ width: "500px" }}>
             <CustomCheckboxDropdown
@@ -290,7 +223,6 @@ const UserView = ({ userData, gameData }) => {
               setSelectedItems={setSelectedGames}
             />
           </Box>
->>>>>>> 95f4f90806b7badcf5d883de026309607fcb514d
         </Box>
 
         <Grid2 container spacing={5} sx={{ width: "100%" }}>
@@ -329,26 +261,14 @@ const UserView = ({ userData, gameData }) => {
               <CustomCheckboxDropdown
                 name="Select Tee Shot Clubs"
                 items={clubs}
-                selectedItems={selectedTeeShotClubs}
-                setSelectedItems={setSelectedTeeShotClubs}
+                selectedItems={selectedTeeClubs}
+                setSelectedItems={setSelectedTeeClubs}
               />
               <CustomCheckboxDropdown
                 name="Select Miss Tee"
-                items={missTees}
-                selectedItems={selectedMissTee}
-                setSelectedItems={setSelectedMissTee}
-              />
-              <CustomSelect
-                name="Select Fairway"
-                options={[
-                  { value: "Both", label: "Both" },
-                  { value: "True", label: "True" },
-                  { value: "False", label: "False" },
-                ]}
-                onChange={(e) => {
-                  setFairwaySelection(e.target.value);
-                }}
-                defaultValue={fairwaySelection}
+                items={teeShots}
+                selectedItems={selectedTeeShots}
+                setSelectedItems={setSelectedTeeShots}
               />
               <CustomCheckboxDropdown
                 name="Select Approach Clubs"
@@ -356,27 +276,15 @@ const UserView = ({ userData, gameData }) => {
                 selectedItems={selectedApproachClubs}
                 setSelectedItems={setSelectedApproachClubs}
               />
-              <CustomSelect
-                name="Select GIR"
-                options={[
-                  { value: "Both", label: "Both" },
-                  { value: "True", label: "True" },
-                  { value: "False", label: "False" },
-                ]}
-                onChange={(e) => {
-                  setGirSelection(e.target.value);
-                }}
-                defaultValue={girSelection}
-              />
             </Stack>
           </Grid2>
           <Grid2 size={3}>
             <Stack spacing={1}>
               <CustomCheckboxDropdown
                 name="Select Approach Miss"
-                items={missApproaches}
-                selectedItems={selectedApproachMiss}
-                setSelectedItems={setSelectedApproachMiss}
+                items={approachShots}
+                selectedItems={selectedApproachShots}
+                setSelectedItems={setSelectedApproachShots}
               />
               <CustomSelect
                 name="Select Up and Down"
@@ -454,34 +362,17 @@ const UserView = ({ userData, gameData }) => {
               return {
                 id: club,
                 label: club,
-                value: getCount(currentHoles, { club: club }),
+                value: getCount(currentHoles, { teeClub: club }),
               };
             })}
           />
           <PieChartView
-            title="Fairway"
-            data={[
-              {
-                id: 0,
-                label: "Yes",
-                value: getCount(currentHoles, { fairway: true }),
-                color: "#468f15",
-              },
-              {
-                id: 1,
-                label: "No",
-                value: getCount(currentHoles, { fairway: false }),
-                color: "#94042b",
-              },
-            ]}
-          />
-          <PieChartView
             title="Fairway Miss Direction"
-            data={missTees.map((miss) => {
+            data={teeShots.map((shot) => {
               return {
-                id: miss,
-                label: miss,
-                value: getCount(currentHoles, { missTee: miss }),
+                id: shot,
+                label: shot,
+                value: getCount(currentHoles, { teeShot: shot }),
               };
             })}
           />
@@ -491,34 +382,17 @@ const UserView = ({ userData, gameData }) => {
               return {
                 id: club,
                 label: club,
-                value: getCount(currentHoles, { clubHit: club }),
+                value: getCount(currentHoles, { approachClub: club }),
               };
             })}
           />
           <PieChartView
-            title="Green in Regulation"
-            data={[
-              {
-                id: 0,
-                label: "Yes",
-                value: getCount(currentHoles, { gir: true }),
-                color: "#468f15",
-              },
-              {
-                id: 1,
-                label: "No",
-                value: getCount(currentHoles, { gir: false }),
-                color: "#94042b",
-              },
-            ]}
-          />
-          <PieChartView
             title="Approach Miss Direction"
-            data={missApproaches.map((miss) => {
+            data={approachShots.map((shot) => {
               return {
-                id: miss,
-                label: miss,
-                value: getCount(currentHoles, { missApproach: miss }),
+                id: shot,
+                label: shot,
+                value: getCount(currentHoles, { approachShot: shot }),
               };
             })}
           />
@@ -528,14 +402,20 @@ const UserView = ({ userData, gameData }) => {
               {
                 id: 0,
                 label: "Yes",
-                value: getCount(currentHoles, { upAndDown: true }),
+                value: getCount(currentHoles, { upAndDown: "Yes" }),
                 color: "#468f15",
               },
               {
                 id: 1,
                 label: "No",
-                value: getCount(currentHoles, { upAndDown: false }),
+                value: getCount(currentHoles, { upAndDown: "No" }),
                 color: "#94042b",
+              },
+              {
+                id: 2,
+                label: "-",
+                value: getCount(currentHoles, { upAndDown: "-" }),
+                color: "#a0a0a0",
               },
             ]}
           />
