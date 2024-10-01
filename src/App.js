@@ -5,8 +5,9 @@ import { Box, Tab, Tabs, Typography, Grid2 } from "@mui/material";
 import { db } from "./firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
 import AdvancedView from "./components/AdvancedView.js";
+import TeeShotView from "./components/TeeShotView.js";
 import { CustomSelect } from "./components/CustomComponents.js";
-import ParScoreBarChart from "./components/ParScoreBarChart.js";
+
 function App() {
   const [value, setValue] = useState(0);
   const [users, setUsers] = useState({});
@@ -53,7 +54,7 @@ function App() {
       <Grid2 spacing={1} container>
         <Header />
         <div style={{ height: "100px" }}></div>
-        <ParScoreBarChart />
+        {/* <ParScoreBarChart /> */}
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <Box sx={{ width: 500 }}>
             <CustomSelect
@@ -107,6 +108,12 @@ function App() {
                 <Tab label="Advanced" index={4} />
               </Tabs>
             </Box>
+            {value === 1 && (
+              <TeeShotView
+                userData={users[selectedUserID]}
+                gameData={data[selectedUserID]}
+              />
+            )}
             {value === 4 && (
               <AdvancedView
                 userData={users[selectedUserID]}
