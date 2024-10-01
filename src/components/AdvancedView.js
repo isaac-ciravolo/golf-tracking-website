@@ -47,9 +47,8 @@ const approachShots = [
 ];
 const arr0to9 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-const AdvancedView = ({ userData, gameData }) => {
-  const [currentHoles, setCurrentHoles] = useState([]);
-  const [selectedGames, setSelectedGames] = useState([]);
+const AdvancedView = ({ currentHoles }) => {
+  const [filteredHoles, setFilteredHoles] = useState([]);
   const [parSum, setParSum] = useState(0);
   const [yardAverage, setYardAverage] = useState(0);
   const [totalPutts, setTotalPutts] = useState(0);
@@ -82,16 +81,12 @@ const AdvancedView = ({ userData, gameData }) => {
     useState(structuredClone(arr0to9));
 
   useEffect(() => {
-    setSelectedGames(gameData);
-  }, [gameData]);
-
-  useEffect(() => {
     let pSum = 0;
     let tPutts = 0;
     let fPuttDistAvg = 0;
     let yAvg = 0;
-    for (let i = 0; i < currentHoles.length; i++) {
-      const hole = currentHoles[i];
+    for (let i = 0; i < filteredHoles.length; i++) {
+      const hole = filteredHoles[i];
       pSum += hole.par;
       tPutts += hole.totalPutts;
       fPuttDistAvg += hole.firstPuttDist;
@@ -99,38 +94,36 @@ const AdvancedView = ({ userData, gameData }) => {
     }
 
     setParSum(pSum);
-    setYardAverage(yAvg / currentHoles.length);
+    setYardAverage(yAvg / filteredHoles.length);
     setTotalPutts(tPutts);
-    setFirstPuttDistAvg(fPuttDistAvg / currentHoles.length);
-  }, [currentHoles]);
+    setFirstPuttDistAvg(fPuttDistAvg / filteredHoles.length);
+  }, [filteredHoles]);
 
   useEffect(() => {
     const newSelection = [];
-    selectedGames.forEach((game) => {
-      game.holes.forEach((hole) => {
-        if (selectedPars.indexOf(hole.par) === -1) return;
-        if (minYardage > hole.yardage) return;
-        if (maxYardage < hole.yardage) return;
-        if (minScore > hole.score) return;
-        if (maxScore < hole.score) return;
-        if (selectedTeeClubs.indexOf(hole.teeClub) === -1) return;
-        if (selectedTeeShots.indexOf(hole.teeShot) === -1) return;
-        if (selectedApproachClubs.indexOf(hole.approachClub) === -1) return;
-        if (selectedApproachShots.indexOf(hole.approachShot) === -1) return;
-        if (upAndDownSelection === "True" && hole.upAndDown === "No") return;
-        if (upAndDownSelection === "False" && hole.upAndDown === "Yes") return;
-        if (selectedPutts.indexOf(hole.totalPutts) === -1) return;
-        if (minFirstPuttDist > hole.firstPuttDist) return;
-        if (maxFirstPuttDist < hole.firstPuttDist) return;
-        if (selectedPenaltyStrokes.indexOf(hole.penaltyStrokes) === -1) return;
-        if (selectedShotsInside100Yards.indexOf(hole.shotsInside100) === -1)
-          return;
-        newSelection.push(hole);
-      });
+    currentHoles.forEach((hole) => {
+      if (selectedPars.indexOf(hole.par) === -1) return;
+      if (minYardage > hole.yardage) return;
+      if (maxYardage < hole.yardage) return;
+      if (minScore > hole.score) return;
+      if (maxScore < hole.score) return;
+      if (selectedTeeClubs.indexOf(hole.teeClub) === -1) return;
+      if (selectedTeeShots.indexOf(hole.teeShot) === -1) return;
+      if (selectedApproachClubs.indexOf(hole.approachClub) === -1) return;
+      if (selectedApproachShots.indexOf(hole.approachShot) === -1) return;
+      if (upAndDownSelection === "True" && hole.upAndDown === "No") return;
+      if (upAndDownSelection === "False" && hole.upAndDown === "Yes") return;
+      if (selectedPutts.indexOf(hole.totalPutts) === -1) return;
+      if (minFirstPuttDist > hole.firstPuttDist) return;
+      if (maxFirstPuttDist < hole.firstPuttDist) return;
+      if (selectedPenaltyStrokes.indexOf(hole.penaltyStrokes) === -1) return;
+      if (selectedShotsInside100Yards.indexOf(hole.shotsInside100) === -1)
+        return;
+      newSelection.push(hole);
     });
-    setCurrentHoles(newSelection);
+    setFilteredHoles(newSelection);
   }, [
-    selectedGames,
+    currentHoles,
     selectedPars,
     minYardage,
     maxYardage,
@@ -178,7 +171,7 @@ const AdvancedView = ({ userData, gameData }) => {
             variant="h6"
             sx={{ width: "100%", fontWeight: "bold" }}
           >
-            Number of Holes: {currentHoles.length}
+            Number of Holes: {filteredHoles.length}
           </Typography>
 
           <Typography
@@ -204,17 +197,6 @@ const AdvancedView = ({ userData, gameData }) => {
           >
             Average First Putt Distance: {firstPuttDistAvg.toFixed(2)}
           </Typography>
-        </Box>
-
-        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-          <Box sx={{ width: "500px" }}>
-            <CustomCheckboxDropdown
-              name="Select Games"
-              items={gameData}
-              selectedItems={selectedGames}
-              setSelectedItems={setSelectedGames}
-            />
-          </Box>
         </Box>
 
         <Grid2 container spacing={5} sx={{ width: "100%" }}>
@@ -333,7 +315,7 @@ const AdvancedView = ({ userData, gameData }) => {
               return {
                 id: par,
                 label: par.toString(),
-                value: getCount(currentHoles, { par: par }),
+                value: getCount(filteredHoles, { par: par }),
               };
             })}
           />
@@ -343,7 +325,7 @@ const AdvancedView = ({ userData, gameData }) => {
               return {
                 id: score,
                 label: score.toString(),
-                value: getCount(currentHoles, { score: score }),
+                value: getCount(filteredHoles, { score: score }),
               };
             })}
           />
@@ -354,7 +336,7 @@ const AdvancedView = ({ userData, gameData }) => {
               return {
                 id: club,
                 label: club,
-                value: getCount(currentHoles, { teeClub: club }),
+                value: getCount(filteredHoles, { teeClub: club }),
               };
             })}
           />
@@ -364,7 +346,7 @@ const AdvancedView = ({ userData, gameData }) => {
               return {
                 id: shot,
                 label: shot,
-                value: getCount(currentHoles, { teeShot: shot }),
+                value: getCount(filteredHoles, { teeShot: shot }),
               };
             })}
           />
@@ -374,7 +356,7 @@ const AdvancedView = ({ userData, gameData }) => {
               return {
                 id: club,
                 label: club,
-                value: getCount(currentHoles, { approachClub: club }),
+                value: getCount(filteredHoles, { approachClub: club }),
               };
             })}
           />
@@ -384,7 +366,7 @@ const AdvancedView = ({ userData, gameData }) => {
               return {
                 id: shot,
                 label: shot,
-                value: getCount(currentHoles, { approachShot: shot }),
+                value: getCount(filteredHoles, { approachShot: shot }),
               };
             })}
           />
@@ -394,19 +376,19 @@ const AdvancedView = ({ userData, gameData }) => {
               {
                 id: 0,
                 label: "Yes",
-                value: getCount(currentHoles, { upAndDown: "Yes" }),
+                value: getCount(filteredHoles, { upAndDown: "Yes" }),
                 color: "#468f15",
               },
               {
                 id: 1,
                 label: "No",
-                value: getCount(currentHoles, { upAndDown: "No" }),
+                value: getCount(filteredHoles, { upAndDown: "No" }),
                 color: "#94042b",
               },
               {
                 id: 2,
                 label: "-",
-                value: getCount(currentHoles, { upAndDown: "-" }),
+                value: getCount(filteredHoles, { upAndDown: "-" }),
                 color: "#a0a0a0",
               },
             ]}
@@ -418,7 +400,7 @@ const AdvancedView = ({ userData, gameData }) => {
               return {
                 id: putt,
                 label: putt.toString(),
-                value: getCount(currentHoles, {
+                value: getCount(filteredHoles, {
                   totalPutts: putt,
                 }),
               };
@@ -431,7 +413,7 @@ const AdvancedView = ({ userData, gameData }) => {
               return {
                 id: penalty,
                 label: penalty.toString(),
-                value: getCount(currentHoles, {
+                value: getCount(filteredHoles, {
                   penaltyStrokes: penalty,
                 }),
               };
@@ -443,17 +425,13 @@ const AdvancedView = ({ userData, gameData }) => {
               return {
                 id: shots,
                 label: shots.toString(),
-                value: getCount(currentHoles, {
+                value: getCount(filteredHoles, {
                   shotsInside100: shots,
                 }),
               };
             })}
           />
         </Grid2>
-
-        {selectedGames && selectedGames.length === 1 && (
-          <HolesView holes={currentHoles} />
-        )}
       </Grid2>
     </Box>
   );

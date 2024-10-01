@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   TextField,
@@ -137,6 +137,10 @@ export const CustomCheckboxDropdown = ({
     const value = event.target.value;
     setSelectedItems(value);
   };
+
+  useEffect(() => {
+    console.log(items);
+  }, [items]);
 
   return (
     <Box display="flex" alignItems="center" gap={2} sx={{ height: "30px" }}>

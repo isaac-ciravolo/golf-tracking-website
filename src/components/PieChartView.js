@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Typography, Grid2 } from "@mui/material";
 import { PieChart } from "@mui/x-charts";
-const PieChartView = ({ title, data }) => {
+const PieChartView = ({ title, data, half = false }) => {
   const [pieChartData, setPieChartData] = useState([]);
   useEffect(() => {
     const newData = [];
@@ -33,6 +33,10 @@ const PieChartView = ({ title, data }) => {
               arcLabel: (item) => item.value.toString(),
               arcLabelMinAngle: 40,
               arcLabelRadius: "60%",
+              ...(half && {
+                startAngle: -90,
+                endAngle: 90,
+              }),
               data: pieChartData,
             },
           ]}

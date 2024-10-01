@@ -6,13 +6,18 @@ import { db } from "./firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
 import AdvancedView from "./components/AdvancedView.js";
 import TeeShotView from "./components/TeeShotView.js";
-import { CustomSelect } from "./components/CustomComponents.js";
+import {
+  CustomSelect,
+  CustomCheckboxDropdown,
+} from "./components/CustomComponents.js";
 
 function App() {
   const [value, setValue] = useState(0);
   const [users, setUsers] = useState({});
   const [data, setData] = useState({});
   const [selectedUserID, setSelectedUserID] = useState("-");
+  const [currentHoles, setCurrentHoles] = useState([]);
+  const [selectedGames, setSelectedGames] = useState([]);
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -49,19 +54,42 @@ function App() {
     fetchGames();
   }, []);
 
+  useEffect(() => {
+    const newCurrentHoles = [];
+    selectedGames.forEach((game) => {
+      game.holes.forEach((hole) => {
+        newCurrentHoles.push(hole);
+      });
+    });
+    setCurrentHoles(newCurrentHoles);
+  }, [selectedGames]);
+
+  useEffect(() => {
+    if (data[selectedUserID]) {
+      console.log(data[selectedUserID][0]);
+      console.log(
+        data[selectedUserID].map((game) => {
+          return {
+            value: game,
+            label: game.title,
+          };
+        })
+      );
+    }
+  }, [selectedUserID]);
+
   return (
     <div className="App">
       <Grid2 spacing={1} container>
         <Header />
         <div style={{ height: "100px" }}></div>
-        {/* <ParScoreBarChart /> */}
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <Box sx={{ width: 500 }}>
             <CustomSelect
               name={"Select User"}
               onChange={(e) => {
                 Object.keys(data).forEach((userId) => {
-                  if (users[userId].name === e.target.value) {
+                  if (userId === e.target.value) {
                     setSelectedUserID(userId);
                   }
                 });
@@ -71,12 +99,20 @@ function App() {
                 { value: "-", label: "-" }, // Placeholder option
                 ...Object.keys(users).map((userId) => {
                   return {
-                    value: users[userId].name,
+                    value: userId,
                     label: users[userId].name,
                   };
                 }),
               ]}
             />
+            {data[selectedUserID] && (
+              <CustomCheckboxDropdown
+                name="Select Games"
+                items={data[selectedUserID]}
+                selectedItems={selectedGames}
+                setSelectedItems={setSelectedGames}
+              />
+            )}
           </Box>
         </Box>
         {selectedUserID !== "-" && (
@@ -108,18 +144,8 @@ function App() {
                 <Tab label="Advanced" index={4} />
               </Tabs>
             </Box>
-            {value === 1 && (
-              <TeeShotView
-                userData={users[selectedUserID]}
-                gameData={data[selectedUserID]}
-              />
-            )}
-            {value === 4 && (
-              <AdvancedView
-                userData={users[selectedUserID]}
-                gameData={data[selectedUserID]}
-              />
-            )}
+            {value === 1 && <TeeShotView currentHoles={currentHoles} />}
+            {value === 4 && <AdvancedView currentHoles={currentHoles} />}
           </>
         )}
       </Grid2>
