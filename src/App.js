@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/header.js";
 import "./styles.css";
-import { Box, Tab, Tabs, Typography, Grid2 } from "@mui/material";
+import {
+  Box,
+  Tab,
+  Tabs,
+  Typography,
+  Grid2,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
 import { db } from "./firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
 import AdvancedView from "./components/AdvancedView.js";
@@ -10,6 +18,16 @@ import {
   CustomSelect,
   CustomCheckboxDropdown,
 } from "./components/CustomComponents.js";
+
+const theme = createTheme({
+  components: {
+    MuiPaper: {
+      defaultProps: {
+        elevation: 4,
+      },
+    },
+  },
+});
 
 function App() {
   const [value, setValue] = useState(0);
@@ -65,90 +83,84 @@ function App() {
   }, [selectedGames]);
 
   useEffect(() => {
-    if (data[selectedUserID]) {
-      console.log(data[selectedUserID][0]);
-      console.log(
-        data[selectedUserID].map((game) => {
-          return {
-            value: game,
-            label: game.title,
-          };
-        })
-      );
-    }
+    if (data[selectedUserID]) setSelectedGames(data[selectedUserID]);
   }, [selectedUserID]);
 
   return (
     <div className="App">
-      <Grid2 spacing={1} container>
-        <Header />
-        <div style={{ height: "100px" }}></div>
-        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-          <Box sx={{ width: 500 }}>
-            <CustomSelect
-              name={"Select User"}
-              onChange={(e) => {
-                Object.keys(data).forEach((userId) => {
-                  if (userId === e.target.value) {
-                    setSelectedUserID(userId);
-                  }
-                });
-              }}
-              defaultValue={selectedUserID}
-              options={[
-                { value: "-", label: "-" }, // Placeholder option
-                ...Object.keys(users).map((userId) => {
-                  return {
-                    value: userId,
-                    label: users[userId].name,
-                  };
-                }),
-              ]}
-            />
-            {data[selectedUserID] && (
-              <CustomCheckboxDropdown
-                name="Select Games"
-                items={data[selectedUserID]}
-                selectedItems={selectedGames}
-                setSelectedItems={setSelectedGames}
+      <ThemeProvider theme={theme}>
+        <Grid2 spacing={1} container>
+          <Header />
+          <div style={{ height: "100px" }}></div>
+          <Box
+            sx={{ width: "100%", display: "flex", justifyContent: "center" }}
+          >
+            <Box sx={{ width: 500 }}>
+              <CustomSelect
+                name={"Select User"}
+                onChange={(e) => {
+                  Object.keys(data).forEach((userId) => {
+                    if (userId === e.target.value) {
+                      setSelectedUserID(userId);
+                    }
+                  });
+                }}
+                defaultValue={selectedUserID}
+                options={[
+                  { value: "-", label: "-" }, // Placeholder option
+                  ...Object.keys(users).map((userId) => {
+                    return {
+                      value: userId,
+                      label: users[userId].name,
+                    };
+                  }),
+                ]}
               />
-            )}
-          </Box>
-        </Box>
-        {selectedUserID !== "-" && (
-          <>
-            <Typography
-              sx={{ width: "100%" }}
-              textAlign="center"
-              variant="h1"
-              fontWeight={"bold"}
-            >
-              {selectedUserID !== "-" && users[selectedUserID].name}
-            </Typography>
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Tabs
-                value={value}
-                onChange={(event, newValue) => setValue(newValue)}
-              >
-                <Tab label="Overview" index={0} />
-                <Tab label="Tee Shot" index={1} />
-                <Tab label="Approach" index={2} />
-                <Tab label="Short Game" index={3} />
-                <Tab label="Advanced" index={4} />
-              </Tabs>
+              {data[selectedUserID] && (
+                <CustomCheckboxDropdown
+                  name="Select Games"
+                  items={data[selectedUserID]}
+                  selectedItems={selectedGames}
+                  setSelectedItems={setSelectedGames}
+                />
+              )}
             </Box>
-            {value === 1 && <TeeShotView currentHoles={currentHoles} />}
-            {value === 4 && <AdvancedView currentHoles={currentHoles} />}
-          </>
-        )}
-      </Grid2>
+          </Box>
+          {selectedUserID !== "-" && (
+            <>
+              <Typography
+                sx={{ width: "100%" }}
+                textAlign="center"
+                variant="h1"
+                fontWeight={"bold"}
+              >
+                {selectedUserID !== "-" && users[selectedUserID].name}
+              </Typography>
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Tabs
+                  value={value}
+                  onChange={(event, newValue) => setValue(newValue)}
+                >
+                  <Tab label="Overview" index={0} />
+                  <Tab label="Tee Shot" index={1} />
+                  <Tab label="Approach" index={2} />
+                  <Tab label="Short Game" index={3} />
+                  <Tab label="Advanced" index={4} />
+                </Tabs>
+              </Box>
+              {value === 1 && <TeeShotView currentHoles={currentHoles} />}
+              {value === 4 && <AdvancedView currentHoles={currentHoles} />}
+            </>
+          )}
+        </Grid2>
+      </ThemeProvider>
     </div>
   );
 }

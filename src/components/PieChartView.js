@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Typography, Grid2 } from "@mui/material";
 import { PieChart } from "@mui/x-charts";
+import BigPieChart from "./BigPieChart.js";
 const PieChartView = ({ title, data, half = false }) => {
   const [pieChartData, setPieChartData] = useState([]);
   useEffect(() => {

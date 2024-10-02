@@ -95,7 +95,12 @@ export const CustomCheckBox = ({
 export const CustomSelect = ({ name, onChange, defaultValue, options }) => {
   const classes = useStyles();
   return (
-    <Box display="flex" alignItems="center" gap={2} sx={{ height: "30px" }}>
+    <Box
+      display="flex"
+      alignItems="center"
+      gap={2}
+      sx={{ height: "30px", zIndex: 100 }}
+    >
       <Box className={classes.labelContainer}>
         <Typography className={classes.label}>{name}</Typography>
       </Box>
@@ -110,15 +115,18 @@ export const CustomSelect = ({ name, onChange, defaultValue, options }) => {
           onChange={onChange}
           fullWidth
         >
-          {options.map((option) => (
-            <MenuItem
-              key={option.value}
-              value={option.value}
-              sx={{ fontSize: "12px" }}
-            >
-              {option.label}
-            </MenuItem>
-          ))}
+          {options.map(
+            (option) =>
+              option && (
+                <MenuItem
+                  key={option.value}
+                  value={option.value}
+                  sx={{ fontSize: "12px" }}
+                >
+                  {option.label}
+                </MenuItem>
+              )
+          )}
         </TextField>
       </Box>
     </Box>
@@ -137,10 +145,6 @@ export const CustomCheckboxDropdown = ({
     const value = event.target.value;
     setSelectedItems(value);
   };
-
-  useEffect(() => {
-    console.log(items);
-  }, [items]);
 
   return (
     <Box display="flex" alignItems="center" gap={2} sx={{ height: "30px" }}>
