@@ -99,7 +99,7 @@ export const CustomSelect = ({ name, onChange, defaultValue, options }) => {
       display="flex"
       alignItems="center"
       gap={2}
-      sx={{ height: "30px", zIndex: 100 }}
+      sx={{ width: "100%", height: "30px", zIndex: 100 }}
     >
       <Box className={classes.labelContainer}>
         <Typography className={classes.label}>{name}</Typography>
@@ -143,11 +143,17 @@ export const CustomCheckboxDropdown = ({
 
   const handleChange = (event) => {
     const value = event.target.value;
+    console.log("value: ", value);
     setSelectedItems(value);
   };
 
   return (
-    <Box display="flex" alignItems="center" gap={2} sx={{ height: "30px" }}>
+    <Box
+      display="flex"
+      alignItems="center"
+      gap={2}
+      sx={{ width: "100%", height: "30px" }}
+    >
       <Box className={classes.labelContainer}>
         <Typography className={classes.label}>{name}</Typography>
       </Box>
@@ -164,43 +170,26 @@ export const CustomCheckboxDropdown = ({
             onChange={handleChange}
             renderValue={(selected) => `${selected.length} selected`}
           >
+            <MenuItem key={"Select All"} value={"Select All"}>
+              <Button variant="contained" onClick={() => {}} fullWidth>
+                Select All
+              </Button>
+            </MenuItem>
+            <MenuItem key={"Deselect All"} value={"Deselect All"}>
+              <Button variant="contained" onClick={() => {}} fullWidth>
+                Deselect All
+              </Button>
+            </MenuItem>
             {items.map((item) => (
-              <MenuItem key={item} value={item} sx={{ width: "100%" }}>
+              <MenuItem key={item} value={item}>
                 <CustomCheckBox
                   name={item.title ? item.title : item}
                   onChange={() => {}}
-                  defaultValue={selectedItems.indexOf(item) > -1}
+                  defaultValufe={selectedItems.indexOf(item) > -1}
                   isDynamic={true}
                 />
               </MenuItem>
             ))}
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Box sx={{ width: "95%", margin: "5px" }}>
-                <Button
-                  variant="contained"
-                  onClick={() => setSelectedItems(items)}
-                  fullWidth
-                >
-                  Select All
-                </Button>
-              </Box>
-              <Box sx={{ width: "95%", margin: "5px" }}>
-                <Button
-                  variant="contained"
-                  onClick={() => setSelectedItems([])}
-                  fullWidth
-                >
-                  Deselect All
-                </Button>
-              </Box>
-            </Box>
           </Select>
         </FormControl>
       </Box>

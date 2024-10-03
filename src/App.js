@@ -75,9 +75,10 @@ function App() {
   useEffect(() => {
     const newCurrentHoles = [];
     selectedGames.forEach((game) => {
-      game.holes.forEach((hole) => {
-        newCurrentHoles.push(hole);
-      });
+      if (game && game.holes)
+        game.holes.forEach((hole) => {
+          newCurrentHoles.push(hole);
+        });
     });
     setCurrentHoles(newCurrentHoles);
   }, [selectedGames]);
@@ -95,7 +96,16 @@ function App() {
           <Box
             sx={{ width: "100%", display: "flex", justifyContent: "center" }}
           >
-            <Box sx={{ width: 500 }}>
+            <Box
+              sx={{
+                width: 500,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                gap: 2,
+              }}
+            >
               <CustomSelect
                 name={"Select User"}
                 onChange={(e) => {
