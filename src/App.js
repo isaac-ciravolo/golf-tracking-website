@@ -59,6 +59,7 @@ function App() {
               userId: userDoc.id,
             });
           });
+          userGames.sort((a, b) => a.gameDate - b.gameDate);
           setData((prevData) => ({
             ...prevData,
             [userDoc.id]: userGames,
@@ -132,6 +133,7 @@ function App() {
                   items={data[selectedUserID]}
                   selectedItems={selectedGames}
                   setSelectedItems={setSelectedGames}
+                  includeTop10={true}
                 />
               )}
             </Box>

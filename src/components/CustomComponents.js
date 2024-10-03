@@ -99,7 +99,7 @@ export const CustomSelect = ({ name, onChange, defaultValue, options }) => {
       display="flex"
       alignItems="center"
       gap={2}
-      sx={{ width: "100%", height: "30px", zIndex: 100 }}
+      sx={{ width: "100%", height: "30px" }}
     >
       <Box className={classes.labelContainer}>
         <Typography className={classes.label}>{name}</Typography>
@@ -138,12 +138,12 @@ export const CustomCheckboxDropdown = ({
   selectedItems,
   setSelectedItems,
   items,
+  includeTop10 = false,
 }) => {
   const classes = useStyles();
 
   const handleChange = (event) => {
     const value = event.target.value;
-    console.log("value: ", value);
     setSelectedItems(value);
   };
 
@@ -170,26 +170,56 @@ export const CustomCheckboxDropdown = ({
             onChange={handleChange}
             renderValue={(selected) => `${selected.length} selected`}
           >
-            <MenuItem key={"Select All"} value={"Select All"}>
-              <Button variant="contained" onClick={() => {}} fullWidth>
-                Select All
-              </Button>
-            </MenuItem>
-            <MenuItem key={"Deselect All"} value={"Deselect All"}>
-              <Button variant="contained" onClick={() => {}} fullWidth>
-                Deselect All
-              </Button>
-            </MenuItem>
             {items.map((item) => (
               <MenuItem key={item} value={item}>
                 <CustomCheckBox
                   name={item.title ? item.title : item}
                   onChange={() => {}}
-                  defaultValufe={selectedItems.indexOf(item) > -1}
+                  defaultValue={selectedItems.indexOf(item) > -1}
                   isDynamic={true}
                 />
               </MenuItem>
             ))}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                p: 2,
+              }}
+            >
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setSelectedItems(items);
+                }}
+                fullWidth
+              >
+                Select All
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setSelectedItems([]);
+                }}
+                fullWidth
+              >
+                Deselect All
+              </Button>
+              {includeTop10 && (
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setSelectedItems(
+                      items.slice(0, Math.min(10, items.length))
+                    );
+                  }}
+                  fullWidth
+                >
+                  Select Recent 10
+                </Button>
+              )}
+            </Box>
           </Select>
         </FormControl>
       </Box>
