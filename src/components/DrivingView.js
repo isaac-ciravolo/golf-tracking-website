@@ -1,43 +1,12 @@
 import React, { useState, useEffect } from "react";
-import HolesView from "./HolesView.js";
 import { Box, Grid2, Paper, Typography } from "@mui/material";
-import { PieChart } from "@mui/x-charts";
-import {
-  CustomSelect,
-  CustomNumberInput,
-  CustomCheckboxDropdown,
-} from "./CustomComponents.js";
-import BigPieChart from "./BigPieChart.js";
+import { CustomSelect } from "./CustomComponents.js";
 import PercentBox from "./PercentBox.js";
+import HalfPizzaGraph from "./HalfPizzaGraph.js";
 
-const clubs = [
-  "-",
-  "Driver",
-  "3-Wood",
-  "4-Wood",
-  "5-Wood",
-  "7-Wood",
-  "2-Hybrid",
-  "3-Hybrid",
-  "4-Hybrid",
-  "5-Hybrid",
-  "2-Iron",
-  "3-Iron",
-  "4-Iron",
-  "5-Iron",
-  "6-Iron",
-  "7-Iron",
-  "8-Iron",
-  "9-Iron",
-  "Pitching Wedge",
-  "Gap/Approach Wedge",
-  "Lob Wedge",
-  "Sand Wedge",
-];
+import { clubs, colors } from "../util/Constants.js";
 
-const teeShots = ["-", "Left", "Fairway", "Right"];
-
-const TeeShotView = ({ currentHoles }) => {
+const DrivingView = ({ currentHoles }) => {
   useEffect(() => {}, [currentHoles]);
   const [selectedClub, setSelectedClub] = useState("-");
   const [numLeft, setNumLeft] = useState(0);
@@ -141,12 +110,15 @@ const TeeShotView = ({ currentHoles }) => {
             gap: 3,
           }}
         >
-          <BigPieChart
-            title=""
-            data={[
-              { value: numLeft, label: "Missed Left", color: "blue" },
-              { value: numFairway, label: "Fairway", color: "green" },
-              { value: numRight, label: "Missed Right", color: "red" },
+          <HalfPizzaGraph
+            sliceData={[
+              { value: numLeft, label: "Missed Left", color: colors["Left"] },
+              { value: numFairway, label: "Fairway", color: colors["Fairway"] },
+              {
+                value: numRight,
+                label: "Missed Right",
+                color: colors["Right"],
+              },
             ]}
           />
           <Box
@@ -180,4 +152,4 @@ const TeeShotView = ({ currentHoles }) => {
   );
 };
 
-export default TeeShotView;
+export default DrivingView;

@@ -12,8 +12,9 @@ import {
 } from "@mui/material";
 import { db } from "./firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
+import DrivingView from "./components/DrivingView.js";
+import ApproachView from "./components/ApproachView.js";
 import AdvancedView from "./components/AdvancedView.js";
-import TeeShotView from "./components/TeeShotView.js";
 import {
   CustomSelect,
   CustomCheckboxDropdown,
@@ -138,6 +139,7 @@ function App() {
               )}
             </Box>
           </Box>
+
           {selectedUserID !== "-" && (
             <>
               <Typography
@@ -161,13 +163,14 @@ function App() {
                   onChange={(event, newValue) => setValue(newValue)}
                 >
                   <Tab label="Overview" index={0} />
-                  <Tab label="Tee Shot" index={1} />
+                  <Tab label="Driving" index={1} />
                   <Tab label="Approach" index={2} />
-                  <Tab label="Short Game" index={3} />
+                  <Tab label="Green" index={3} />
                   <Tab label="Advanced" index={4} />
                 </Tabs>
               </Box>
-              {value === 1 && <TeeShotView currentHoles={currentHoles} />}
+              {value === 1 && <DrivingView currentHoles={currentHoles} />}
+              {value === 2 && <ApproachView currentHoles={currentHoles} />}
               {value === 4 && <AdvancedView currentHoles={currentHoles} />}
             </>
           )}

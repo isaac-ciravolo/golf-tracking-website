@@ -3,5 +3,3 @@ average first putt distance for gir per club
 fairway hit or miss per club
 fairway miss left or right per club
 Group everything by driving, approach, green, advanced, scorecard
-only put used clubs into dropdowns
-put select and deselect alls at top of dropdowns
