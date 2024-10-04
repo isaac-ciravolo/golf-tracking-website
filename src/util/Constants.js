@@ -23,29 +23,29 @@ const clubs = [
   "Sand Wedge",
 ];
 
-const teeShots = ["-", "Fairway", "Left", "Right"];
+const teeShots = ["-", "Left", "Fairway", "Right"];
 const approachShots = [
   "-",
   "GIR",
+  "Short Right",
   "Short Left",
   "Left",
-  "Short Right",
   "Long Left",
-  "Right",
   "Long Right",
+  "Right",
 ];
 const arr0to9 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const colors = {
-  "-": "#000000",
-  GIR: "#00FF00",
-  Fairway: "#00FF00",
-  Left: "#FF0000",
-  Right: "#FF0000",
-  "Short Left": "#FF0000",
-  "Short Right": "#FF0000",
-  "Long Left": "#FF0000",
-  "Long Right": "#FF0000",
+  "-": "#ABABAB",
+  GIR: "#11C02E",
+  Fairway: "#11C02E",
+  Left: "#55BCFF",
+  Right: "#FFE84A",
+  "Short Left": "#4A6EFF",
+  "Short Right": "#FA4AFF",
+  "Long Left": "#FFC34A",
+  "Long Right": "#B14AFF",
 };
 
 export { clubs, teeShots, approachShots, arr0to9, colors };

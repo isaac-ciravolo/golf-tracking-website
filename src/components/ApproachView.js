@@ -3,88 +3,46 @@ import { Box, Grid2, Paper, Typography } from "@mui/material";
 import { CustomSelect } from "./CustomComponents.js";
 import BigPieChart from "./BigPieChart.js";
 import PercentBox from "./PercentBox.js";
-
-const clubs = [
-  "-",
-  "Driver",
-  "3-Wood",
-  "4-Wood",
-  "5-Wood",
-  "7-Wood",
-  "2-Hybrid",
-  "3-Hybrid",
-  "4-Hybrid",
-  "5-Hybrid",
-  "2-Iron",
-  "3-Iron",
-  "4-Iron",
-  "5-Iron",
-  "6-Iron",
-  "7-Iron",
-  "8-Iron",
-  "9-Iron",
-  "Pitching Wedge",
-  "Gap/Approach Wedge",
-  "Lob Wedge",
-  "Sand Wedge",
-];
+import { clubs, approachShots, colors } from "../util/Constants.js";
+import PizzaGraph from "./PizzaGraph.js";
 
 const ApproachView = ({ currentHoles }) => {
-  useEffect(() => {}, [currentHoles]);
   const [selectedClub, setSelectedClub] = useState("-");
-  const [numGIR, setNumGIR] = useState(0);
-  const [numLeft, setNumLeft] = useState(0);
-  const [numRight, setNumRight] = useState(0);
-  const [numShortLeft, setNumShortLeft] = useState(0);
-  const [numShortRight, setNumShortRight] = useState(0);
-  const [numLongLeft, setNumLongLeft] = useState(0);
-  const [numLongRight, setNumLongRight] = useState(0);
-  const [total, setTotal] = useState(0);
+  const [selectedData, setSelectedData] = useState([]);
+  const [selectedTotal, setSelectedTotal] = useState(0);
+  const [allData, setAllData] = useState([]);
+  const [allTotal, setAllTotal] = useState(0);
 
   useEffect(() => {
-    setNumLeft(
-      getCount(currentHoles, {
-        approachShot: "Left",
+    const newSelectedData = [];
+    let newSelectedTotal = 0;
+    approachShots.slice(1, approachShots.length).forEach((shot) => {
+      const newValue = getCount(currentHoles, {
         approachClub: selectedClub,
-      })
-    );
-    setNumRight(
-      getCount(currentHoles, {
-        approachShot: "Right",
-        approachClub: selectedClub,
-      })
-    );
-    setNumShortLeft(
-      getCount(currentHoles, {
-        approachShot: "Short Left",
-        approachClub: selectedClub,
-      })
-    );
-    setNumShortRight(
-      getCount(currentHoles, {
-        approachShot: "Short Right",
-        approachClub: selectedClub,
-      })
-    );
-    setNumLongLeft(
-      getCount(currentHoles, {
-        approachShot: "Long Left",
-        approachClub: selectedClub,
-      })
-    );
-    setNumLongRight(
-      getCount(currentHoles, {
-        approachShot: "Long Right",
-        approachClub: selectedClub,
-      })
-    );
-    setNumGIR(
-      getCount(currentHoles, {
-        approachShot: "GIR",
-        approachClub: selectedClub,
-      })
-    );
-    setTotal(getCount(currentHoles, { approachClub: selectedClub }));
+        approachShot: shot,
+      });
+      newSelectedData.push({
+        value: newValue,
+        label: shot,
+        color: colors[shot],
+      });
+      newSelectedTotal += newValue;
+    });
+    setSelectedData(newSelectedData);
+    setSelectedTotal(newSelectedTotal);
+    const newAllData = [];
+    let newAllTotal = 0;
+    approachShots.slice(1, approachShots.length).forEach((shot) => {
+      const newValue = getCount(currentHoles, { approachShot: shot });
+      newAllData.push({
+        value: newValue,
+        label: shot,
+        color: colors[shot],
+      });
+      newAllTotal += newValue;
+    });
+    setAllData(newAllData);
+    setAllTotal(newAllTotal);
   }, [currentHoles, selectedClub]);
 
   const getCount = (currHoles, conditions) => {
@@ -112,65 +70,94 @@ const ApproachView = ({ currentHoles }) => {
         gap: 3,
       }}
     >
-      <Box sx={{ width: "500px" }}>
-        <CustomSelect
-          name={"Select Club"}
-          onChange={(e) => setSelectedClub(e.target.value)}
-          defaultValue={selectedClub}
-          options={clubs.map((club) => {
-            if (
-              club === "-" ||
-              getCount(currentHoles, { approachClub: club }) > 0
-            )
-              return { value: club, label: club };
-          })}
-        />
-      </Box>
       <Grid2 container spacing={3}>
         <Paper
           sx={{
             width: "500px",
-            height: "500px",
+            height: "1000px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             gap: 3,
+            paddingLeft: 3,
+            paddingRight: 3,
           }}
         >
-          <BigPieChart
-            title=""
-            data={[
-              { value: numLeft, label: "Missed Left", color: "blue" },
-              { value: numGIR, label: "GIR", color: "green" },
-              { value: numRight, label: "Missed Right", color: "red" },
-            ]}
-          />
-          <Box
+          <Typography fontWeight={"bold"}>All Clubs</Typography>
+          {allData.length > 0 && (
+            <PizzaGraph
+              sliceData={allData.filter((slice) => slice.label !== "GIR")}
+              circleData={allData.find((slice) => slice.label === "GIR")}
+            />
+          )}
+          <Grid2
             sx={{
               width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 2,
             }}
+            container
+            spacing={2}
           >
-            <PercentBox
-              title="Missed Left"
-              percent={(numLeft / total) * 100}
-              shots={numLeft}
+            {allData.map((slice, index) => (
+              <Grid2 size={4}>
+                <PercentBox
+                  key={index}
+                  title={slice.label}
+                  percent={(slice.value / allTotal) * 100}
+                  shots={slice.value}
+                />
+              </Grid2>
+            ))}
+          </Grid2>
+        </Paper>
+        <Paper
+          sx={{
+            width: "500px",
+            height: "1000px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 3,
+            paddingLeft: 3,
+            paddingRight: 3,
+          }}
+        >
+          <CustomSelect
+            name={"Select Club"}
+            onChange={(e) => setSelectedClub(e.target.value)}
+            defaultValue={selectedClub}
+            options={clubs.map((club) => {
+              if (
+                club === "-" ||
+                getCount(currentHoles, { approachClub: club }) > 0
+              )
+                return { value: club, label: club };
+            })}
+          />
+          {selectedData.length > 0 && (
+            <PizzaGraph
+              sliceData={selectedData.filter((slice) => slice.label !== "GIR")}
+              circleData={selectedData.find((slice) => slice.label === "GIR")}
             />
-            <PercentBox
-              title="GIR"
-              percent={(numGIR / total) * 100}
-              shots={numGIR}
-            />
-            <PercentBox
-              title="Missed Right"
-              percent={(numRight / total) * 100}
-              shots={numRight}
-            />
-          </Box>
+          )}
+          <Grid2
+            sx={{
+              width: "100%",
+            }}
+            container
+            spacing={2}
+          >
+            {selectedData.map((slice, index) => (
+              <Grid2 size={4} key={index}>
+                <PercentBox
+                  title={slice.label}
+                  percent={(slice.value / selectedTotal) * 100}
+                  shots={slice.value}
+                />
+              </Grid2>
+            ))}
+          </Grid2>
         </Paper>
       </Grid2>
     </Box>

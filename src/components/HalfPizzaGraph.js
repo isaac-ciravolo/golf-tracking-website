@@ -1,42 +1,102 @@
 import React, { useEffect, useState } from "react";
 
-const HalfPizzaGraph = ({ sliceData, radius = 200 }) => {
-  const numberOfSlices = sliceData.length;
-  const angleStep = Math.PI / numberOfSlices; // Half circle angle (π radians)
+const HalfPizzaGraph = ({ sliceData }) => {
+  const bigRadius = 200; // Max radius
+
+  const [angleStep, setAngleStep] = useState(0);
   const [sum, setSum] = useState(0);
 
   useEffect(() => {
-    let newSum = 0;
+    let newNum = 0;
     sliceData.forEach((slice) => {
-      newSum += slice.value;
+      newNum += slice.value;
     });
-    setSum(newSum);
+    setSum(newNum);
+    setAngleStep(Math.PI / sliceData.length);
   }, [sliceData]);
 
   const calculateSlicePath = (radius, startAngle) => {
-    const x1 = radius + radius * Math.cos(startAngle);
-    const y1 = radius + radius * Math.sin(startAngle);
-    const x2 = radius + radius * Math.cos(startAngle + angleStep);
-    const y2 = radius + radius * Math.sin(startAngle + angleStep);
+    const x1 = bigRadius + radius * Math.cos(startAngle);
+    const y1 = bigRadius + radius * Math.sin(startAngle);
+    const x2 = bigRadius + radius * Math.cos(startAngle + angleStep);
+    const y2 = bigRadius + radius * Math.sin(startAngle + angleStep);
 
-    return `M ${radius},${radius} L ${x1},${y1} A ${radius},${radius} 0 0,1 ${x2},${y2} Z`;
+    return `M ${bigRadius},${bigRadius} L ${x1},${y1} A ${radius},${radius} 0 0,1 ${x2},${y2} Z`;
+  };
+
+  const calculateBackgroundPath = (radius) => {
+    const x1 = bigRadius + radius * Math.cos(Math.PI);
+    const y1 = bigRadius + radius * Math.sin(Math.PI);
+    const x2 = bigRadius + radius * Math.cos(0);
+    const y2 = bigRadius + radius * Math.sin(0);
+
+    return `M ${bigRadius},${bigRadius} L ${x1},${y1} A ${radius},${radius} 0 0,1 ${x2},${y2} Z`;
   };
 
   return (
-    <svg width={400} height={200}>
-      {sliceData.map((slice, index) => {
-        const startAngle = Math.PI + index * angleStep; // Start at π to make it face upwards
-        return (
+    <>
+      {sum > 0 && (
+        <svg width={bigRadius * 2} height={bigRadius}>
+          {/* Light gray background semi-circle */}
           <path
-            key={index}
-            d={calculateSlicePath((slice.value / sum) * radius, startAngle)}
-            fill={slice.color}
-            stroke="#fff"
-            strokeWidth={2}
+            d={calculateBackgroundPath(bigRadius)}
+            fill="lightgray"
+            stroke="none"
           />
-        );
-      })}
-    </svg>
+          {sliceData.map((slice, index) => {
+            const startAngle = Math.PI + index * angleStep; // Start at π to make it face upwards
+
+            // Calculate radius based on square root of the value (for proportional area)
+            const sliceRadius = Math.sqrt(slice.value / sum) * bigRadius;
+
+            return (
+              <g key={index}>
+                {/* Draw the main slice without stroke */}
+                <path
+                  d={calculateSlicePath(sliceRadius, startAngle)}
+                  fill={slice.color}
+                  stroke="none"
+                />
+              </g>
+            );
+          })}
+          {sliceData.map((slice, index) => {
+            if (index !== 0) {
+              const startAngle = Math.PI + index * angleStep;
+
+              return (
+                <line
+                  x1={bigRadius}
+                  y1={bigRadius}
+                  x2={bigRadius + bigRadius * Math.cos(startAngle)}
+                  y2={bigRadius + bigRadius * Math.sin(startAngle)}
+                  stroke="white"
+                  strokeWidth={6}
+                  key={index}
+                />
+              );
+            }
+          })}
+          <line
+            x1={0}
+            y2={bigRadius}
+            x2={bigRadius * 2}
+            y1={bigRadius}
+            stroke="white"
+            strokeWidth={6}
+          />
+        </svg>
+      )}
+      {sum === 0 && (
+        <svg width={bigRadius * 2} height={bigRadius}>
+          <path
+            d={calculateBackgroundPath(bigRadius)}
+            fill="lightgray"
+            stroke="none"
+          />
+        </svg>
+      )}
+    </>
   );
 };
 
