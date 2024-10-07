@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { db } from "./firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
+import OverviewView from "./components/OverviewView.js";
 import DrivingView from "./components/DrivingView.js";
 import ApproachView from "./components/ApproachView.js";
 import AdvancedView from "./components/AdvancedView.js";
@@ -29,6 +30,21 @@ const theme = createTheme({
     },
   },
 });
+
+const clubsData = [
+  { club: "Dr", distance: 274 },
+  { club: "3w", distance: 233 },
+  { club: "2h", distance: 219 },
+  { club: "4i", distance: 198 },
+  { club: "5i", distance: 178 },
+  { club: "6i", distance: 174 },
+  { club: "7i", distance: 158 },
+  { club: "8i", distance: 139 },
+  { club: "9i", distance: 128 },
+  { club: "Pw", distance: 119 },
+  { club: "52", distance: 110 },
+  { club: "54", distance: 100 },
+];
 
 function App() {
   const [value, setValue] = useState(0);
@@ -169,9 +185,26 @@ function App() {
                   <Tab label="Advanced" index={4} />
                 </Tabs>
               </Box>
-              {value === 1 && <DrivingView currentHoles={currentHoles} />}
-              {value === 2 && <ApproachView currentHoles={currentHoles} />}
-              {value === 4 && <AdvancedView currentHoles={currentHoles} />}
+              <Box
+                sx={{ width: "100%", ...(value !== 0 && { display: "none" }) }}
+              >
+                <OverviewView currentHoles={currentHoles} />
+              </Box>
+              <Box
+                sx={{ width: "100%", ...(value !== 1 && { display: "none" }) }}
+              >
+                <DrivingView currentHoles={currentHoles} />
+              </Box>
+              <Box
+                sx={{ width: "100%", ...(value !== 2 && { display: "none" }) }}
+              >
+                <ApproachView currentHoles={currentHoles} />
+              </Box>
+              <Box
+                sx={{ width: "100%", ...(value !== 4 && { display: "none" }) }}
+              >
+                <AdvancedView currentHoles={currentHoles} />
+              </Box>
             </>
           )}
         </Grid2>
