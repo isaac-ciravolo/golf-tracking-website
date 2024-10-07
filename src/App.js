@@ -188,30 +188,54 @@ function App() {
                 </Tabs>
               </Box>
               <Box
-                sx={{ width: "100%", ...(value !== 0 && { display: "none" }) }}
+                sx={{
+                  width: "100%",
+                  p: 3,
+                  ...(value !== 0 && { display: "none" }),
+                }}
               >
                 <OverviewView currentHoles={currentHoles} />
               </Box>
               <Box
-                sx={{ width: "100%", ...(value !== 1 && { display: "none" }) }}
+                sx={{
+                  width: "100%",
+                  p: 3,
+                  ...(value !== 1 && { display: "none" }),
+                }}
               >
                 <DrivingView currentHoles={currentHoles} />
               </Box>
               <Box
-                sx={{ width: "100%", ...(value !== 2 && { display: "none" }) }}
+                sx={{
+                  width: "100%",
+                  p: 3,
+                  ...(value !== 2 && { display: "none" }),
+                }}
               >
                 <ApproachView currentHoles={currentHoles} />
               </Box>
               <Box
-                sx={{ width: "100%", ...(value !== 3 && { display: "none" }) }}
+                sx={{
+                  width: "100%",
+                  p: 3,
+                  ...(value !== 3 && { display: "none" }),
+                }}
               ></Box>
               <Box
-                sx={{ width: "100%", ...(value !== 4 && { display: "none" }) }}
+                sx={{
+                  width: "100%",
+                  p: 3,
+                  ...(value !== 4 && { display: "none" }),
+                }}
               >
                 <CardView currentHoles={currentHoles} />
               </Box>
               <Box
-                sx={{ width: "100%", ...(value !== 5 && { display: "none" }) }}
+                sx={{
+                  width: "100%",
+                  p: 3,
+                  ...(value !== 5 && { display: "none" }),
+                }}
               >
                 <AdvancedView currentHoles={currentHoles} />
               </Box>

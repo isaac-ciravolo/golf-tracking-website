@@ -70,98 +70,95 @@ const DrivingView = ({ currentHoles }) => {
   return (
     <Box
       sx={{
-        p: 3,
         height: "100%",
         width: "100%",
         display: "flex",
-        flexDirection: "column",
+        justifyContent: "center",
         alignItems: "center",
         gap: 3,
       }}
     >
-      <Grid2 container spacing={3}>
-        <Paper
+      <Paper
+        sx={{
+          width: "500px",
+          height: "500px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 3,
+          paddingLeft: 3,
+          paddingRight: 3,
+        }}
+      >
+        <Typography fontWeight={"bold"}>All Clubs</Typography>
+        <HalfPizzaGraph sliceData={allData} />
+        <Box
           sx={{
-            width: "500px",
-            height: "500px",
+            width: "100%",
             display: "flex",
-            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            gap: 3,
-            paddingLeft: 3,
-            paddingRight: 3,
+            gap: 2,
           }}
         >
-          <Typography fontWeight={"bold"}>All Clubs</Typography>
-          <HalfPizzaGraph sliceData={allData} />
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 2,
-            }}
-          >
-            {allData.map((slice, index) => (
-              <PercentBox
-                key={index}
-                title={slice.label}
-                percent={(slice.value / allTotal) * 100}
-                shots={slice.value}
-              />
-            ))}
-          </Box>
-        </Paper>
-        <Paper
+          {allData.map((slice, index) => (
+            <PercentBox
+              key={index}
+              title={slice.label}
+              percent={(slice.value / allTotal) * 100}
+              shots={slice.value}
+            />
+          ))}
+        </Box>
+      </Paper>
+      <Paper
+        sx={{
+          width: "500px",
+          height: "500px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 3,
+          paddingLeft: 3,
+          paddingRight: 3,
+        }}
+      >
+        <CustomSelect
+          name={"Select Club"}
+          onChange={(e) => setSelectedClub(e.target.value)}
+          defaultValue={selectedClub}
+          options={clubs.map((club) => {
+            if (
+              club === "-" ||
+              getCount(currentHoles, { teeClub: club, par: 4 }) +
+                getCount(currentHoles, { teeClub: club, par: 5 }) >
+                0
+            )
+              return { value: club, label: club };
+          })}
+        />
+        <HalfPizzaGraph sliceData={selectedData} />
+        <Box
           sx={{
-            width: "500px",
-            height: "500px",
+            width: "100%",
             display: "flex",
-            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            gap: 3,
-            paddingLeft: 3,
-            paddingRight: 3,
+            gap: 2,
           }}
         >
-          <CustomSelect
-            name={"Select Club"}
-            onChange={(e) => setSelectedClub(e.target.value)}
-            defaultValue={selectedClub}
-            options={clubs.map((club) => {
-              if (
-                club === "-" ||
-                getCount(currentHoles, { teeClub: club, par: 4 }) +
-                  getCount(currentHoles, { teeClub: club, par: 5 }) >
-                  0
-              )
-                return { value: club, label: club };
-            })}
-          />
-          <HalfPizzaGraph sliceData={selectedData} />
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 2,
-            }}
-          >
-            {selectedData.map((slice, index) => (
-              <PercentBox
-                key={index}
-                title={slice.label}
-                percent={(slice.value / selectedTotal) * 100}
-                shots={slice.value}
-              />
-            ))}
-          </Box>
-        </Paper>
-      </Grid2>
+          {selectedData.map((slice, index) => (
+            <PercentBox
+              key={index}
+              title={slice.label}
+              percent={(slice.value / selectedTotal) * 100}
+              shots={slice.value}
+            />
+          ))}
+        </Box>
+      </Paper>
     </Box>
   );
 };

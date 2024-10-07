@@ -32,7 +32,7 @@ const Cell = ({ text, bold = false, color = "white" }) => {
 
 const CardView = ({ currentHoles }) => {
   return (
-    <Grid2 container sx={{ width: "100%", p: 3 }}>
+    <Grid2 container sx={{ width: "100%" }}>
       <Grid2 size={(12 / (currentHoles.length + 3)) * 3}>
         <Cell text={"HOLE"} bold />
         <Cell text={""} color="rgb(188, 139, 216)" />
