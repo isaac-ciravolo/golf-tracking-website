@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import formatDateFromMilliseconds from "../util/DateConverter.js";
-import HolesView from "./HolesView.js";
 import { Box, Typography, Grid2, Stack } from "@mui/material";
 import PieChartView from "./PieChartView.js";
 import {

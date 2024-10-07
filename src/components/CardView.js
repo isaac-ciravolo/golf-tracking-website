@@ -30,61 +30,59 @@ const Cell = ({ text, bold = false, color = "white" }) => {
   );
 };
 
-const HolesView = ({ holes }) => {
+const CardView = ({ currentHoles }) => {
   return (
-    <Grid2 container sx={{ width: "100%" }}>
-      <Grid2 size={(12 / (holes.length + 3)) * 3}>
-        <Cell text={""} />
-        <Cell text={""} color="purple" />
+    <Grid2 container sx={{ width: "100%", p: 3 }}>
+      <Grid2 size={(12 / (currentHoles.length + 3)) * 3}>
+        <Cell text={"HOLE"} bold />
+        <Cell text={""} color="rgb(188, 139, 216)" />
         <Cell text={"PAR"} bold color="lightGray" />
         <Cell text={"YARDAGE"} bold />
         <Cell text={"SCORE"} bold color="lightGray" />
-        <Cell text={""} color="purple" />
+        <Cell text={""} color="rgb(188, 139, 216)" />
         <Cell text={"TEE SHOT"} bold color="lightGray" />
         <Cell text={"Club"} />
-        <Cell text={"Fairway"} color="lightGray" />
-        <Cell text={"Miss"} />
-        <Cell text={""} color="purple" />
+        <Cell text={"Shot"} color="lightGray" />
+        <Cell text={""} color="rgb(188, 139, 216)" />
         <Cell text={"APPROACH"} bold />
-        <Cell text={"Club Hit"} color="lightGray" />
-        <Cell text={"GIR"} />
-        <Cell text={"Miss"} color="lightGray" />
-        <Cell text={""} color="purple" />
+        <Cell text={"Club"} color="lightGray" />
+        <Cell text={"Shot"} />
+        <Cell text={""} color="rgb(188, 139, 216)" />
         <Cell text={"SHORT GAME"} bold color="lightGray" />
+        <Cell text={"Club"} />
         <Cell text={"Up and Down"} />
-        <Cell text={""} color="purple" />
+        <Cell text={""} color="rgb(188, 139, 216)" />
         <Cell text={"PUTTS"} bold />
         <Cell text={"Total Putts"} color="lightGray" />
         <Cell text={"1st Putt Distance"} />
-        <Cell text={""} color="purple" />
+        <Cell text={""} color="rgb(188, 139, 216)" />
         <Cell text={"PENALTY STROKES"} bold />
         <Cell text={"SHOTS INSIDE 100 YARDS"} bold color="lightGray" />
       </Grid2>
-      {holes.map((hole, i) => (
-        <Grid2 size={12 / (holes.length + 3)} key={hole.id}>
+      {currentHoles.map((hole, i) => (
+        <Grid2 size={12 / (currentHoles.length + 3)} key={hole.id}>
           <Cell text={i + 1} bold />
-          <Cell text={""} color="purple" />
+          <Cell text={""} color="rgb(188, 139, 216)" />
           <Cell text={hole.par} color={"lightGray"} />
           <Cell text={hole.yardage} />
           <Cell text={hole.score} color={"lightGray"} />
-          <Cell text={""} color="purple" />
+          <Cell text={""} color="rgb(188, 139, 216)" />
           <Cell text={""} color="lightGray" />
-          <Cell text={hole.club} />
-          <Cell text={hole.fairway ? "Yes" : "No"} color="lightGray" />
-          <Cell text={hole.missTee} />
-          <Cell text={""} color="purple" />
+          <Cell text={hole.teeClub} />
+          <Cell text={hole.teeShot} color="lightGray" />
+          <Cell text={""} color="rgb(188, 139, 216)" />
           <Cell text={""} />
-          <Cell text={hole.clubHit} color="lightGray" />
-          <Cell text={hole.gir ? "Yes" : "No"} />
-          <Cell text={hole.missApproach} color="lightGray" />
-          <Cell text={""} color="purple" />
+          <Cell text={hole.approachClub} color="lightGray" />
+          <Cell text={hole.approachShot} color="lightGray" />
+          <Cell text={""} color="rgb(188, 139, 216)" />
           <Cell text={""} color="lightGray" />
-          <Cell text={hole.upAndDown ? "Yes" : "No"} />
-          <Cell text={""} color="purple" />
+          <Cell text={hole.upAndDownClub} />
+          <Cell text={hole.upAndDown} />
+          <Cell text={""} color="rgb(188, 139, 216)" />
           <Cell text={""} />
           <Cell text={hole.totalPutts} color="lightGray" />
           <Cell text={hole.firstPuttDist} />
-          <Cell text={""} color="purple" />
+          <Cell text={""} color="rgb(188, 139, 216)" />
           <Cell text={hole.penaltyStrokes} />
           <Cell text={hole.shotsInside100} color="lightGray" />
         </Grid2>
@@ -93,4 +91,4 @@ const HolesView = ({ holes }) => {
   );
 };
 
-export default HolesView;
+export default CardView;

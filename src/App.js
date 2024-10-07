@@ -15,6 +15,7 @@ import { collection, getDocs } from "firebase/firestore";
 import OverviewView from "./components/OverviewView.js";
 import DrivingView from "./components/DrivingView.js";
 import ApproachView from "./components/ApproachView.js";
+import CardView from "./components/CardView.js";
 import AdvancedView from "./components/AdvancedView.js";
 import {
   CustomSelect,
@@ -182,7 +183,8 @@ function App() {
                   <Tab label="Driving" index={1} />
                   <Tab label="Approach" index={2} />
                   <Tab label="Green" index={3} />
-                  <Tab label="Advanced" index={4} />
+                  <Tab label="Card" index={4} />
+                  <Tab label="Advanced" index={5} />
                 </Tabs>
               </Box>
               <Box
@@ -201,7 +203,15 @@ function App() {
                 <ApproachView currentHoles={currentHoles} />
               </Box>
               <Box
+                sx={{ width: "100%", ...(value !== 3 && { display: "none" }) }}
+              ></Box>
+              <Box
                 sx={{ width: "100%", ...(value !== 4 && { display: "none" }) }}
+              >
+                <CardView currentHoles={currentHoles} />
+              </Box>
+              <Box
+                sx={{ width: "100%", ...(value !== 5 && { display: "none" }) }}
               >
                 <AdvancedView currentHoles={currentHoles} />
               </Box>
