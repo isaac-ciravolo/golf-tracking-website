@@ -15,6 +15,7 @@ import { collection, getDocs } from "firebase/firestore";
 import OverviewView from "./components/OverviewView.js";
 import DrivingView from "./components/DrivingView.js";
 import ApproachView from "./components/ApproachView.js";
+import GreenView from "./components/GreenView.js";
 import CardView from "./components/CardView.js";
 import AdvancedView from "./components/AdvancedView.js";
 import {
@@ -220,7 +221,9 @@ function App() {
                   p: 3,
                   ...(value !== 3 && { display: "none" }),
                 }}
-              ></Box>
+              >
+                <GreenView currentHoles={currentHoles} />
+              </Box>
               <Box
                 sx={{
                   width: "100%",

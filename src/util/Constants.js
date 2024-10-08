@@ -49,4 +49,6 @@ const colors = {
   "Long Right": "#B14AFF",
 };
 
-export { clubs, teeShots, approachShots, arr0to9, colors };
+const UpAndDown = ["-", "True", "False"];
+
+export { clubs, teeShots, approachShots, arr0to9, colors, UpAndDown };
