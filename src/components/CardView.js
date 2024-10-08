@@ -5,7 +5,7 @@ const Cell = ({ text, bold = false, color = "white" }) => {
   return (
     <Box
       sx={{
-        width: "100%",
+        width: "200px",
         height: "20px",
         display: "flex",
         alignItems: "center",
@@ -17,7 +17,7 @@ const Cell = ({ text, bold = false, color = "white" }) => {
       <Typography
         sx={{
           fontSize: "10px",
-          overflow: "hidden",
+          overflow: "auto",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
           marginLeft: "5px",
@@ -32,8 +32,17 @@ const Cell = ({ text, bold = false, color = "white" }) => {
 
 const CardView = ({ currentHoles }) => {
   return (
-    <Grid2 container sx={{ width: "100%" }}>
-      <Grid2 size={(12 / (currentHoles.length + 3)) * 3}>
+    <Box
+      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "200px",
+          zIndex: 1,
+        }}
+      >
         <Cell text={"HOLE"} bold />
         <Cell text={""} color="rgb(188, 139, 216)" />
         <Cell text={"PAR"} bold color="lightGray" />
@@ -48,8 +57,8 @@ const CardView = ({ currentHoles }) => {
         <Cell text={"Club"} color="lightGray" />
         <Cell text={"Shot"} />
         <Cell text={""} color="rgb(188, 139, 216)" />
-        <Cell text={"SHORT GAME"} bold color="lightGray" />
-        <Cell text={"Club"} />
+        <Cell text={"SHORT GAME"} bold />
+        <Cell text={"Club"} color="lightGray" />
         <Cell text={"Up and Down"} />
         <Cell text={""} color="rgb(188, 139, 216)" />
         <Cell text={"PUTTS"} bold />
@@ -58,36 +67,50 @@ const CardView = ({ currentHoles }) => {
         <Cell text={""} color="rgb(188, 139, 216)" />
         <Cell text={"PENALTY STROKES"} bold />
         <Cell text={"SHOTS INSIDE 100 YARDS"} bold color="lightGray" />
-      </Grid2>
-      {currentHoles.map((hole, i) => (
-        <Grid2 size={12 / (currentHoles.length + 3)} key={hole.id}>
-          <Cell text={i + 1} bold />
-          <Cell text={""} color="rgb(188, 139, 216)" />
-          <Cell text={hole.par} color={"lightGray"} />
-          <Cell text={hole.yardage} />
-          <Cell text={hole.score} color={"lightGray"} />
-          <Cell text={""} color="rgb(188, 139, 216)" />
-          <Cell text={""} color="lightGray" />
-          <Cell text={hole.teeClub} />
-          <Cell text={hole.teeShot} color="lightGray" />
-          <Cell text={""} color="rgb(188, 139, 216)" />
-          <Cell text={""} />
-          <Cell text={hole.approachClub} color="lightGray" />
-          <Cell text={hole.approachShot} color="lightGray" />
-          <Cell text={""} color="rgb(188, 139, 216)" />
-          <Cell text={""} color="lightGray" />
-          <Cell text={hole.upAndDownClub} />
-          <Cell text={hole.upAndDown} />
-          <Cell text={""} color="rgb(188, 139, 216)" />
-          <Cell text={""} />
-          <Cell text={hole.totalPutts} color="lightGray" />
-          <Cell text={hole.firstPuttDist} />
-          <Cell text={""} color="rgb(188, 139, 216)" />
-          <Cell text={hole.penaltyStrokes} />
-          <Cell text={hole.shotsInside100} color="lightGray" />
-        </Grid2>
-      ))}
-    </Grid2>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          overflowX: "scroll",
+          overflowY: "hidden",
+          whiteSpace: "nowrap",
+          scrollBehavior: "smooth",
+          width: "1100px",
+        }}
+      >
+        {currentHoles.map((hole, i) => (
+          <Box
+            key={hole.id}
+            sx={{ display: "flex", flexDirection: "column", width: "200px" }}
+          >
+            <Cell text={i + 1} bold />
+            <Cell text={""} color="rgb(188, 139, 216)" />
+            <Cell text={hole.par} color={"lightGray"} />
+            <Cell text={hole.yardage} />
+            <Cell text={hole.score} color={"lightGray"} />
+            <Cell text={""} color="rgb(188, 139, 216)" />
+            <Cell text={""} color="lightGray" />
+            <Cell text={hole.teeClub} />
+            <Cell text={hole.teeShot} color="lightGray" />
+            <Cell text={""} color="rgb(188, 139, 216)" />
+            <Cell text={""} />
+            <Cell text={hole.approachClub} color="lightGray" />
+            <Cell text={hole.approachShot} />
+            <Cell text={""} color="rgb(188, 139, 216)" />
+            <Cell text={""} />
+            <Cell text={hole.upAndDownClub} color="lightGray" />
+            <Cell text={hole.upAndDown} />
+            <Cell text={""} color="rgb(188, 139, 216)" />
+            <Cell text={""} />
+            <Cell text={hole.totalPutts} color="lightGray" />
+            <Cell text={hole.firstPuttDist} />
+            <Cell text={""} color="rgb(188, 139, 216)" />
+            <Cell text={hole.penaltyStrokes} />
+            <Cell text={hole.shotsInside100} color="lightGray" />
+          </Box>
+        ))}
+      </Box>
+    </Box>
   );
 };
 
