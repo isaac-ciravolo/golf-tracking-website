@@ -37,6 +37,8 @@ const approachShots = [
 
 const arr0to9 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+const UpAndDown = ["-", "Yes", "No"];
+
 const colors = {
   "-": "#ABABAB",
   GIR: "#11C02E",
@@ -47,8 +49,8 @@ const colors = {
   "Short Right": "#FA4AFF",
   "Long Left": "#FFC34A",
   "Long Right": "#B14AFF",
+  Yes: "#11C02E",
+  No: "#FF0000",
 };
-
-const UpAndDown = ["-", "True", "False"];
 
 export { clubs, teeShots, approachShots, arr0to9, colors, UpAndDown };

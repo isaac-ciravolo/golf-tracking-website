@@ -14,25 +14,15 @@ const GreenView = ({ currentHoles }) => {
   const [allTotal, setAllTotal] = useState(0);
 
   useEffect(() => {
+    console.log(currentHoles);
     const newSelectedData = [];
     let newSelectedTotal = 0;
     UpAndDown.slice(1, UpAndDown.length).forEach((shot) => {
-      const newValue =
-        getCount(currentHoles, {
-          clubs: selectedClub,
-          UpAndDown: shot,
-          par: 4,
-        }) +
-        getCount(currentHoles, {
-          clubs: selectedClub,
-          UpAndDown: shot,
-          par: 5,
-        }) +
-        getCount(currentHoles, {
-          clubs: selectedClub,
-          UpAndDown: shot,
-          par: 3,
-        });
+      const newValue = getCount(currentHoles, {
+        clubs: selectedClub,
+        upAndDown: shot,
+      });
+      console.log(shot, newValue);
       newSelectedData.push({
         value: newValue,
         label: shot,
@@ -44,11 +34,8 @@ const GreenView = ({ currentHoles }) => {
     setSelectedTotal(newSelectedTotal);
     const newAllData = [];
     let newAllTotal = 0;
-    UpAndDown.slice(1, UpAndDown.length).forEach((shot) => {
-      const newValue =
-        getCount(currentHoles, { UpAndDown: shot, par: 3 }) +
-        getCount(currentHoles, { UpAndDown: shot, par: 4 }) +
-        getCount(currentHoles, { UpAndDown: shot, par: 5 });
+    UpAndDown.forEach((shot) => {
+      const newValue = getCount(currentHoles, { upAndDown: shot });
       newAllData.push({
         value: newValue,
         label: shot,
