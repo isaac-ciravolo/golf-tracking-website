@@ -103,6 +103,51 @@ const GreenView = ({ currentHoles }) => {
           ))}
         </Box>
       </Paper>
+      <Paper
+        sx={{
+          width: "500px",
+          height: "500px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 3,
+          paddingLeft: 3,
+          paddingRight: 3,
+        }}
+      >
+        <CustomSelect
+          name={"Select Club"}
+          onChange={(e) => setSelectedClub(e.target.value)}
+          defaultValue={selectedClub}
+          options={clubs.map((club) => {
+            if (
+              club === "-" ||
+              getCount(currentHoles, { upAndDownClub: club }) > 0
+            )
+              return { value: club, label: club };
+          })}
+        />
+        <HalfPizzaGraph sliceData={selectedData} />
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          {selectedData.map((slice, index) => (
+            <PercentBox
+              key={index}
+              title={slice.label}
+              percent={(slice.value / selectedTotal) * 100}
+              shots={slice.value}
+            />
+          ))}
+        </Box>
+      </Paper>
     </Box>
   );
 };
