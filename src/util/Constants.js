@@ -50,7 +50,7 @@ const colors = {
   "Long Left": "#FFC34A",
   "Long Right": "#B14AFF",
   Yes: "#11C02E",
-  No: "#FF0000",
+  No: "#eb6b54",
 };
 
 export { clubs, teeShots, approachShots, arr0to9, colors, UpAndDown };
