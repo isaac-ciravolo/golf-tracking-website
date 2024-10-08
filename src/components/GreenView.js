@@ -14,12 +14,12 @@ const GreenView = ({ currentHoles }) => {
   const [allTotal, setAllTotal] = useState(0);
 
   useEffect(() => {
-    console.log(currentHoles);
+    console.log(selectedClub);
     const newSelectedData = [];
     let newSelectedTotal = 0;
     UpAndDown.slice(1, UpAndDown.length).forEach((shot) => {
       const newValue = getCount(currentHoles, {
-        clubs: selectedClub,
+        upAndDownClub: selectedClub,
         upAndDown: shot,
       });
       console.log(shot, newValue);
