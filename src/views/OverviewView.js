@@ -14,6 +14,8 @@ const OverviewView = ({ currentHoles }) => {
     const newParCounts = {};
     const newClubFirstPuttDistData = [];
     let newMaxDistance = 0;
+
+    // Calculate scoring averages and par counts
     [3, 4, 5].forEach((par) => {
       const holes = currentHoles.filter((hole) => hole.par === par);
       const totalScore = holes.reduce((acc, hole) => acc + hole.score, 0);
@@ -21,6 +23,8 @@ const OverviewView = ({ currentHoles }) => {
       newScoringAverages[par] = averageScore;
       newParCounts[par] = holes.length;
     });
+
+    // Calculate club first putt distances
     clubs.forEach((club) => {
       if (club === "-") return;
       let dist = 0;
@@ -38,12 +42,44 @@ const OverviewView = ({ currentHoles }) => {
       });
       newMaxDistance = Math.max(newMaxDistance, dist / holes.length);
     });
+
     newClubFirstPuttDistData.sort((a, b) => a.dist - b.dist);
     setScoringAverages(newScoringAverages);
     setParCounts(newParCounts);
     setClubFirstPuttDistData(newClubFirstPuttDistData);
     setMaxDistance(newMaxDistance);
   }, [currentHoles]);
+
+  const getColorFromScore = (score, par) => {
+    const green = { r: 144, g: 238, b: 144 }; // Light green
+    const black = { r: 150, g: 150, b: 150 }; // Black
+    const red = { r: 255, g: 0, b: 0 }; // Red
+
+    // Calculate the difference from par
+    const diff = score - par;
+    const range = 3; // Define a range for scoring differences (e.g., -3 to +3)
+
+    if (diff < -range) return `rgb(${green.r},${green.g},${green.b})`; // Very good
+    if (diff > range) return `rgb(${red.r},${red.g},${red.b})`; // Very bad
+
+    // Calculate color interpolation
+    let ratio;
+    if (diff < 0) {
+      // From green to black
+      ratio = Math.abs(diff) / range;
+      const r = Math.round(green.r + (black.r - green.r) * ratio);
+      const g = Math.round(green.g + (black.g - green.g) * ratio);
+      const b = Math.round(green.b + (black.b - green.b) * ratio);
+      return `rgb(${r},${g},${b})`;
+    } else {
+      // From black to red
+      ratio = diff / range;
+      const r = Math.round(black.r + (red.r - black.r) * ratio);
+      const g = Math.round(black.g + (red.g - black.g) * ratio);
+      const b = Math.round(black.b + (red.b - black.b) * ratio);
+      return `rgb(${r},${g},${b})`;
+    }
+  };
 
   const getColorFromDistance = (distanceRatio) => {
     const green = { r: 144, g: 238, b: 144 }; // light green
@@ -82,6 +118,9 @@ const OverviewView = ({ currentHoles }) => {
               padding: 3,
             }}
           >
+            <Typography fontWeight="bold" variant="h6">
+              Scoring Averages
+            </Typography>
             {[3, 4, 5].map((par) => {
               return (
                 <Paper
@@ -96,7 +135,7 @@ const OverviewView = ({ currentHoles }) => {
                   }}
                 >
                   <Typography noWrap fontWeight={"bold"}>
-                    {par + " Par Average (" + parCounts[par] + " holes)"}
+                    {par + " Par"}
                   </Typography>
                   {scoringAverages[par] !== undefined && (
                     <>
@@ -105,13 +144,7 @@ const OverviewView = ({ currentHoles }) => {
                       </Typography>
                       <Typography
                         noWrap
-                        color={
-                          scoringAverages[par] - par < 0
-                            ? "green"
-                            : scoringAverages[par] - par > 0
-                            ? "red"
-                            : "black"
-                        }
+                        color={getColorFromScore(scoringAverages[par], par)} // Smooth color transition
                         fontWeight={"bold"}
                       >
                         {(scoringAverages[par] > par ? "+" : "") +

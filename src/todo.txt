@@ -1,6 +1,4 @@
 website
-
-get rid of dash in up and down all cubs
 add putts to gree tab. total and avg per round and per gir
 
 title left box in overview "scoring averages"
@@ -9,8 +7,6 @@ Takeaway count for pars in overview
 
 change first putt dist to ft 
 copy fairway%, gir, putts per round to overview. (common stats)
-
-default selected games to all
 
 app side
 if up and down false still have club
