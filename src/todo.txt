@@ -1,6 +1,5 @@
 website
 
-put percents in graphs
 get rid of dash in up and down all cubs
 add putts to gree tab. total and avg per round and per gir
 

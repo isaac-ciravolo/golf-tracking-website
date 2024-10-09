@@ -34,7 +34,7 @@ const GreenView = ({ currentHoles }) => {
     setSelectedTotal(newSelectedTotal);
     const newAllData = [];
     let newAllTotal = 0;
-    upAndDown.forEach((shot) => {
+    upAndDown.slice(1, upAndDown.length).forEach((shot) => {
       const newValue = getCount(currentHoles, { upAndDown: shot });
       newAllData.push({
         value: newValue,
