@@ -72,7 +72,7 @@ const ApproachView = ({ currentHoles }) => {
       <Paper
         sx={{
           width: "500px",
-          height: "1000px",
+          height: "600px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -89,29 +89,11 @@ const ApproachView = ({ currentHoles }) => {
             circleData={allData.find((slice) => slice.label === "GIR")}
           />
         )}
-        <Grid2
-          sx={{
-            width: "100%",
-          }}
-          container
-          spacing={2}
-        >
-          {allData.map((slice, index) => (
-            <Grid2 size={4}>
-              <PercentBox
-                key={index}
-                title={slice.label}
-                percent={(slice.value / allTotal) * 100}
-                shots={slice.value}
-              />
-            </Grid2>
-          ))}
-        </Grid2>
       </Paper>
       <Paper
         sx={{
           width: "500px",
-          height: "1000px",
+          height: "600px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -139,23 +121,6 @@ const ApproachView = ({ currentHoles }) => {
             circleData={selectedData.find((slice) => slice.label === "GIR")}
           />
         )}
-        <Grid2
-          sx={{
-            width: "100%",
-          }}
-          container
-          spacing={2}
-        >
-          {selectedData.map((slice, index) => (
-            <Grid2 size={4} key={index}>
-              <PercentBox
-                title={slice.label}
-                percent={(slice.value / selectedTotal) * 100}
-                shots={slice.value}
-              />
-            </Grid2>
-          ))}
-        </Grid2>
       </Paper>
     </Box>
   );
