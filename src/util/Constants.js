@@ -37,7 +37,7 @@ const approachShots = [
 
 const arr0to9 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-const UpAndDown = ["-", "Yes", "No"];
+const upAndDown = ["-", "Yes", "No"];
 
 const colors = {
   "-": "#ABABAB",
@@ -53,4 +53,4 @@ const colors = {
   No: "#eb6b54",
 };
 
-export { clubs, teeShots, approachShots, arr0to9, colors, UpAndDown };
+export { clubs, teeShots, approachShots, arr0to9, colors, upAndDown };

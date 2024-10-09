@@ -12,12 +12,12 @@ import {
 } from "@mui/material";
 import { db } from "./firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
-import OverviewView from "./components/OverviewView.js";
-import DrivingView from "./components/DrivingView.js";
-import ApproachView from "./components/ApproachView.js";
-import GreenView from "./components/GreenView.js";
-import CardView from "./components/CardView.js";
-import AdvancedView from "./components/AdvancedView.js";
+import OverviewView from "./views/OverviewView.js";
+import DrivingView from "./views/DrivingView.js";
+import ApproachView from "./views/ApproachView.js";
+import GreenView from "./views/GreenView.js";
+import CardView from "./views/CardView.js";
+import AdvancedView from "./views/AdvancedView.js";
 import {
   CustomSelect,
   CustomCheckboxDropdown,

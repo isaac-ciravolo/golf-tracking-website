@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, Grid2, Paper, Typography } from "@mui/material";
-import { CustomSelect } from "./CustomComponents.js";
-import PercentBox from "./PercentBox.js";
-import HalfPizzaGraph from "./HalfPizzaGraph.js";
+import { CustomSelect } from "../components/CustomComponents.js";
+import PercentBox from "../components/PercentBox.js";
+import HalfPizzaGraph from "../components/HalfPizzaGraph.js";
 
 import { clubs, teeShots, colors } from "../util/Constants.js";
 

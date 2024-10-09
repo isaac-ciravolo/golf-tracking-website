@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid2, Stack } from "@mui/material";
-import PieChartView from "./PieChartView.js";
+import PieChartView from "../components/PieChartView.js";
 import {
   CustomSelect,
   CustomNumberInput,
   CustomCheckboxDropdown,
-} from "./CustomComponents.js";
+} from "../components/CustomComponents.js";
 import { clubs, teeShots, approachShots, arr0to9 } from "../util/Constants.js";
 
 const AdvancedView = ({ currentHoles }) => {

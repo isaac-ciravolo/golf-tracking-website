@@ -63,7 +63,6 @@ const OverviewView = ({ currentHoles }) => {
         height: "100%",
         width: "100%",
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         gap: 3,
@@ -80,8 +79,7 @@ const OverviewView = ({ currentHoles }) => {
               justifyContent: "center",
               alignItems: "center",
               gap: 3,
-              paddingLeft: 3,
-              paddingRight: 3,
+              padding: 3,
             }}
           >
             {[3, 4, 5].map((par) => {
@@ -127,7 +125,8 @@ const OverviewView = ({ currentHoles }) => {
           </Paper>
           <Paper
             sx={{
-              width: "1000px",
+              width: "500px",
+              minHeight: "500px",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",

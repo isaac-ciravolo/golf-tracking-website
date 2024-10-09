@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Box, Grid2, Paper, Typography } from "@mui/material";
-import { CustomSelect } from "./CustomComponents.js";
-import PercentBox from "./PercentBox.js";
-import HalfPizzaGraph from "./HalfPizzaGraph.js";
+import { CustomSelect } from "../components/CustomComponents.js";
+import BigPieChart from "../components/BigPieChart.js";
+import PercentBox from "../components/PercentBox.js";
+import { clubs, approachShots, colors } from "../util/Constants.js";
+import PizzaGraph from "../components/PizzaGraph.js";
 
-import { clubs, UpAndDown, colors } from "../util/Constants.js";
-
-const GreenView = ({ currentHoles }) => {
+const ApproachView = ({ currentHoles }) => {
   const [selectedClub, setSelectedClub] = useState("-");
   const [selectedData, setSelectedData] = useState([]);
   const [selectedTotal, setSelectedTotal] = useState(0);
@@ -14,15 +14,13 @@ const GreenView = ({ currentHoles }) => {
   const [allTotal, setAllTotal] = useState(0);
 
   useEffect(() => {
-    console.log(selectedClub);
     const newSelectedData = [];
     let newSelectedTotal = 0;
-    UpAndDown.slice(1, UpAndDown.length).forEach((shot) => {
+    approachShots.slice(1, approachShots.length).forEach((shot) => {
       const newValue = getCount(currentHoles, {
-        upAndDownClub: selectedClub,
-        upAndDown: shot,
+        approachClub: selectedClub,
+        approachShot: shot,
       });
-      console.log(shot, newValue);
       newSelectedData.push({
         value: newValue,
         label: shot,
@@ -34,8 +32,8 @@ const GreenView = ({ currentHoles }) => {
     setSelectedTotal(newSelectedTotal);
     const newAllData = [];
     let newAllTotal = 0;
-    UpAndDown.forEach((shot) => {
-      const newValue = getCount(currentHoles, { upAndDown: shot });
+    approachShots.slice(1, approachShots.length).forEach((shot) => {
+      const newValue = getCount(currentHoles, { approachShot: shot });
       newAllData.push({
         value: newValue,
         label: shot,
@@ -46,6 +44,7 @@ const GreenView = ({ currentHoles }) => {
     setAllData(newAllData);
     setAllTotal(newAllTotal);
   }, [currentHoles, selectedClub]);
+
   const getCount = (currHoles, conditions) => {
     let count = 0;
     currHoles.forEach((hole) => {
@@ -58,6 +57,7 @@ const GreenView = ({ currentHoles }) => {
     });
     return count;
   };
+
   return (
     <Box
       sx={{
@@ -72,7 +72,7 @@ const GreenView = ({ currentHoles }) => {
       <Paper
         sx={{
           width: "500px",
-          height: "500px",
+          height: "1000px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -82,31 +82,36 @@ const GreenView = ({ currentHoles }) => {
           paddingRight: 3,
         }}
       >
-        <Typography fontWeight={"bold"}>Up And Down All Clubs</Typography>
-        <HalfPizzaGraph sliceData={allData} />
-        <Box
+        <Typography fontWeight={"bold"}>All Clubs</Typography>
+        {allData.length > 0 && (
+          <PizzaGraph
+            sliceData={allData.filter((slice) => slice.label !== "GIR")}
+            circleData={allData.find((slice) => slice.label === "GIR")}
+          />
+        )}
+        <Grid2
           sx={{
             width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 2,
           }}
+          container
+          spacing={2}
         >
           {allData.map((slice, index) => (
-            <PercentBox
-              key={index}
-              title={slice.label}
-              percent={(slice.value / allTotal) * 100}
-              shots={slice.value}
-            />
+            <Grid2 size={4}>
+              <PercentBox
+                key={index}
+                title={slice.label}
+                percent={(slice.value / allTotal) * 100}
+                shots={slice.value}
+              />
+            </Grid2>
           ))}
-        </Box>
+        </Grid2>
       </Paper>
       <Paper
         sx={{
           width: "500px",
-          height: "500px",
+          height: "1000px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -123,33 +128,37 @@ const GreenView = ({ currentHoles }) => {
           options={clubs.map((club) => {
             if (
               club === "-" ||
-              getCount(currentHoles, { upAndDownClub: club }) > 0
+              getCount(currentHoles, { approachClub: club }) > 0
             )
               return { value: club, label: club };
           })}
         />
-        <HalfPizzaGraph sliceData={selectedData} />
-        <Box
+        {selectedData.length > 0 && (
+          <PizzaGraph
+            sliceData={selectedData.filter((slice) => slice.label !== "GIR")}
+            circleData={selectedData.find((slice) => slice.label === "GIR")}
+          />
+        )}
+        <Grid2
           sx={{
             width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 2,
           }}
+          container
+          spacing={2}
         >
           {selectedData.map((slice, index) => (
-            <PercentBox
-              key={index}
-              title={slice.label}
-              percent={(slice.value / selectedTotal) * 100}
-              shots={slice.value}
-            />
+            <Grid2 size={4} key={index}>
+              <PercentBox
+                title={slice.label}
+                percent={(slice.value / selectedTotal) * 100}
+                shots={slice.value}
+              />
+            </Grid2>
           ))}
-        </Box>
+        </Grid2>
       </Paper>
     </Box>
   );
 };
 
-export default GreenView;
+export default ApproachView;
