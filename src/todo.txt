@@ -1,2 +1,24 @@
-Web side:
-average first putt distance for gir per club
+website
+
+put percents in graphs
+get rid of dash in up and down all cubs
+add putts to gree tab. total and avg per round and per gir
+
+title left box in overview "scoring averages"
+add full game score average
+Takeaway count for pars in overview
+
+change first putt dist to ft 
+copy fairway%, gir, putts per round to overview. (common stats)
+
+default selected games to all
+
+app side
+if up and down false still have club
+
+LATER:
+student teacher login
+
+LATER LATER:
+standout data emphasized
+integrate with videos from coach scott friends

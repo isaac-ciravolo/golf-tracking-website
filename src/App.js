@@ -112,7 +112,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <Grid2 spacing={1} container>
           <Header />
-          <div style={{ height: "100px" }}></div>
+          <div style={{ height: "150px" }}></div>
           <Box
             sx={{ width: "100%", display: "flex", justifyContent: "center" }}
           >
