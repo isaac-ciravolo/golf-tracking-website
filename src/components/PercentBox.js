@@ -3,8 +3,8 @@ import { Paper, Typography } from "@mui/material";
 const PercentBox = ({ title, percent, shots }) => (
   <Paper
     sx={{
-      width: "100px",
-      height: "100px",
+      width: "80px",
+      height: "80px",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -16,7 +16,7 @@ const PercentBox = ({ title, percent, shots }) => (
     <Typography noWrap fontWeight={"bold"}>
       {title}
     </Typography>
-    <Typography noWrap variant="h4">
+    <Typography noWrap variant="h5">
       {percent.toFixed(1) + "%"}
     </Typography>
     <Typography noWrap>{shots + " shots"}</Typography>

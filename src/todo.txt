@@ -1,7 +1,6 @@
 website
 add putts to gree tab. total and avg per round and per gir
 
-title left box in overview "scoring averages"
 add full game score average
 Takeaway count for pars in overview
 

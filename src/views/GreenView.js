@@ -14,7 +14,6 @@ const GreenView = ({ currentHoles }) => {
   const [allTotal, setAllTotal] = useState(0);
 
   useEffect(() => {
-    console.log(selectedClub);
     const newSelectedData = [];
     let newSelectedTotal = 0;
     upAndDown.slice(1, upAndDown.length).forEach((shot) => {
@@ -22,7 +21,6 @@ const GreenView = ({ currentHoles }) => {
         upAndDownClub: selectedClub,
         upAndDown: shot,
       });
-      console.log(shot, newValue);
       newSelectedData.push({
         value: newValue,
         label: shot,
