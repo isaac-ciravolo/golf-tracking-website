@@ -9,7 +9,6 @@ const OverviewView = ({ currentHoles }) => {
   const [maxDistance, setMaxDistance] = useState(0);
 
   useEffect(() => {
-    if (!currentHoles || !currentHoles.length) return;
     const newScoringAverages = {};
     const newParCounts = {};
     const newClubFirstPuttDistData = [];
@@ -104,144 +103,139 @@ const OverviewView = ({ currentHoles }) => {
         gap: 3,
       }}
     >
-      {currentHoles.length > 0 && (
-        <>
-          <Paper
-            sx={{
-              width: "500px",
-              height: "500px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 3,
-              padding: 3,
-            }}
-          >
-            <Typography fontWeight="bold" variant="h6">
-              Scoring Averages
-            </Typography>
-            {[3, 4, 5].map((par) => {
-              return (
-                <Paper
-                  key={par}
-                  sx={{
-                    width: "300px",
-                    height: "125px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography noWrap fontWeight={"bold"}>
-                    {par + " Par"}
-                  </Typography>
-                  {scoringAverages[par] !== undefined && (
-                    <>
-                      <Typography noWrap variant="h4">
-                        {scoringAverages[par].toFixed(2)}
-                      </Typography>
-                      <Typography
-                        noWrap
-                        color={getColorFromScore(scoringAverages[par], par)} // Smooth color transition
-                        fontWeight={"bold"}
-                      >
-                        {(scoringAverages[par] > par ? "+" : "") +
-                          (scoringAverages[par] - par).toFixed(2)}
-                      </Typography>
-                    </>
-                  )}
-                </Paper>
-              );
-            })}
-          </Paper>
-          <Paper
-            sx={{
-              width: "500px",
-              minHeight: "500px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              p: 3,
-            }}
-          >
-            <Typography
-              gutterBottom
-              fullWidth
-              textAlign={"center"}
-              fontWeight={"bold"}
+      <Paper
+        sx={{
+          width: "500px",
+          height: "500px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 3,
+          padding: 3,
+        }}
+      >
+        <Typography fontWeight="bold" variant="h6">
+          Scoring Averages
+        </Typography>
+        {[3, 4, 5].map((par) => {
+          return (
+            <Paper
+              key={par}
+              sx={{
+                width: "300px",
+                height: "125px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              Approach Club First Putt Dist
+              <Typography noWrap fontWeight={"bold"}>
+                {par + " Par"}
+              </Typography>
+              {scoringAverages[par] !== undefined && (
+                <>
+                  <Typography noWrap variant="h4">
+                    {scoringAverages[par].toFixed(2)}
+                  </Typography>
+                  <Typography
+                    noWrap
+                    color={getColorFromScore(scoringAverages[par], par)} // Smooth color transition
+                    fontWeight={"bold"}
+                  >
+                    {(scoringAverages[par] > par ? "+" : "") +
+                      (scoringAverages[par] - par).toFixed(2)}
+                  </Typography>
+                </>
+              )}
+            </Paper>
+          );
+        })}
+      </Paper>
+      <Paper
+        sx={{
+          width: "500px",
+          minHeight: "500px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          p: 3,
+        }}
+      >
+        <Typography
+          gutterBottom
+          fullWidth
+          textAlign={"center"}
+          fontWeight={"bold"}
+        >
+          Approach Club First Putt Dist
+        </Typography>
+        <Grid2 sx={{ marginBottom: "10px" }} container>
+          <Grid2 size={2}>
+            <Typography fontWeight={"bold"} noWrap>
+              Club
             </Typography>
-            <Grid2 sx={{ marginBottom: "10px" }} container>
+          </Grid2>
+          <Grid2 size={2}>
+            <Typography fontWeight={"bold"} noWrap>
+              Distance
+            </Typography>
+          </Grid2>
+          <Grid2 size={2}>
+            <Typography fontWeight={"bold"} noWrap>
+              Count
+            </Typography>
+          </Grid2>
+          <Grid2 size={6}>
+            <Typography fontWeight={"bold"} noWrap>
+              Graph
+            </Typography>
+          </Grid2>
+        </Grid2>
+        {clubFirstPuttDistData.map((data, index) => {
+          const color = getColorFromDistance(data.dist / maxDistance); // Get interpolated color
+
+          return (
+            <Grid2 container spacing={1} key={index}>
               <Grid2 size={2}>
-                <Typography fontWeight={"bold"} noWrap>
-                  Club
+                <Typography noWrap>{data.club}</Typography>
+              </Grid2>
+              <Grid2 size={2}>
+                <Typography noWrap>
+                  {data.dist.toFixed(2) + " yards"}
                 </Typography>
               </Grid2>
               <Grid2 size={2}>
-                <Typography fontWeight={"bold"} noWrap>
-                  Distance
-                </Typography>
-              </Grid2>
-              <Grid2 size={2}>
-                <Typography fontWeight={"bold"} noWrap>
-                  Count
-                </Typography>
+                <Typography noWrap>{data.count + " holes"}</Typography>
               </Grid2>
               <Grid2 size={6}>
-                <Typography fontWeight={"bold"} noWrap>
-                  Graph
-                </Typography>
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "25px",
+                    backgroundColor: "gray",
+                    border: "1px solid black",
+                    position: "relative",
+                  }}
+                >
+                  <Box
+                    key={data.club}
+                    sx={{
+                      width: `${
+                        (data.dist === Infinity ? 0 : data.dist / maxDistance) *
+                        100
+                      }%`,
+                      height: "25px",
+                      backgroundColor: color,
+                    }}
+                  />
+                </Box>
               </Grid2>
             </Grid2>
-            {clubFirstPuttDistData.map((data, index) => {
-              const color = getColorFromDistance(data.dist / maxDistance); // Get interpolated color
-
-              return (
-                <Grid2 container spacing={1} key={index}>
-                  <Grid2 size={2}>
-                    <Typography noWrap>{data.club}</Typography>
-                  </Grid2>
-                  <Grid2 size={2}>
-                    <Typography noWrap>
-                      {data.dist.toFixed(2) + " yards"}
-                    </Typography>
-                  </Grid2>
-                  <Grid2 size={2}>
-                    <Typography noWrap>{data.count + " holes"}</Typography>
-                  </Grid2>
-                  <Grid2 size={6}>
-                    <Box
-                      sx={{
-                        width: "100%",
-                        height: "25px",
-                        backgroundColor: "gray",
-                        border: "1px solid black",
-                        position: "relative",
-                      }}
-                    >
-                      <Box
-                        key={data.club}
-                        sx={{
-                          width: `${
-                            (data.dist === Infinity
-                              ? 0
-                              : data.dist / maxDistance) * 100
-                          }%`,
-                          height: "25px",
-                          backgroundColor: color,
-                        }}
-                      />
-                    </Box>
-                  </Grid2>
-                </Grid2>
-              );
-            })}
-          </Paper>
-        </>
-      )}
+          );
+        })}
+      </Paper>
     </Box>
   );
 };

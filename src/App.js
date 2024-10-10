@@ -74,10 +74,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<HomeView data={data} users={users} />} />
-          <Route
-            path="/user/:userId"
-            element={<UserView data={data} users={users} />}
-          />
+          <Route path="/user/:userId" element={<UserView />} />
         </Routes>
       </ThemeProvider>
     </div>
