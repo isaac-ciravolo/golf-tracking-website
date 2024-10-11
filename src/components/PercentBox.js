@@ -9,7 +9,6 @@ const PercentBox = ({ title, percent, shots }) => (
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      gap: 1,
       p: 3,
     }}
   >
@@ -17,7 +16,7 @@ const PercentBox = ({ title, percent, shots }) => (
       {title}
     </Typography>
     <Typography noWrap variant="h5">
-      {percent.toFixed(1) + "%"}
+      {percent.toFixed(2) + "%"}
     </Typography>
     <Typography noWrap>{shots + " shots"}</Typography>
   </Paper>

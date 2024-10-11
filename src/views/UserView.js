@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { db } from "../firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
+import formatDateFromMilliseconds from "../util/DateConverter.js";
 const UserView = () => {
   const { userId } = useParams();
   const [value, setValue] = useState(0);
@@ -165,10 +166,16 @@ const UserView = () => {
           }}
         >
           <Box sx={{ p: 3 }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "baseline", gap: 4 }}>
               <Typography variant="h3" fontWeight="bold">
                 {users[userId] && users[userId].name.toUpperCase()}
-                {" (" + selectedGames.length} Games Selected)
+              </Typography>
+              <Typography color="gray" fontWeight={"bold"} variant="h4">
+                {selectedGames.length === 1
+                  ? selectedGames[0].title +
+                    " - " +
+                    formatDateFromMilliseconds(selectedGames[0].gameDate)
+                  : +selectedGames.length + " Games Selected"}
               </Typography>
             </Box>
             <Tabs
@@ -192,7 +199,10 @@ const UserView = () => {
               ...(value !== 0 && { display: "none" }),
             }}
           >
-            <OverviewView currentHoles={currentHoles} />
+            <OverviewView
+              currentHoles={currentHoles}
+              numGames={selectedGames.length}
+            />
           </Box>
           <Box
             sx={{
@@ -219,7 +229,10 @@ const UserView = () => {
               ...(value !== 3 && { display: "none" }),
             }}
           >
-            <GreenView currentHoles={currentHoles} />
+            <GreenView
+              currentHoles={currentHoles}
+              numGames={selectedGames.length}
+            />
           </Box>
           <Box
             sx={{

@@ -1,15 +1,3 @@
-website
-add putts to gree tab. total and avg per round and per gir
-sum of putts
-average putts per hole
-average putts per round
-
-add full game score average
-Takeaway count for pars in overview
-
-change first putt dist to ft 
-copy fairway%, gir, putts per round to overview. (common stats)
-
 app side
 if up and down false still have club
 
