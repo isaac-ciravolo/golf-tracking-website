@@ -13,11 +13,9 @@ const firebaseConfig = {
   storageBucket: "practicumproject-1373d.appspot.com",
   messagingSenderId: "78714958107",
   appId: "1:78714958107:web:8247d4268591e30c1b63be",
-  measurementId: "G-VF8R2JV2G3"
+  measurementId: "G-VF8R2JV2G3",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-
 export const db = getFirestore(app);

@@ -163,12 +163,7 @@ const OverviewView = ({ currentHoles }) => {
           p: 3,
         }}
       >
-        <Typography
-          gutterBottom
-          fullWidth
-          textAlign={"center"}
-          fontWeight={"bold"}
-        >
+        <Typography gutterBottom textAlign={"center"} fontWeight={"bold"}>
           Approach Club First Putt Dist
         </Typography>
         <Grid2 sx={{ marginBottom: "10px" }} container>

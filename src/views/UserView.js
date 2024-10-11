@@ -86,6 +86,7 @@ const UserView = () => {
           display: "flex",
           flexDirection: "column",
           gap: 3,
+          zIndex: 100,
         }}
       >
         <Typography textAlign="center" fontWeight={"bold"}>
@@ -145,11 +146,13 @@ const UserView = () => {
             ))}
         </Box>
       </Box>
-      <Box sx={{ width: "200px", height: "100%" }}></Box>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
+          width: "100%",
+          marginLeft: "200px",
+          position: "relative",
         }}
       >
         <Box
@@ -181,7 +184,7 @@ const UserView = () => {
             </Tabs>
           </Box>
         </Box>
-        <Box sx={{ marginTop: "130px" }}>
+        <Box sx={{ marginTop: "130px", width: "1200px" }}>
           <Box
             sx={{
               width: "100%",

@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/header.js";
 import "./styles.css";
-import {
-  Box,
-  Tab,
-  Tabs,
-  Typography,
-  Grid2,
-  createTheme,
-  ThemeProvider,
-} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material";
 import { db } from "./firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
 import HomeView from "./views/HomeView.js";
