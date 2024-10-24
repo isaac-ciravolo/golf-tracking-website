@@ -1,6 +1,3 @@
-app side
-if up and down false still have club
-
 LATER:
 student teacher login
 

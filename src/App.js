@@ -6,7 +6,16 @@ import { db } from "./firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
 import HomeView from "./views/HomeView.js";
 import UserView from "./views/UserView.js";
-import { Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Login from "./components/login.js";
+import Register from "./components/register.js";
+import Profile from "./components/profile.js";
+import { auth } from "./firebase";
 
 const theme = createTheme({
   components: {
@@ -21,6 +30,7 @@ const theme = createTheme({
 function App() {
   const [users, setUsers] = useState({});
   const [data, setData] = useState({});
+  const [user, setUser] = useState();
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -57,7 +67,11 @@ function App() {
 
     fetchGames();
   }, []);
-
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+  });
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
@@ -65,8 +79,15 @@ function App() {
         <div style={{ height: "100px" }}></div>
 
         <Routes>
-          <Route path="/" element={<HomeView data={data} users={users} />} />
-          <Route path="/user/:userId" element={<UserView />} />
+          <Route
+            path="/"
+            element={user ? <Navigate to="/profile" /> : <Login />}
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
+          {/* <Route path="/" element={<HomeView data={data} users={users} />} />
+          <Route path="/user/:userId" element={<UserView />} /> */}
         </Routes>
       </ThemeProvider>
     </div>
