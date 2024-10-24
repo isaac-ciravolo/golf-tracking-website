@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/header.js";
 import "./styles.css";
-import { createTheme, ThemeProvider } from "@mui/material";
+import { createTheme, ThemeProvider, CircularProgress } from "@mui/material";
 import { db } from "./firebase.js"; // Import Firestore config
-import { collection, getDocs } from "firebase/firestore";
-import HomeView from "./views/HomeView.js";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import UserView from "./views/UserView.js";
+import LoadingView from "./views/LoadingView.js";
 import {
   BrowserRouter as Router,
   Routes,
@@ -28,50 +28,45 @@ const theme = createTheme({
 });
 
 function App() {
-  const [users, setUsers] = useState({});
-  const [data, setData] = useState({});
-  const [user, setUser] = useState();
+  const [games, setGames] = useState([]);
+  const [user, setUser] = useState({});
 
   useEffect(() => {
+    const fetchUser = async () => {
+      auth.onAuthStateChanged(async (user) => {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUser(docSnap.data());
+        } else {
+          console.log("User is not logged in");
+        }
+      });
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    if (!user || !user.id) return;
     const fetchGames = async () => {
-      try {
-        const usersCollection = collection(db, "users");
-        const usersSnapshot = await getDocs(usersCollection);
-
-        usersSnapshot.forEach(async (userDoc) => {
-          const userGames = [];
-          const gamesCollectionRef = collection(userDoc.ref, "games");
-          const gamesSnapshot = await getDocs(gamesCollectionRef);
-          setUsers((prevUsers) => ({
-            ...prevUsers,
-            [userDoc.id]: userDoc.data(),
-          }));
-
-          gamesSnapshot.forEach((gameDoc) => {
-            userGames.push({
-              id: gameDoc.id,
-              ...gameDoc.data(),
-              userId: userDoc.id,
-            });
-          });
-          userGames.sort((a, b) => a.gameDate - b.gameDate);
-          setData((prevData) => ({
-            ...prevData,
-            [userDoc.id]: userGames,
-          }));
+      const userDocRef = doc(db, "users", user.id);
+      const gamesCollectionRef = collection(userDocRef, "games");
+      const gamesSnapshot = await getDocs(gamesCollectionRef);
+      const userGames = [];
+      gamesSnapshot.forEach((gameDoc) => {
+        userGames.push({
+          id: gameDoc.id,
+          ...gameDoc.data(),
         });
-      } catch (error) {
-        console.error("Error fetching games: ", error);
-      }
+      });
+      userGames.sort((a, b) => a.gameDate - b.gameDate);
+      setGames(userGames);
     };
 
     fetchGames();
-  }, []);
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      setUser(user);
-    });
-  });
+  }, [user]);
+
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
@@ -85,9 +80,16 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
-          {/* <Route path="/" element={<HomeView data={data} users={users} />} />
-          <Route path="/user/:userId" element={<UserView />} /> */}
+          <Route
+            path="/profile"
+            element={
+              user.name ? (
+                <UserView user={user} games={games} />
+              ) : (
+                <LoadingView />
+              )
+            }
+          />
         </Routes>
       </ThemeProvider>
     </div>

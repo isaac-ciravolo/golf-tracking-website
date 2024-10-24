@@ -17,53 +17,14 @@ import {
 import { db } from "../firebase.js"; // Import Firestore config
 import { collection, getDocs } from "firebase/firestore";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
-const UserView = () => {
-  const { userId } = useParams();
+const UserView = ({ user, games }) => {
   const [value, setValue] = useState(0);
   const [currentHoles, setCurrentHoles] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
-  const [users, setUsers] = useState({});
-  const [data, setData] = useState({});
 
   useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const usersCollection = collection(db, "users");
-        const usersSnapshot = await getDocs(usersCollection);
-
-        usersSnapshot.forEach(async (userDoc) => {
-          const userGames = [];
-          const gamesCollectionRef = collection(userDoc.ref, "games");
-          const gamesSnapshot = await getDocs(gamesCollectionRef);
-          setUsers((prevUsers) => ({
-            ...prevUsers,
-            [userDoc.id]: userDoc.data(),
-          }));
-
-          gamesSnapshot.forEach((gameDoc) => {
-            userGames.push({
-              id: gameDoc.id,
-              ...gameDoc.data(),
-              userId: userDoc.id,
-            });
-          });
-          userGames.sort((a, b) => a.gameDate - b.gameDate);
-          setData((prevData) => ({
-            ...prevData,
-            [userDoc.id]: userGames,
-          }));
-        });
-      } catch (error) {
-        console.error("Error fetching games: ", error);
-      }
-    };
-
-    fetchGames();
-  }, []);
-
-  useEffect(() => {
-    if (data[userId]) setSelectedGames(data[userId]);
-  }, [data, userId]);
+    if (games) setSelectedGames(games);
+  }, [games]);
 
   useEffect(() => {
     const newHoles = [];
@@ -107,7 +68,7 @@ const UserView = () => {
           <Button
             variant="contained"
             sx={{ width: "90%", height: "48.5px" }}
-            onClick={() => setSelectedGames(data[userId])}
+            onClick={() => setSelectedGames(games)}
           >
             Select All
           </Button>
@@ -118,8 +79,8 @@ const UserView = () => {
           >
             Deselect All
           </Button>
-          {data[userId] &&
-            data[userId].map((game) => (
+          {games.length &&
+            games.map((game) => (
               <Box
                 key={game.id}
                 sx={{
@@ -168,7 +129,7 @@ const UserView = () => {
           <Box sx={{ p: 3 }}>
             <Box sx={{ display: "flex", alignItems: "baseline", gap: 4 }}>
               <Typography variant="h3" fontWeight="bold">
-                {users[userId] && users[userId].name.toUpperCase()}
+                {user.name && user.name.toUpperCase()}
               </Typography>
               <Typography color="gray" fontWeight={"bold"} variant="h4">
                 {selectedGames.length === 1
