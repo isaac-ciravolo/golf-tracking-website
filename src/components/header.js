@@ -1,19 +1,17 @@
-import { AppBar, Typography } from "@mui/material";
+import { AppBar, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
-function Header() {
+function Header({ showLogOut, logOut }) {
   return (
     <AppBar
       sx={{
         zIndex: 1000,
         height: "100px",
         display: "flex",
-        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      {/* Use Link to wrap the title */}
       <Link
         to="/"
         style={{ textDecoration: "none", color: "inherit" }} // Remove underline and keep text color
@@ -23,6 +21,19 @@ function Header() {
         </Typography>
       </Link>
       <Typography>Hows The Weather?</Typography>
+      {showLogOut && (
+        <Button
+          sx={{
+            position: "absolute",
+            right: 10,
+            backgroundColor: "gray",
+          }}
+          variant="contained"
+          onClick={logOut}
+        >
+          Log Out
+        </Button>
+      )}
     </AppBar>
   );
 }

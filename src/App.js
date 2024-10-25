@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
-import Header from "./components/header.js";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import "./styles.css";
-import { createTheme, ThemeProvider, CircularProgress } from "@mui/material";
-import { db } from "./firebase.js"; // Import Firestore config
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+
+import { createTheme, ThemeProvider } from "@mui/material";
+
+import Header from "./components/header.js";
 import UserView from "./views/UserView.js";
 import LoadingView from "./views/LoadingView.js";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
 import Login from "./components/login.js";
 import Register from "./components/register.js";
-import Profile from "./components/profile.js";
+
 import { auth } from "./firebase";
+import { db } from "./firebase.js"; // Import Firestore config
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { getAuth, signOut } from "firebase/auth";
 
 const theme = createTheme({
   components: {
@@ -30,10 +28,15 @@ const theme = createTheme({
 function App() {
   const [games, setGames] = useState([]);
   const [user, setUser] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
       auth.onAuthStateChanged(async (user) => {
+        if (!user) {
+          setUser(null);
+          return;
+        }
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
@@ -67,10 +70,23 @@ function App() {
     fetchGames();
   }, [user]);
 
+  const logOut = () => {
+    const auth = getAuth();
+
+    signOut(auth)
+      .then(() => {
+        console.log("User signed out successfully.");
+        navigate("/login"); // Redirect to login page
+      })
+      .catch((error) => {
+        console.error("Error signing out: ", error);
+      });
+  };
+
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Header />
+        <Header showLogOut={user !== null} logOut={logOut} />
         <div style={{ height: "100px" }}></div>
 
         <Routes>
@@ -83,7 +99,7 @@ function App() {
           <Route
             path="/profile"
             element={
-              user.name ? (
+              user && user.name ? (
                 <UserView user={user} games={games} />
               ) : (
                 <LoadingView />
