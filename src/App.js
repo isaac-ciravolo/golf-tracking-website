@@ -41,6 +41,7 @@ function App() {
   const [games, setGames] = useState([]);
   const [user, setUser] = useState(null);
   const [isCoach, setIsCoach] = useState(false);
+  const [classes, setClasses] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -97,7 +98,16 @@ function App() {
         userGames.sort((a, b) => a.gameDate - b.gameDate);
         setGames(userGames);
       } else {
-        const coachDocRef = doc(db, "coaches", user.id);
+        const newClasses = [];
+        user.classes.forEach(async (_class) => {
+          const classDocRef = doc(db, "classes", _class.id);
+          const classDocSnap = await getDoc(classDocRef);
+
+          if (classDocSnap.exists()) {
+            newClasses.push(classDocSnap.data());
+          }
+        });
+        setClasses(newClasses);
       }
     };
 
@@ -134,7 +144,7 @@ function App() {
             element={
               user && user.name ? (
                 isCoach ? (
-                  <CoachView user={user} />
+                  <CoachView user={user} classes={classes} />
                 ) : (
                   <UserView user={user} games={games} />
                 )
