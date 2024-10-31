@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import "./styles.css";
 
 import { createTheme, ThemeProvider } from "@mui/material";
@@ -7,8 +13,8 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import Header from "./components/header.js";
 import UserView from "./views/UserView.js";
 import LoadingView from "./views/LoadingView.js";
-import Login from "./components/login.js";
-import Register from "./components/register.js";
+import LoginView from "./views/LoginView.js";
+import SignUpView from "./views/SignUpView.js";
 
 import { auth } from "./firebase";
 import { db } from "./firebase.js"; // Import Firestore config
@@ -32,13 +38,16 @@ const theme = createTheme({
 
 function App() {
   const [games, setGames] = useState([]);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchUser = async () => {
       auth.onAuthStateChanged(async (user) => {
         if (!user) {
+          if (location.pathname !== "/login" && location.pathname !== "/signup")
+            navigate("/login");
           setUser(null);
           return;
         }
@@ -47,7 +56,9 @@ function App() {
         if (docSnap.exists()) {
           setUser(docSnap.data());
         } else {
-          console.log("User is not logged in");
+          console.error("User not found in Firestore.");
+          setUser(null);
+          navigate("/login");
         }
       });
     };
@@ -80,7 +91,6 @@ function App() {
 
     signOut(auth)
       .then(() => {
-        console.log("User signed out successfully.");
         navigate("/login"); // Redirect to login page
       })
       .catch((error) => {
@@ -97,10 +107,10 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={user ? <Navigate to="/profile" /> : <Login />}
+            element={user ? <Navigate to="/profile" /> : <LoginView />}
           />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<LoginView />} />
+          <Route path="/signup" element={<SignUpView />} />
           <Route
             path="/profile"
             element={

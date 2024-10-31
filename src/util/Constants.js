@@ -53,4 +53,19 @@ const colors = {
   No: "#eb6b54",
 };
 
-export { clubs, teeShots, approachShots, arr0to9, colors, upAndDown };
+const sortingOptions = [
+  "Name (A-Z)",
+  "Name (Z-A)",
+  "Date (Early-Late)",
+  "Date (Late-Early)",
+];
+
+export {
+  clubs,
+  teeShots,
+  approachShots,
+  arr0to9,
+  colors,
+  upAndDown,
+  sortingOptions,
+};
