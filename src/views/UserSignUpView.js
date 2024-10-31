@@ -2,16 +2,27 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { auth, db } from "../firebase";
 import { setDoc, doc } from "firebase/firestore";
-import { Typography, Paper, Box, Button, TextField, Link } from "@mui/material";
-import { autocompleteClasses } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import {
+  Typography,
+  Paper,
+  Box,
+  Button,
+  TextField,
+  Link,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
 import { sortingOptions } from "../util/Constants";
 
-function SignUpView() {
+function UserSignUpView() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [accountType, setAccountType] = useState("user");
+  const navigate = useNavigate();
 
   function isValidEmail(email) {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -49,14 +60,24 @@ function SignUpView() {
       await createUserWithEmailAndPassword(auth, email, password);
       const user = auth.currentUser;
       if (user) {
-        await setDoc(doc(db, "users", user.uid), {
-          id: user.uid,
-          email: user.email,
-          name: name,
-          joined: new Date().getTime() / 1000,
-          sortBy: sortingOptions[0],
-        });
+        if (accountType === "user") {
+          await setDoc(doc(db, "users", user.uid), {
+            id: user.uid,
+            email: user.email,
+            name: name,
+            joined: new Date().getTime() / 1000,
+            sortBy: sortingOptions[0],
+          });
+        } else {
+          await setDoc(doc(db, "coaches", user.uid), {
+            id: user.uid,
+            email: user.email,
+            name: name,
+            joined: new Date().getTime() / 1000,
+          });
+        }
       }
+      navigate("/profile");
     } catch (error) {
       if (error.message === "Firebase: Error (auth/email-already-in-use).")
         setErrorMessage("Email already in use");
@@ -84,6 +105,32 @@ function SignUpView() {
         >
           <Typography variant="h3" fontWeight="bold">
             Sign Up
+          </Typography>
+
+          <Typography textAlign={"center"} fontWeight={"bold"}>
+            Account Type
+          </Typography>
+          <Box
+            sx={{ width: "100%", display: "flex", justifyContent: "center" }}
+          >
+            <ToggleButtonGroup
+              value={accountType}
+              exclusive
+              onChange={(e, value) => setAccountType(value)}
+            >
+              <ToggleButton sx={{ width: "200px" }} value="user">
+                User
+              </ToggleButton>
+              <ToggleButton sx={{ width: "200px" }} value="coach">
+                Coach
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+
+          <Typography textAlign={"center"}>
+            {accountType === "user"
+              ? "Users have the ability to input vata and view their progress."
+              : "Coaches have the ability to create classes for users to join."}
           </Typography>
 
           <TextField
@@ -151,7 +198,7 @@ function SignUpView() {
           </Button>
 
           <Typography>
-            Already Signed Up? <Link href="/login">Login Here</Link>
+            Already Have an Account? <Link href="/login">Login Here</Link>
           </Typography>
           <Typography color="error">{errorMessage}</Typography>
         </Box>
@@ -159,4 +206,4 @@ function SignUpView() {
     </Paper>
   );
 }
-export default SignUpView;
+export default UserSignUpView;

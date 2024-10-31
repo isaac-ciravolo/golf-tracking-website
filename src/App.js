@@ -13,8 +13,9 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import Header from "./components/header.js";
 import UserView from "./views/UserView.js";
 import LoadingView from "./views/LoadingView.js";
-import LoginView from "./views/LoginView.js";
-import SignUpView from "./views/SignUpView.js";
+import UserLoginView from "./views/UserLoginView.js";
+import UserSignUpView from "./views/UserSignUpView.js";
+import CoachView from "./views/CoachView.js";
 
 import { auth } from "./firebase";
 import { db } from "./firebase.js"; // Import Firestore config
@@ -39,6 +40,7 @@ const theme = createTheme({
 function App() {
   const [games, setGames] = useState([]);
   const [user, setUser] = useState(null);
+  const [isCoach, setIsCoach] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -51,15 +53,27 @@ function App() {
           setUser(null);
           return;
         }
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setUser(docSnap.data());
-        } else {
-          console.error("User not found in Firestore.");
-          setUser(null);
-          navigate("/login");
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          setUser(userDocSnap.data());
+          setIsCoach(false);
+          return;
         }
+
+        const coachDocRef = doc(db, "coaches", user.uid);
+        const coachDocSnap = await getDoc(coachDocRef);
+
+        if (coachDocSnap.exists()) {
+          setUser(coachDocSnap.data());
+          setIsCoach(true);
+          return;
+        }
+
+        console.error("User not found in Firestore.");
+        setUser(null);
+        navigate("/login");
       });
     };
 
@@ -69,18 +83,22 @@ function App() {
   useEffect(() => {
     if (!user || !user.id) return;
     const fetchGames = async () => {
-      const userDocRef = doc(db, "users", user.id);
-      const gamesCollectionRef = collection(userDocRef, "games");
-      const gamesSnapshot = await getDocs(gamesCollectionRef);
-      const userGames = [];
-      gamesSnapshot.forEach((gameDoc) => {
-        userGames.push({
-          id: gameDoc.id,
-          ...gameDoc.data(),
+      if (!isCoach) {
+        const userDocRef = doc(db, "users", user.id);
+        const gamesCollectionRef = collection(userDocRef, "games");
+        const gamesSnapshot = await getDocs(gamesCollectionRef);
+        const userGames = [];
+        gamesSnapshot.forEach((gameDoc) => {
+          userGames.push({
+            id: gameDoc.id,
+            ...gameDoc.data(),
+          });
         });
-      });
-      userGames.sort((a, b) => a.gameDate - b.gameDate);
-      setGames(userGames);
+        userGames.sort((a, b) => a.gameDate - b.gameDate);
+        setGames(userGames);
+      } else {
+        const coachDocRef = doc(db, "coaches", user.id);
+      }
     };
 
     fetchGames();
@@ -107,15 +125,19 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={user ? <Navigate to="/profile" /> : <LoginView />}
+            element={user ? <Navigate to="/profile" /> : <UserLoginView />}
           />
-          <Route path="/login" element={<LoginView />} />
-          <Route path="/signup" element={<SignUpView />} />
+          <Route path="/login" element={<UserLoginView />} />
+          <Route path="/signup" element={<UserSignUpView />} />
           <Route
             path="/profile"
             element={
               user && user.name ? (
-                <UserView user={user} games={games} />
+                isCoach ? (
+                  <CoachView user={user} />
+                ) : (
+                  <UserView user={user} games={games} />
+                )
               ) : (
                 <LoadingView />
               )

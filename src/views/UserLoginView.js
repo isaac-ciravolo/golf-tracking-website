@@ -4,7 +4,7 @@ import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { Typography, Paper, Box, Button, TextField, Link } from "@mui/material";
 
-function LoginView() {
+function UserLoginView() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -16,7 +16,9 @@ function LoginView() {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/profile");
     } catch (error) {
-      if (error.message === "Firebase: Error (auth/invalid-credential).")
+      if (error.message === "Firebase: Error (auth/invalid-email).")
+        setErrorMessage("Invalid email");
+      else if (error.message === "Firebase: Error (auth/invalid-credential).")
         setErrorMessage("Invalid email or password");
       else setErrorMessage(error.message);
     }
@@ -91,4 +93,4 @@ function LoginView() {
   );
 }
 
-export default LoginView;
+export default UserLoginView;
