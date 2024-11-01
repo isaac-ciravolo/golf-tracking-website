@@ -6,17 +6,22 @@ import {
   Typography,
   Button,
   ToggleButton,
+  Dialog,
+  TextField,
 } from "@mui/material";
 
-const CoachView = ({ user, classes }) => {
+const CoachView = ({ user, coachClasses, createClass }) => {
   const [value, setValue] = useState(0);
   const [selectedClass, setSelectedClass] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [className, setClassName] = useState("");
 
   useEffect(() => {
-    if (classes.length > 0) {
-      setSelectedClass(classes[0]);
+    if (coachClasses.length > 0) {
+      setSelectedClass(coachClasses[0]);
     }
-  }, [classes]);
+    console.log(coachClasses.length);
+  }, [coachClasses]);
 
   return (
     <Box sx={{ display: "flex", width: "100%", height: "100%" }}>
@@ -47,8 +52,18 @@ const CoachView = ({ user, classes }) => {
             gap: 1,
           }}
         >
-          {classes.length > 0 &&
-            classes.map((_class) => (
+          <Button
+            variant="contained"
+            sx={{ width: "90%", height: "48.5px" }}
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            Add a Class
+          </Button>
+          {coachClasses.map((_class) => {
+            console.log("mapping class:", _class);
+            return (
               <Box
                 key={_class.id}
                 sx={{
@@ -67,7 +82,8 @@ const CoachView = ({ user, classes }) => {
                   {_class.name}
                 </ToggleButton>
               </Box>
-            ))}
+            );
+          })}
         </Box>
       </Box>
       <Box
@@ -114,6 +130,44 @@ const CoachView = ({ user, classes }) => {
           </Box>
         </Box>
       </Box>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <Box
+          sx={{
+            width: "500px",
+            p: 3,
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <Typography variant="h3" fontWeight="bold">
+            Create a Class
+          </Typography>
+          <TextField
+            label="Name"
+            type="text"
+            fullWidth
+            variant="outlined"
+            placeholder="Enter name"
+            value={className}
+            sx={{ width: "100%" }}
+            onChange={(e) => {
+              setClassName(e.target.value);
+            }}
+          />
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ height: "50px", width: "100%", fontSize: "20px" }}
+            onClick={() => {
+              setOpen(false);
+              createClass(className);
+            }}
+          >
+            CREATE CLASS
+          </Button>
+        </Box>
+      </Dialog>
     </Box>
   );
 };

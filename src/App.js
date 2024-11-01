@@ -13,13 +13,15 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import Header from "./components/header.js";
 import UserView from "./views/UserView.js";
 import LoadingView from "./views/LoadingView.js";
-import UserLoginView from "./views/UserLoginView.js";
-import UserSignUpView from "./views/UserSignUpView.js";
+import LoginView from "./views/LoginView.js";
+import SignUpView from "./views/SignUpView.js";
 import CoachView from "./views/CoachView.js";
+
+import generateClassCode from "./util/ClassCode.js";
 
 import { auth } from "./firebase";
 import { db } from "./firebase.js"; // Import Firestore config
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, setDoc } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 
 const theme = createTheme({
@@ -41,9 +43,40 @@ function App() {
   const [games, setGames] = useState([]);
   const [user, setUser] = useState(null);
   const [isCoach, setIsCoach] = useState(false);
-  const [classes, setClasses] = useState([]);
+  const [coachClasses, setClasses] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const createClass = async (className) => {
+    let newClassCode = generateClassCode();
+    let classCodeExists = true;
+    while (classCodeExists) {
+      const classDocRef = doc(db, "classes", newClassCode);
+      const classDocSnap = await getDoc(classDocRef);
+      if (!classDocSnap.exists()) {
+        classCodeExists = false;
+      } else {
+        newClassCode = generateClassCode(); // Generate a new class code if it already exists
+      }
+    }
+
+    const newClass = {
+      name: className,
+      id: newClassCode,
+      coach: user.id,
+      students: [],
+    };
+    await setDoc(doc(db, "classes", newClassCode), newClass);
+    setClasses((prevClasses) => [...prevClasses, newClass]);
+
+    const updatedUser = {
+      ...user,
+      classes: [...user.classes, { id: newClassCode }],
+    };
+    setUser(updatedUser);
+    const userDocRef = doc(db, "coaches", user.id);
+    await setDoc(userDocRef, updatedUser);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -82,36 +115,42 @@ function App() {
   }, []);
 
   useEffect(() => {
+    console.log(coachClasses);
+    console.log([{ id: "123", name: "test", students: [] }]);
+  }, [coachClasses]);
+
+  useEffect(() => {
     if (!user || !user.id) return;
+
     const fetchGames = async () => {
-      if (!isCoach) {
-        const userDocRef = doc(db, "users", user.id);
-        const gamesCollectionRef = collection(userDocRef, "games");
-        const gamesSnapshot = await getDocs(gamesCollectionRef);
-        const userGames = [];
-        gamesSnapshot.forEach((gameDoc) => {
-          userGames.push({
-            id: gameDoc.id,
-            ...gameDoc.data(),
-          });
+      const userDocRef = doc(db, "users", user.id);
+      const gamesCollectionRef = collection(userDocRef, "games");
+      const gamesSnapshot = await getDocs(gamesCollectionRef);
+      const userGames = [];
+      gamesSnapshot.forEach((gameDoc) => {
+        userGames.push({
+          id: gameDoc.id,
+          ...gameDoc.data(),
         });
-        userGames.sort((a, b) => a.gameDate - b.gameDate);
-        setGames(userGames);
-      } else {
-        const newClasses = [];
-        user.classes.forEach(async (_class) => {
+      });
+      userGames.sort((a, b) => a.gameDate - b.gameDate);
+      setGames(userGames);
+    };
+
+    const fetchClasses = async () => {
+      const newClasses = await Promise.all(
+        user.classes.map(async (_class) => {
           const classDocRef = doc(db, "classes", _class.id);
           const classDocSnap = await getDoc(classDocRef);
 
-          if (classDocSnap.exists()) {
-            newClasses.push(classDocSnap.data());
-          }
-        });
-        setClasses(newClasses);
-      }
+          return classDocSnap.exists() ? classDocSnap.data() : null;
+        })
+      );
+      setClasses(newClasses.filter(Boolean));
     };
 
-    fetchGames();
+    if (isCoach) fetchClasses();
+    else fetchGames();
   }, [user]);
 
   const logOut = () => {
@@ -135,16 +174,20 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={user ? <Navigate to="/profile" /> : <UserLoginView />}
+            element={user ? <Navigate to="/profile" /> : <LoginView />}
           />
-          <Route path="/login" element={<UserLoginView />} />
-          <Route path="/signup" element={<UserSignUpView />} />
+          <Route path="/login" element={<LoginView />} />
+          <Route path="/signup" element={<SignUpView />} />
           <Route
             path="/profile"
             element={
               user && user.name ? (
                 isCoach ? (
-                  <CoachView user={user} classes={classes} />
+                  <CoachView
+                    user={user}
+                    coachClasses={coachClasses}
+                    createClass={createClass}
+                  />
                 ) : (
                   <UserView user={user} games={games} />
                 )

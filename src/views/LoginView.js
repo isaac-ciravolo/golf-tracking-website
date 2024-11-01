@@ -4,7 +4,7 @@ import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { Typography, Paper, Box, Button, TextField, Link } from "@mui/material";
 
-function UserLoginView() {
+function LoginView() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -93,4 +93,4 @@ function UserLoginView() {
   );
 }
 
-export default UserLoginView;
+export default LoginView;

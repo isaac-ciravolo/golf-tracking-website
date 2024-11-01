@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { sortingOptions } from "../util/Constants";
 
-function UserSignUpView() {
+function SignUpView() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -206,4 +206,4 @@ function UserSignUpView() {
     </Paper>
   );
 }
-export default UserSignUpView;
+export default SignUpView;
