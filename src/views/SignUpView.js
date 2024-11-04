@@ -74,6 +74,7 @@ function SignUpView() {
             email: user.email,
             name: name,
             joined: new Date().getTime() / 1000,
+            classes: [],
           });
         }
       }

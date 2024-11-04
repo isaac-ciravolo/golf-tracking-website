@@ -9,18 +9,20 @@ import {
   Dialog,
   TextField,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 const CoachView = ({ user, coachClasses, createClass }) => {
   const [value, setValue] = useState(0);
   const [selectedClass, setSelectedClass] = useState(null);
   const [open, setOpen] = useState(false);
   const [className, setClassName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (coachClasses.length > 0) {
       setSelectedClass(coachClasses[0]);
     }
-    console.log(coachClasses.length);
   }, [coachClasses]);
 
   return (
@@ -61,29 +63,29 @@ const CoachView = ({ user, coachClasses, createClass }) => {
           >
             Add a Class
           </Button>
-          {coachClasses.map((_class) => {
-            console.log("mapping class:", _class);
-            return (
-              <Box
-                key={_class.id}
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <ToggleButton
-                  color="primary"
-                  value={_class === selectedClass}
-                  selected={_class === selectedClass}
-                  onClick={() => setSelectedClass(_class)}
-                  sx={{ width: "90%" }}
+          {coachClasses &&
+            coachClasses.map((_class) => {
+              return (
+                <Box
+                  key={_class.id}
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
                 >
-                  {_class.name}
-                </ToggleButton>
-              </Box>
-            );
-          })}
+                  <ToggleButton
+                    color="primary"
+                    value={_class === selectedClass}
+                    selected={_class === selectedClass}
+                    onClick={() => setSelectedClass(_class)}
+                    sx={{ width: "90%" }}
+                  >
+                    {_class.name}
+                  </ToggleButton>
+                </Box>
+              );
+            })}
         </Box>
       </Box>
       <Box
@@ -153,19 +155,29 @@ const CoachView = ({ user, coachClasses, createClass }) => {
             sx={{ width: "100%" }}
             onChange={(e) => {
               setClassName(e.target.value);
+              setErrorMessage("");
             }}
           />
-          <Button
+          <LoadingButton
             variant="contained"
             fullWidth
             sx={{ height: "50px", width: "100%", fontSize: "20px" }}
-            onClick={() => {
-              setOpen(false);
-              createClass(className);
+            loading={loading}
+            onClick={async () => {
+              setLoading(true);
+              const error = await createClass(className);
+              setLoading(false);
+
+              if (error) {
+                setErrorMessage(error);
+              } else {
+                setOpen(false);
+              }
             }}
           >
             CREATE CLASS
-          </Button>
+          </LoadingButton>
+          <Typography color="error">{errorMessage}</Typography>
         </Box>
       </Dialog>
     </Box>

@@ -48,34 +48,39 @@ function App() {
   const location = useLocation();
 
   const createClass = async (className) => {
-    let newClassCode = generateClassCode();
-    let classCodeExists = true;
-    while (classCodeExists) {
-      const classDocRef = doc(db, "classes", newClassCode);
-      const classDocSnap = await getDoc(classDocRef);
-      if (!classDocSnap.exists()) {
-        classCodeExists = false;
-      } else {
-        newClassCode = generateClassCode(); // Generate a new class code if it already exists
+    try {
+      if (className === "") return "Please enter a class name.";
+      let newClassCode = generateClassCode();
+      let classCodeExists = true;
+      while (classCodeExists) {
+        const classDocRef = doc(db, "classes", newClassCode);
+        const classDocSnap = await getDoc(classDocRef);
+        if (!classDocSnap.exists()) {
+          classCodeExists = false;
+        } else {
+          newClassCode = generateClassCode(); // Generate a new class code if it already exists
+        }
       }
+
+      const newClass = {
+        name: className,
+        id: newClassCode,
+        coach: user.id,
+        students: [],
+      };
+      await setDoc(doc(db, "classes", newClassCode), newClass);
+
+      const userDocRef = doc(db, "coaches", user.id);
+      const updatedUser = {
+        ...user,
+        classes: [...user.classes, { id: newClassCode }],
+      };
+      await setDoc(userDocRef, updatedUser);
+
+      setUser(updatedUser);
+    } catch (error) {
+      return error.message;
     }
-
-    const newClass = {
-      name: className,
-      id: newClassCode,
-      coach: user.id,
-      students: [],
-    };
-    await setDoc(doc(db, "classes", newClassCode), newClass);
-    setClasses((prevClasses) => [...prevClasses, newClass]);
-
-    const updatedUser = {
-      ...user,
-      classes: [...user.classes, { id: newClassCode }],
-    };
-    setUser(updatedUser);
-    const userDocRef = doc(db, "coaches", user.id);
-    await setDoc(userDocRef, updatedUser);
   };
 
   useEffect(() => {
@@ -113,11 +118,6 @@ function App() {
 
     fetchUser();
   }, []);
-
-  useEffect(() => {
-    console.log(coachClasses);
-    console.log([{ id: "123", name: "test", students: [] }]);
-  }, [coachClasses]);
 
   useEffect(() => {
     if (!user || !user.id) return;

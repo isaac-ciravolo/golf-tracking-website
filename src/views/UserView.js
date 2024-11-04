@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import OverviewView from "./OverviewView.js";
 import DrivingView from "./DrivingView.js";
 import ApproachView from "./ApproachView.js";
 import GreenView from "./GreenView.js";
 import CardView from "./CardView.js";
 import AdvancedView from "./AdvancedView.js";
+import ClassesView from "./ClassesView.js";
 import {
   Box,
   Tab,
@@ -14,8 +14,6 @@ import {
   Button,
   ToggleButton,
 } from "@mui/material";
-import { db } from "../firebase.js"; // Import Firestore config
-import { collection, getDocs } from "firebase/firestore";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
 const UserView = ({ user, games }) => {
   const [value, setValue] = useState(0);
@@ -149,6 +147,7 @@ const UserView = ({ user, games }) => {
               <Tab label="Green" index={3} />
               <Tab label="Card" index={4} />
               <Tab label="Advanced" index={5} />
+              <Tab label="Classes" index={6} />
             </Tabs>
           </Box>
         </Box>
@@ -212,6 +211,15 @@ const UserView = ({ user, games }) => {
             }}
           >
             <AdvancedView currentHoles={currentHoles} />
+          </Box>
+          <Box
+            sx={{
+              width: "100%",
+              p: 3,
+              ...(value !== 6 && { display: "none" }),
+            }}
+          >
+            <ClassesView />
           </Box>
         </Box>
       </Box>
