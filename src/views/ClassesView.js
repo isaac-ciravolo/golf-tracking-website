@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, Dialog, Typography, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
-const ClassesView = () => {
+const ClassesView = ({ fetchClass, addRequest, userId }) => {
   const [open, setOpen] = useState(false);
   const [classCode, setClassCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -23,7 +23,12 @@ const ClassesView = () => {
       >
         Join a Class
       </Button>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          if (!loading) setOpen(false);
+        }}
+      >
         <Box
           sx={{
             width: "500px",
@@ -41,7 +46,7 @@ const ClassesView = () => {
             type="text"
             fullWidth
             variant="outlined"
-            placeholder="Enter name"
+            placeholder="Enter code"
             value={classCode}
             sx={{ width: "100%" }}
             onChange={(e) => {
@@ -56,10 +61,9 @@ const ClassesView = () => {
             loading={loading}
             onClick={async () => {
               setLoading(true);
-              //   const error = await createClass(className);
-              const error = null;
+              const error = await addRequest(classCode, userId);
               setLoading(false);
-
+              console.log(error);
               if (error) {
                 setErrorMessage(error);
               } else {

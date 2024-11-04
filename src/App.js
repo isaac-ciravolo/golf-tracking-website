@@ -67,6 +67,7 @@ function App() {
         id: newClassCode,
         coach: user.id,
         students: [],
+        requests: [],
       };
       await setDoc(doc(db, "classes", newClassCode), newClass);
 
@@ -81,6 +82,42 @@ function App() {
     } catch (error) {
       return error.message;
     }
+  };
+
+  const fetchClass = async (classCode) => {
+    const classDocRef = doc(db, "classes", classCode);
+    const classDocSnap = await getDoc(classDocRef);
+
+    if (!classDocSnap.exists()) {
+      return "Class not found.";
+    }
+
+    return classDocSnap.data();
+  };
+
+  const addRequest = async (classCode, userId) => {
+    const classDocRef = doc(db, "classes", classCode);
+    const classDocSnap = await getDoc(classDocRef);
+
+    if (!classDocSnap.exists()) {
+      return "Class not found.";
+    }
+
+    const classData = classDocSnap.data();
+    if (classData.students.includes(userId)) {
+      return "You are already in this class.";
+    }
+
+    if (classData.requests.includes(userId)) {
+      return "You have already requested to join this class.";
+    }
+
+    const updatedClass = {
+      ...classData,
+      requests: [...classData.requests, userId],
+    };
+
+    await setDoc(classDocRef, updatedClass);
   };
 
   useEffect(() => {
@@ -189,7 +226,12 @@ function App() {
                     createClass={createClass}
                   />
                 ) : (
-                  <UserView user={user} games={games} />
+                  <UserView
+                    user={user}
+                    games={games}
+                    fetchClass={fetchClass}
+                    addRequest={addRequest}
+                  />
                 )
               ) : (
                 <LoadingView />

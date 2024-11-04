@@ -132,7 +132,12 @@ const CoachView = ({ user, coachClasses, createClass }) => {
           </Box>
         </Box>
       </Box>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          if (!loading) setOpen(false);
+        }}
+      >
         <Box
           sx={{
             width: "500px",
