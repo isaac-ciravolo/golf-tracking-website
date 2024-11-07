@@ -21,7 +21,14 @@ import generateClassCode from "./util/ClassCode.js";
 
 import { auth } from "./firebase";
 import { db } from "./firebase.js"; // Import Firestore config
-import { collection, getDocs, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  addDoc,
+} from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 
 const theme = createTheme({
@@ -44,6 +51,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [isCoach, setIsCoach] = useState(false);
   const [coachClasses, setClasses] = useState([]);
+  const [requests, setRequests] = useState({});
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -66,19 +74,11 @@ function App() {
         name: className,
         id: newClassCode,
         coach: user.id,
-        students: [],
-        requests: [],
       };
       await setDoc(doc(db, "classes", newClassCode), newClass);
 
       const userDocRef = doc(db, "coaches", user.id);
-      const updatedUser = {
-        ...user,
-        classes: [...user.classes, { id: newClassCode }],
-      };
-      await setDoc(userDocRef, updatedUser);
-
-      setUser(updatedUser);
+      await setDoc(doc(userDocRef, "classes", newClassCode), {});
     } catch (error) {
       return error.message;
     }
@@ -96,99 +96,159 @@ function App() {
   };
 
   const addRequest = async (classCode, userId) => {
-    const classDocRef = doc(db, "classes", classCode);
-    const classDocSnap = await getDoc(classDocRef);
+    try {
+      const classDocRef = doc(db, "classes", classCode);
+      const classDocSnap = await getDoc(classDocRef);
 
-    if (!classDocSnap.exists()) {
-      return "Class not found.";
+      if (!classDocSnap.exists()) {
+        return "Class not found.";
+      }
+
+      const studentsCollectionRef = collection(classDocRef, "students");
+      const studentDocRef = doc(studentsCollectionRef, userId);
+      const studentDocSnap = await getDoc(studentDocRef);
+
+      if (studentDocSnap.exists()) {
+        return "You are already a member of this class.";
+      }
+
+      const requestsCollectionRef = collection(classDocRef, "requests");
+      const requestDocRef = doc(requestsCollectionRef, userId);
+      const requestDocSnap = await getDoc(requestDocRef);
+
+      if (requestDocSnap.exists()) {
+        return "You have already requested to join this class.";
+      }
+
+      await setDoc(requestDocRef, { userId });
+    } catch (error) {
+      return error.message;
     }
-
-    const classData = classDocSnap.data();
-    if (classData.students.includes(userId)) {
-      return "You are already in this class.";
-    }
-
-    if (classData.requests.includes(userId)) {
-      return "You have already requested to join this class.";
-    }
-
-    const updatedClass = {
-      ...classData,
-      requests: [...classData.requests, userId],
-    };
-
-    await setDoc(classDocRef, updatedClass);
   };
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      auth.onAuthStateChanged(async (user) => {
-        if (!user) {
-          if (location.pathname !== "/login" && location.pathname !== "/signup")
-            navigate("/login");
-          setUser(null);
-          return;
-        }
-        const userDocRef = doc(db, "users", user.uid);
-        const userDocSnap = await getDoc(userDocRef);
+  const acceptRequest = async (classCode, userId) => {
+    try {
+      const classDocRef = doc(db, "classes", classCode);
+      const classDocSnap = await getDoc(classDocRef);
 
-        if (userDocSnap.exists()) {
-          setUser(userDocSnap.data());
-          setIsCoach(false);
-          return;
-        }
+      if (!classDocSnap.exists()) {
+        return "Class not found.";
+      }
 
-        const coachDocRef = doc(db, "coaches", user.uid);
-        const coachDocSnap = await getDoc(coachDocRef);
+      const requestsCollectionRef = collection(classDocRef, "requests");
+      const requestDocRef = doc(requestsCollectionRef, userId);
+      const requestDocSnap = await getDoc(requestDocRef);
 
-        if (coachDocSnap.exists()) {
-          setUser(coachDocSnap.data());
-          setIsCoach(true);
-          return;
-        }
+      if (!requestDocSnap.exists()) {
+        return "Request not found.";
+      }
 
-        console.error("User not found in Firestore.");
-        setUser(null);
-        navigate("/login");
-      });
-    };
+      await setDoc(doc(requestsCollectionRef, userId), null);
 
-    fetchUser();
-  }, []);
+      const studentsCollectionRef = collection(classDocRef, "students");
+      await setDoc(doc(studentsCollectionRef, userId), {});
+    } catch (error) {
+      return error.message;
+    }
+  };
 
-  useEffect(() => {
-    if (!user || !user.id) return;
+  const fetchRequests = async (classCode) => {
+    try {
+      const classDocRef = doc(db, "classes", classCode);
+      const classDocSnap = await getDoc(classDocRef);
 
-    const fetchGames = async () => {
-      const userDocRef = doc(db, "users", user.id);
-      const gamesCollectionRef = collection(userDocRef, "games");
-      const gamesSnapshot = await getDocs(gamesCollectionRef);
-      const userGames = [];
-      gamesSnapshot.forEach((gameDoc) => {
-        userGames.push({
-          id: gameDoc.id,
-          ...gameDoc.data(),
+      if (!classDocSnap.exists()) {
+        return "Class not found.";
+      }
+
+      const requestsCollectionRef = collection(classDocRef, "requests");
+      const requestsSnapshot = await getDocs(requestsCollectionRef);
+
+      const requests = [];
+      requestsSnapshot.forEach((requestDoc) => {
+        requests.push({
+          id: requestDoc.id,
+          ...requestDoc.data(),
         });
       });
-      userGames.sort((a, b) => a.gameDate - b.gameDate);
-      setGames(userGames);
-    };
 
-    const fetchClasses = async () => {
-      const newClasses = await Promise.all(
-        user.classes.map(async (_class) => {
-          const classDocRef = doc(db, "classes", _class.id);
-          const classDocSnap = await getDoc(classDocRef);
+      return requests;
+    } catch (error) {
+      return error.message;
+    }
+  };
 
-          return classDocSnap.exists() ? classDocSnap.data() : null;
-        })
-      );
-      setClasses(newClasses.filter(Boolean));
-    };
+  const fetchUser = async () => {
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        if (location.pathname !== "/login" && location.pathname !== "/signup")
+          navigate("/login");
+        setUser(null);
+        return;
+      }
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
 
-    if (isCoach) fetchClasses();
-    else fetchGames();
-  }, [user]);
+      if (userDocSnap.exists()) {
+        setUser(userDocSnap.data());
+        setIsCoach(false);
+        return;
+      }
+
+      const coachDocRef = doc(db, "coaches", user.uid);
+      const coachDocSnap = await getDoc(coachDocRef);
+
+      if (coachDocSnap.exists()) {
+        setUser(coachDocSnap.data());
+        setIsCoach(true);
+        return;
+      }
+
+      console.error("User not found in Firestore.");
+      setUser(null);
+      navigate("/login");
+    });
+  };
+
+  const fetchGames = async () => {
+    const userDocRef = doc(db, "users", user.id);
+    const gamesCollectionRef = collection(userDocRef, "games");
+    const gamesSnapshot = await getDocs(gamesCollectionRef);
+    const userGames = [];
+    gamesSnapshot.forEach((gameDoc) => {
+      userGames.push({
+        id: gameDoc.id,
+        ...gameDoc.data(),
+      });
+    });
+    userGames.sort((a, b) => a.gameDate - b.gameDate);
+    setGames(userGames);
+  };
+
+  const fetchClasses = async () => {
+    const userDocRef = doc(db, "coaches", user.id);
+    const classesCollectionRef = collection(userDocRef, "classes");
+    const classesSnapshot = await getDocs(classesCollectionRef);
+
+    const userClasses = await Promise.all(
+      classesSnapshot.docs.map(async (classDoc) => {
+        const classDocRef = doc(db, "classes", classDoc.id);
+        const classDocSnap = await getDoc(classDocRef);
+
+        if (classDocSnap.exists()) {
+          return {
+            id: classDoc.id,
+            ...classDocSnap.data(),
+          };
+        }
+        return null;
+      })
+    );
+
+    const filteredClasses = userClasses.filter((cls) => cls !== null);
+
+    setClasses(filteredClasses);
+  };
 
   const logOut = () => {
     const auth = getAuth();
@@ -201,6 +261,32 @@ function App() {
         console.error("Error signing out: ", error);
       });
   };
+
+  useEffect(() => {
+    if (!user || !user.id) return;
+
+    if (isCoach) fetchClasses();
+    else fetchGames();
+  }, [user]);
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchAllRequests = async () => {
+      const newRequests = {};
+      await Promise.all(
+        coachClasses.map(async (cls) => {
+          const currRequests = await fetchRequests(cls.id);
+          newRequests[cls.id] = currRequests;
+        })
+      );
+      setRequests(newRequests);
+    };
+
+    fetchAllRequests();
+  }, [coachClasses]);
 
   return (
     <div className="App">
