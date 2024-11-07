@@ -28,6 +28,7 @@ import {
   getDoc,
   setDoc,
   addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 
@@ -52,6 +53,7 @@ function App() {
   const [isCoach, setIsCoach] = useState(false);
   const [coachClasses, setClasses] = useState([]);
   const [requests, setRequests] = useState({});
+  const [students, setStudents] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -120,7 +122,7 @@ function App() {
         return "You have already requested to join this class.";
       }
 
-      await setDoc(requestDocRef, { userId });
+      await setDoc(requestDocRef, { userId, name: user.name });
     } catch (error) {
       return error.message;
     }
@@ -143,10 +145,45 @@ function App() {
         return "Request not found.";
       }
 
-      await setDoc(doc(requestsCollectionRef, userId), null);
+      await deleteDoc(requestDocRef);
 
       const studentsCollectionRef = collection(classDocRef, "students");
       await setDoc(doc(studentsCollectionRef, userId), {});
+      setRequests((prevRequests) => {
+        const updatedRequests = { ...prevRequests };
+        if (updatedRequests[classCode]) {
+          updatedRequests[classCode] = updatedRequests[classCode].filter(
+            (request) => request.id !== userId
+          );
+        }
+        return updatedRequests;
+      });
+    } catch (error) {
+      return error.message;
+    }
+  };
+
+  const fetchStudents = async (classCode) => {
+    try {
+      const classDocRef = doc(db, "classes", classCode);
+      const classDocSnap = await getDoc(classDocRef);
+
+      if (!classDocSnap.exists()) {
+        return "Class not found.";
+      }
+
+      const studentsCollectionRef = collection(classDocRef, "students");
+      const studentsSnapshot = await getDocs(studentsCollectionRef);
+
+      const newStudents = [];
+      studentsSnapshot.forEach((studentDoc) => {
+        newStudents.push({
+          id: studentDoc.id,
+          ...studentDoc.data(),
+        });
+      });
+
+      setStudents(newStudents);
     } catch (error) {
       return error.message;
     }
@@ -310,6 +347,8 @@ function App() {
                     user={user}
                     coachClasses={coachClasses}
                     createClass={createClass}
+                    requests={requests}
+                    acceptRequest={acceptRequest}
                   />
                 ) : (
                   <UserView

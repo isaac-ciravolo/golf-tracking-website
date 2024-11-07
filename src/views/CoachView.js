@@ -10,8 +10,15 @@ import {
   TextField,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import RequestsView from "./RequestsView";
 
-const CoachView = ({ user, coachClasses, createClass }) => {
+const CoachView = ({
+  user,
+  coachClasses,
+  createClass,
+  requests,
+  acceptRequest,
+}) => {
   const [value, setValue] = useState(0);
   const [selectedClass, setSelectedClass] = useState(null);
   const [open, setOpen] = useState(false);
@@ -116,7 +123,7 @@ const CoachView = ({ user, coachClasses, createClass }) => {
               value={value}
               onChange={(event, newValue) => setValue(newValue)}
             >
-              <Tab label="Users" index={0} />
+              <Tab label="Requests" index={0} />
             </Tabs>
           </Box>
         </Box>
@@ -128,7 +135,15 @@ const CoachView = ({ user, coachClasses, createClass }) => {
               ...(value !== 0 && { display: "none" }),
             }}
           >
-            User List
+            {selectedClass &&
+              selectedClass.id &&
+              requests[selectedClass.id] && (
+                <RequestsView
+                  classCode={selectedClass.id}
+                  requests={requests[selectedClass.id]}
+                  acceptRequest={acceptRequest}
+                />
+              )}
           </Box>
         </Box>
       </Box>
