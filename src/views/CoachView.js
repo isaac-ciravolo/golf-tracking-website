@@ -29,6 +29,7 @@ const CoachView = ({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    console.log(coachClasses);
     if (coachClasses.length > 0) {
       setSelectedClass(coachClasses[0]);
     }
@@ -72,7 +73,7 @@ const CoachView = ({
           >
             Add a Class
           </Button>
-          {coachClasses &&
+          {coachClasses.length > 0 &&
             coachClasses.map((_class) => {
               return (
                 <Box

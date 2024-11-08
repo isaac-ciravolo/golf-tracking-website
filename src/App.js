@@ -30,6 +30,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
+import ReadOnlyUserView from "./views/ReadOnlyUserView.js";
 
 const theme = createTheme({
   components: {
@@ -208,8 +209,8 @@ const App = () => {
     });
   };
 
-  const fetchGames = async () => {
-    const userDocRef = doc(db, "users", user.id);
+  const fetchGames = async (userId) => {
+    const userDocRef = doc(db, "users", userId);
     const gamesCollectionRef = collection(userDocRef, "games");
     const gamesSnapshot = await getDocs(gamesCollectionRef);
     const userGames = [];
@@ -220,7 +221,7 @@ const App = () => {
       });
     });
     userGames.sort((a, b) => a.gameDate - b.gameDate);
-    setGames(userGames);
+    return userGames;
   };
 
   const fetchClasses = async () => {
@@ -243,7 +244,22 @@ const App = () => {
     );
 
     const filteredClasses = userClasses.filter((cls) => cls !== null);
-    setClasses(filteredClasses);
+    return filteredClasses;
+  };
+
+  const fetchStudent = async (studentId) => {
+    try {
+      const studentDocRef = doc(db, "users", studentId);
+      const studentDocSnap = await getDoc(studentDocRef);
+
+      if (!studentDocSnap.exists()) {
+        return "Student not found.";
+      }
+
+      return studentDocSnap.data();
+    } catch (error) {
+      return error.message;
+    }
   };
 
   const logOut = () => {
@@ -259,10 +275,14 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (!user || !user.id) return;
+    const temp = async () => {
+      if (!user || !user.id) return;
 
-    if (isCoach) fetchClasses();
-    else fetchGames();
+      if (isCoach) setClasses(await fetchClasses());
+      else setGames(await fetchGames());
+    };
+
+    temp();
   }, [user]);
 
   useEffect(() => {
@@ -315,6 +335,15 @@ const App = () => {
               ) : (
                 <LoadingView />
               )
+            }
+          />
+          <Route
+            path="/view/:id"
+            element={
+              <ReadOnlyUserView
+                fetchStudent={fetchStudent}
+                fetchGames={fetchGames}
+              />
             }
           />
         </Routes>
