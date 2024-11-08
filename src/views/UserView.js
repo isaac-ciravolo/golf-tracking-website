@@ -15,7 +15,7 @@ import {
   ToggleButton,
 } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
-const UserView = ({ user, games, fetchClass, addRequest }) => {
+const UserView = ({ user, games, addRequest }) => {
   const [value, setValue] = useState(0);
   const [currentHoles, setCurrentHoles] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
@@ -219,11 +219,7 @@ const UserView = ({ user, games, fetchClass, addRequest }) => {
               ...(value !== 6 && { display: "none" }),
             }}
           >
-            <ClassesView
-              fetchClass={fetchClass}
-              addRequest={addRequest}
-              userId={user.id}
-            />
+            <ClassesView addRequest={addRequest} userId={user.id} />
           </Box>
         </Box>
       </Box>

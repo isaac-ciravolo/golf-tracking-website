@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, Dialog, Typography, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
-const ClassesView = ({ fetchClass, addRequest, userId }) => {
+const ClassesView = ({ addRequest, userId }) => {
   const [open, setOpen] = useState(false);
   const [classCode, setClassCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");

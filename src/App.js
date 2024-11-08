@@ -27,7 +27,6 @@ import {
   doc,
   getDoc,
   setDoc,
-  addDoc,
   deleteDoc,
 } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
@@ -47,13 +46,12 @@ const theme = createTheme({
   },
 });
 
-function App() {
+const App = () => {
   const [games, setGames] = useState([]);
   const [user, setUser] = useState(null);
   const [isCoach, setIsCoach] = useState(false);
   const [coachClasses, setClasses] = useState([]);
   const [requests, setRequests] = useState({});
-  const [students, setStudents] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -76,6 +74,7 @@ function App() {
         name: className,
         id: newClassCode,
         coach: user.id,
+        students: [],
       };
       await setDoc(doc(db, "classes", newClassCode), newClass);
 
@@ -106,11 +105,7 @@ function App() {
         return "Class not found.";
       }
 
-      const studentsCollectionRef = collection(classDocRef, "students");
-      const studentDocRef = doc(studentsCollectionRef, userId);
-      const studentDocSnap = await getDoc(studentDocRef);
-
-      if (studentDocSnap.exists()) {
+      if (classDocSnap.data().students.includes(userId)) {
         return "You are already a member of this class.";
       }
 
@@ -147,43 +142,9 @@ function App() {
 
       await deleteDoc(requestDocRef);
 
-      const studentsCollectionRef = collection(classDocRef, "students");
-      await setDoc(doc(studentsCollectionRef, userId), {});
-      setRequests((prevRequests) => {
-        const updatedRequests = { ...prevRequests };
-        if (updatedRequests[classCode]) {
-          updatedRequests[classCode] = updatedRequests[classCode].filter(
-            (request) => request.id !== userId
-          );
-        }
-        return updatedRequests;
-      });
-    } catch (error) {
-      return error.message;
-    }
-  };
-
-  const fetchStudents = async (classCode) => {
-    try {
-      const classDocRef = doc(db, "classes", classCode);
-      const classDocSnap = await getDoc(classDocRef);
-
-      if (!classDocSnap.exists()) {
-        return "Class not found.";
-      }
-
-      const studentsCollectionRef = collection(classDocRef, "students");
-      const studentsSnapshot = await getDocs(studentsCollectionRef);
-
-      const newStudents = [];
-      studentsSnapshot.forEach((studentDoc) => {
-        newStudents.push({
-          id: studentDoc.id,
-          ...studentDoc.data(),
-        });
-      });
-
-      setStudents(newStudents);
+      const classData = classDocSnap.data();
+      classData["students"].push(userId);
+      await setDoc(classDocRef, classData);
     } catch (error) {
       return error.message;
     }
@@ -264,17 +225,16 @@ function App() {
 
   const fetchClasses = async () => {
     const userDocRef = doc(db, "coaches", user.id);
-    const classesCollectionRef = collection(userDocRef, "classes");
-    const classesSnapshot = await getDocs(classesCollectionRef);
-
+    const userDocSnap = await getDoc(userDocRef);
+    const userData = userDocSnap.data();
     const userClasses = await Promise.all(
-      classesSnapshot.docs.map(async (classDoc) => {
-        const classDocRef = doc(db, "classes", classDoc.id);
+      userData.classes.map(async (classId) => {
+        const classDocRef = doc(db, "classes", classId);
         const classDocSnap = await getDoc(classDocRef);
 
         if (classDocSnap.exists()) {
           return {
-            id: classDoc.id,
+            id: classId,
             ...classDocSnap.data(),
           };
         }
@@ -283,7 +243,6 @@ function App() {
     );
 
     const filteredClasses = userClasses.filter((cls) => cls !== null);
-
     setClasses(filteredClasses);
   };
 
@@ -351,12 +310,7 @@ function App() {
                     acceptRequest={acceptRequest}
                   />
                 ) : (
-                  <UserView
-                    user={user}
-                    games={games}
-                    fetchClass={fetchClass}
-                    addRequest={addRequest}
-                  />
+                  <UserView user={user} games={games} addRequest={addRequest} />
                 )
               ) : (
                 <LoadingView />
@@ -367,6 +321,6 @@ function App() {
       </ThemeProvider>
     </div>
   );
-}
+};
 
 export default App;

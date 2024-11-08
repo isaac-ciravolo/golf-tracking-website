@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import RequestsView from "./RequestsView";
+import StudentsView from "./StudentsView";
 
 const CoachView = ({
   user,
@@ -18,6 +19,7 @@ const CoachView = ({
   createClass,
   requests,
   acceptRequest,
+  students,
 }) => {
   const [value, setValue] = useState(0);
   const [selectedClass, setSelectedClass] = useState(null);
@@ -123,6 +125,7 @@ const CoachView = ({
               value={value}
               onChange={(event, newValue) => setValue(newValue)}
             >
+              <Tab label="Students" index={0} />
               <Tab label="Requests" index={0} />
             </Tabs>
           </Box>
@@ -133,6 +136,17 @@ const CoachView = ({
               width: "100%",
               p: 3,
               ...(value !== 0 && { display: "none" }),
+            }}
+          >
+            {selectedClass && (
+              <StudentsView students={selectedClass.students} />
+            )}
+          </Box>
+          <Box
+            sx={{
+              width: "100%",
+              p: 3,
+              ...(value !== 1 && { display: "none" }),
             }}
           >
             {selectedClass &&

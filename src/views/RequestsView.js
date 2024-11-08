@@ -30,6 +30,8 @@ const RequestsView = ({ classCode, requests, acceptRequest }) => {
                   const res = await acceptRequest(classCode, request.userId);
                   if (res) {
                     setErrorMessage(res);
+                  } else {
+                    window.location.reload();
                   }
                 }}
               >
