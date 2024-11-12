@@ -6,6 +6,7 @@ import GreenView from "./GreenView.js";
 import CardView from "./CardView.js";
 import AdvancedView from "./AdvancedView.js";
 import ClassesView from "./ClassesView.js";
+import TitleDateInput from "../components/InputGame.js";
 import {
   Box,
   Tab,
@@ -116,6 +117,7 @@ const UserView = ({ user }) => {
                 </ToggleButton>
               </Box>
             ))}
+          <TitleDateInput />
         </Box>
       </Box>
       <Box
