@@ -1,7 +1,8 @@
 import { AppBar, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import { logOut } from "../DatabaseFunctions";
 
-function Header({ showLogOut, logOut }) {
+function Header({ showLogOut }) {
   return (
     <AppBar
       sx={{

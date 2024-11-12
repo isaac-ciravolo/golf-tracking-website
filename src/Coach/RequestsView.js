@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, Paper } from "@mui/material";
-
-const RequestsView = ({ classCode, requests, acceptRequest }) => {
+import { fetchRequests, acceptRequest } from "../DatabaseFunctions";
+const RequestsView = ({ classCode }) => {
+  const [requests, setRequests] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  useEffect(() => {
+    if (classCode) {
+      const temp = async () => {
+        const newRequests = await fetchRequests(classCode);
+        setRequests(newRequests);
+      };
+
+      temp();
+    }
+  });
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}

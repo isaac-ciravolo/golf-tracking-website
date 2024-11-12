@@ -12,15 +12,10 @@ import {
 import { LoadingButton } from "@mui/lab";
 import RequestsView from "./RequestsView";
 import StudentsView from "./StudentsView";
+import { fetchClasses, createClass } from "../DatabaseFunctions";
 
-const CoachView = ({
-  user,
-  coachClasses,
-  createClass,
-  requests,
-  acceptRequest,
-  students,
-}) => {
+const CoachView = ({ user }) => {
+  const [coachClasses, setCoachClasses] = useState([]);
   const [value, setValue] = useState(0);
   const [selectedClass, setSelectedClass] = useState(null);
   const [open, setOpen] = useState(false);
@@ -29,7 +24,17 @@ const CoachView = ({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log(coachClasses);
+    if (user) {
+      const temp = async () => {
+        const newClasses = await fetchClasses(user.id);
+        setCoachClasses(newClasses);
+      };
+
+      temp();
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (coachClasses.length > 0) {
       setSelectedClass(coachClasses[0]);
     }
@@ -150,15 +155,7 @@ const CoachView = ({
               ...(value !== 1 && { display: "none" }),
             }}
           >
-            {selectedClass &&
-              selectedClass.id &&
-              requests[selectedClass.id] && (
-                <RequestsView
-                  classCode={selectedClass.id}
-                  requests={requests[selectedClass.id]}
-                  acceptRequest={acceptRequest}
-                />
-              )}
+            {selectedClass && <RequestsView classCode={selectedClass.id} />}
           </Box>
         </Box>
       </Box>

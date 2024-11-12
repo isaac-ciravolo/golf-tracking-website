@@ -15,7 +15,9 @@ import {
   ToggleButton,
 } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
-const UserView = ({ user, games, addRequest }) => {
+import { fetchGames } from "../DatabaseFunctions.js";
+const UserView = ({ user }) => {
+  const [games, setGames] = useState([]);
   const [value, setValue] = useState(0);
   const [currentHoles, setCurrentHoles] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
@@ -23,6 +25,16 @@ const UserView = ({ user, games, addRequest }) => {
   useEffect(() => {
     if (games) setSelectedGames(games);
   }, [games]);
+
+  useEffect(() => {
+    if (user && user.id) {
+      const temp = async () => {
+        const newGames = await fetchGames(user.id);
+        setGames(newGames);
+      };
+      temp();
+    }
+  }, [user]);
 
   useEffect(() => {
     const newHoles = [];
@@ -219,7 +231,7 @@ const UserView = ({ user, games, addRequest }) => {
               ...(value !== 6 && { display: "none" }),
             }}
           >
-            <ClassesView addRequest={addRequest} userId={user.id} />
+            <ClassesView userId={user.id} />
           </Box>
         </Box>
       </Box>

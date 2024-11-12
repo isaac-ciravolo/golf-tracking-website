@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import OverviewView from "./OverviewView.js";
-import DrivingView from "./DrivingView.js";
-import ApproachView from "./ApproachView.js";
-import GreenView from "./GreenView.js";
-import CardView from "./CardView.js";
-import AdvancedView from "./AdvancedView.js";
-import ClassesView from "./ClassesView.js";
+import OverviewView from "../User/OverviewView.js";
+import DrivingView from "../User/DrivingView.js";
+import ApproachView from "../User/ApproachView.js";
+import GreenView from "../User/GreenView.js";
+import CardView from "../User/CardView.js";
+import AdvancedView from "../User/AdvancedView.js";
+import ClassesView from "../User/ClassesView.js";
 import {
   Box,
   Tab,
@@ -25,7 +25,6 @@ const ReadOnlyUserView = ({ fetchStudent, fetchGames }) => {
   let { id } = useParams();
 
   useEffect(() => {
-    console.log(id);
     fetchStudent(id).then((data) => {
       setUser(data);
       fetchGames(id).then((data) => {

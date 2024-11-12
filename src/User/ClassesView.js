@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Box, Button, Dialog, Typography, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import { addRequest } from "../DatabaseFunctions.js";
 
-const ClassesView = ({ addRequest, userId }) => {
+const ClassesView = ({ userId }) => {
   const [open, setOpen] = useState(false);
   const [classCode, setClassCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
