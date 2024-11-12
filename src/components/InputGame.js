@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase"; // Import your Firestore database configuration
@@ -45,7 +45,7 @@ const TitleDateInput = () => {
         margin="normal"
         required
       />
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="Date"
           value={date}

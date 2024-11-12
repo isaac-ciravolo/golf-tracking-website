@@ -117,6 +117,7 @@ const UserView = ({ user }) => {
                 </ToggleButton>
               </Box>
             ))}
+          <TitleDateInput />
         </Box>
       </Box>
       <Box
