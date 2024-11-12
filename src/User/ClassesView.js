@@ -3,7 +3,7 @@ import { Box, Button, Dialog, Typography, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { addRequest } from "../DatabaseFunctions.js";
 
-const ClassesView = ({ userId }) => {
+const ClassesView = ({ userId, userName }) => {
   const [open, setOpen] = useState(false);
   const [classCode, setClassCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -62,13 +62,14 @@ const ClassesView = ({ userId }) => {
             loading={loading}
             onClick={async () => {
               setLoading(true);
-              const error = await addRequest(classCode, userId);
+              console.log(classCode, userId);
+              const error = await addRequest(classCode, userId, userName);
               setLoading(false);
               console.log(error);
-              if (error) {
-                setErrorMessage(error);
-              } else {
+              if (error === "Success!") {
                 setOpen(false);
+              } else {
+                setErrorMessage(error);
               }
             }}
           >

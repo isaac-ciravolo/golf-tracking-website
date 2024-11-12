@@ -231,7 +231,7 @@ const UserView = ({ user }) => {
               ...(value !== 6 && { display: "none" }),
             }}
           >
-            <ClassesView userId={user.id} />
+            <ClassesView userId={user.id} userName={user.name} />
           </Box>
         </Box>
       </Box>

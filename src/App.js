@@ -36,7 +36,6 @@ const theme = createTheme({
 });
 
 const App = () => {
-  const [games, setGames] = useState([]);
   const [isCoach, setIsCoach] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
