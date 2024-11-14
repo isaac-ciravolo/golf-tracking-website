@@ -30,7 +30,7 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: "#4E2A84", // Purple color
+      main: "#db7125", // orange color
     },
   },
 });
