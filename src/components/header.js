@@ -17,7 +17,7 @@ function Header({ showLogOut }) {
         to="/"
         style={{ textDecoration: "none", color: "inherit" }} // Remove underline and keep text color
       >
-        <Typography variant="h4" fontWeight={"bold"} color="#db7125">
+        <Typography variant="h4" fontWeight={"bold"}>
           Eagle Eye Analytics
         </Typography>
       </Link>

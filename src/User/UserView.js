@@ -6,7 +6,8 @@ import GreenView from "./GreenView.js";
 import CardView from "./CardView.js";
 import AdvancedView from "./AdvancedView.js";
 import ClassesView from "./ClassesView.js";
-import TitleDateInput from "../components/InputGame.js";
+import TitleDateInput from "./InputGameView.js";
+import InputGameView from "./InputGameView.js";
 import {
   Box,
   Tab,
@@ -17,6 +18,7 @@ import {
 } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
 import { fetchGames } from "../DatabaseFunctions.js";
+
 const UserView = ({ user }) => {
   const [games, setGames] = useState([]);
   const [value, setValue] = useState(0);
@@ -117,7 +119,6 @@ const UserView = ({ user }) => {
                 </ToggleButton>
               </Box>
             ))}
-          <TitleDateInput />
         </Box>
       </Box>
       <Box
@@ -162,6 +163,7 @@ const UserView = ({ user }) => {
               <Tab label="Card" index={4} />
               <Tab label="Advanced" index={5} />
               <Tab label="Classes" index={6} />
+              <Tab label="Input Game" index={7} />
             </Tabs>
           </Box>
         </Box>
@@ -234,6 +236,15 @@ const UserView = ({ user }) => {
             }}
           >
             <ClassesView userId={user.id} userName={user.name} />
+          </Box>
+          <Box
+            sx={{
+              width: "100%",
+              p: 3,
+              ...(value !== 7 && { display: "none" }),
+            }}
+          >
+            <InputGameView />
           </Box>
         </Box>
       </Box>

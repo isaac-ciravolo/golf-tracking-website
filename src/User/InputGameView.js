@@ -36,29 +36,36 @@ const TitleDateInput = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        fullWidth
-        margin="normal"
-        required
-      />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="Date"
-          value={date}
-          onChange={(newDate) => setDate(newDate)}
-          renderInput={(params) => (
-            <TextField {...params} fullWidth margin="normal" required />
-          )}
+    <div>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          fullWidth
+          margin="normal"
+          required
         />
-      </LocalizationProvider>
-      <Button type="submit" variant="contained" color="primary">
-        Save Event
-      </Button>
-    </form>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Date"
+            value={date}
+            onChange={(newDate) => setDate(newDate)}
+            renderInput={(params) => (
+              <TextField {...params} fullWidth margin="normal" required />
+            )}
+          />
+        </LocalizationProvider>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          sx={{ margin: "10px" }}
+        >
+          Save Event
+        </Button>
+      </form>
+    </div>
   );
 };
 
