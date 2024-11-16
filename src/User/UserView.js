@@ -6,7 +6,6 @@ import GreenView from "./GreenView.js";
 import CardView from "./CardView.js";
 import AdvancedView from "./AdvancedView.js";
 import ClassesView from "./ClassesView.js";
-import TitleDateInput from "./InputGameView.js";
 import InputGameView from "./InputGameView.js";
 import {
   Box,
@@ -17,7 +16,7 @@ import {
   ToggleButton,
 } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
-import { fetchGames } from "../DatabaseFunctions.js";
+import { listenToGames } from "../DatabaseFunctions.js";
 
 const UserView = ({ user }) => {
   const [games, setGames] = useState([]);
@@ -31,11 +30,19 @@ const UserView = ({ user }) => {
 
   useEffect(() => {
     if (user && user.id) {
-      const temp = async () => {
-        const newGames = await fetchGames(user.id);
-        setGames(newGames);
+      let unsubscribe;
+
+      const fetchData = async () => {
+        unsubscribe = await listenToGames(user.id, setGames);
       };
-      temp();
+
+      fetchData();
+
+      return () => {
+        if (unsubscribe) {
+          unsubscribe();
+        }
+      };
     }
   }, [user]);
 
@@ -50,11 +57,17 @@ const UserView = ({ user }) => {
   }, [selectedGames]);
 
   return (
-    <Box sx={{ display: "flex", width: "100%", height: "100%" }}>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        height: "100%",
+      }}
+    >
       <Box
         sx={{
           width: "200px",
-          height: "100vh",
+          height: "100%",
           backgroundColor: "lightGray",
           position: "fixed",
           paddingTop: 3,
@@ -71,7 +84,6 @@ const UserView = ({ user }) => {
           sx={{
             width: "100%",
             height: "90%",
-            overflow: "scroll",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -83,42 +95,63 @@ const UserView = ({ user }) => {
             sx={{ width: "90%", height: "48.5px" }}
             onClick={() => setSelectedGames(games)}
           >
-            Select All
+            ALL ROUNDS
           </Button>
           <Button
             variant="contained"
             sx={{ width: "90%", height: "48.5px" }}
             onClick={() => setSelectedGames([])}
           >
-            Deselect All
+            DESELECT ALL
           </Button>
-          {games.length &&
-            games.map((game) => (
-              <Box
-                key={game.id}
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <ToggleButton
-                  color="primary"
-                  value={selectedGames.includes(game)}
-                  selected={selectedGames.includes(game)}
-                  onClick={() => {
-                    if (selectedGames.includes(game)) {
-                      setSelectedGames(selectedGames.filter((g) => g !== game));
-                    } else {
-                      setSelectedGames([...selectedGames, game]);
-                    }
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 1,
+              alignItems: "center",
+              width: "100%",
+              overflow: "scroll",
+              flexGrow: 1,
+            }}
+          >
+            {games.length &&
+              games.map((game) => (
+                <Box
+                  key={game.id}
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
                   }}
-                  sx={{ width: "90%" }}
                 >
-                  {game.title}
-                </ToggleButton>
-              </Box>
-            ))}
+                  <ToggleButton
+                    color="primary"
+                    value={selectedGames.includes(game)}
+                    selected={selectedGames.includes(game)}
+                    onClick={() => {
+                      if (selectedGames.includes(game)) {
+                        setSelectedGames(
+                          selectedGames.filter((g) => g !== game)
+                        );
+                      } else {
+                        setSelectedGames([...selectedGames, game]);
+                      }
+                    }}
+                    sx={{ width: "90%" }}
+                  >
+                    {game.title}
+                  </ToggleButton>
+                </Box>
+              ))}
+          </Box>
+          <Button
+            variant="contained"
+            sx={{ width: "90%", height: "48.5px" }}
+            onClick={() => setSelectedGames(games)}
+          >
+            ADD / EDIT ROUNDS
+          </Button>
         </Box>
       </Box>
       <Box
@@ -157,13 +190,12 @@ const UserView = ({ user }) => {
               onChange={(event, newValue) => setValue(newValue)}
             >
               <Tab label="Overview" index={0} />
-              <Tab label="Driving" index={1} />
+              <Tab label="Tee Shot" index={1} />
               <Tab label="Approach" index={2} />
-              <Tab label="Green" index={3} />
+              <Tab label="Putting" index={3} />
               <Tab label="Card" index={4} />
-              <Tab label="Advanced" index={5} />
               <Tab label="Classes" index={6} />
-              <Tab label="Input Game" index={7} />
+              <Tab label="Add Round" index={7} />
             </Tabs>
           </Box>
         </Box>
@@ -235,7 +267,11 @@ const UserView = ({ user }) => {
               ...(value !== 6 && { display: "none" }),
             }}
           >
-            <ClassesView userId={user.id} userName={user.name} />
+            <ClassesView
+              userId={user.id}
+              userName={user.name}
+              classes={user.classes}
+            />
           </Box>
           <Box
             sx={{
@@ -244,7 +280,7 @@ const UserView = ({ user }) => {
               ...(value !== 7 && { display: "none" }),
             }}
           >
-            <InputGameView />
+            <InputGameView userId={user.id} />
           </Box>
         </Box>
       </Box>

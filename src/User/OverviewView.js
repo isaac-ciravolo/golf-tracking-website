@@ -194,7 +194,7 @@ const OverviewView = ({ currentHoles, numGames }) => {
             }}
           >
             <Typography noWrap fontWeight={"bold"}>
-              Total Score per Round
+              Average Score
             </Typography>
             <Typography noWrap variant="h4">
               {(totalScore / numGames).toFixed(2)}

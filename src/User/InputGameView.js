@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { addGame, fetchGames } from "../DatabaseFunctions";
 
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../firebase"; // Import your Firestore database configuration
-
-const TitleDateInput = () => {
+const TitleDateInput = ({ userId }) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(null);
 
@@ -20,15 +18,20 @@ const TitleDateInput = () => {
     }
 
     try {
-      // Add to Firestore
-      await addDoc(collection(db, "events"), {
-        title,
-        date: date.toISOString(), // Store date as ISO string for easy conversion
+      const res = await addGame(userId, {
+        createdDate: new Date().getTime() / 1000,
+        title: title,
+        holes: [],
+        gameDate: date.unix(),
       });
 
-      alert("Event saved successfully!");
-      setTitle("");
-      setDate(null);
+      if (res === "Success!") {
+        setTitle("");
+        setDate(null);
+      } else {
+        console.error("Error saving document:", res);
+        alert("Error saving event. Please try again.");
+      }
     } catch (error) {
       console.error("Error saving document:", error);
       alert("Error saving event. Please try again.");

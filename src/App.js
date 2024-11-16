@@ -17,6 +17,7 @@ import LoginView from "./views/LoginView.js";
 import SignUpView from "./views/SignUpView.js";
 import CoachView from "./Coach/CoachView.js";
 import ReadOnlyUserView from "./Coach/ReadOnlyUserView.js";
+import GameView from "./Games/GameView.js";
 
 import { fetchUser } from "./DatabaseFunctions.js";
 
@@ -57,21 +58,6 @@ const App = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   const fetchAllRequests = async () => {
-  //     const newRequests = {};
-  //     await Promise.all(
-  //       coachClasses.map(async (cls) => {
-  //         const currRequests = await fetchRequests(cls.id);
-  //         newRequests[cls.id] = currRequests;
-  //       })
-  //     );
-  //     setRequests(newRequests);
-  //   };
-
-  //   fetchAllRequests();
-  // }, [coachClasses]);
-
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
@@ -100,6 +86,7 @@ const App = () => {
             }
           />
           <Route path="/view/:id" element={<ReadOnlyUserView />} />
+          <Route path="/editGames" element={<GameView user={user} />} />
         </Routes>
       </ThemeProvider>
     </div>

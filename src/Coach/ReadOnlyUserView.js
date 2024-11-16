@@ -16,7 +16,8 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
-const ReadOnlyUserView = ({ fetchStudent, fetchGames }) => {
+import { fetchStudent, fetchGames } from "../DatabaseFunctions.js";
+const ReadOnlyUserView = () => {
   const [value, setValue] = useState(0);
   const [currentHoles, setCurrentHoles] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
@@ -81,7 +82,7 @@ const ReadOnlyUserView = ({ fetchStudent, fetchGames }) => {
             sx={{ width: "90%", height: "48.5px" }}
             onClick={() => setSelectedGames(games)}
           >
-            Select All
+            ALL ROUNDS
           </Button>
           <Button
             variant="contained"

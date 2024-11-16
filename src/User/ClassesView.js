@@ -3,7 +3,7 @@ import { Box, Button, Dialog, Typography, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { addRequest } from "../DatabaseFunctions.js";
 
-const ClassesView = ({ userId, userName }) => {
+const ClassesView = ({ userId, userName, classes }) => {
   const [open, setOpen] = useState(false);
   const [classCode, setClassCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -15,6 +15,7 @@ const ClassesView = ({ userId, userName }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        gap: "20px",
       }}
     >
       <Button
@@ -24,6 +25,25 @@ const ClassesView = ({ userId, userName }) => {
       >
         Join a Class
       </Button>
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        {classes &&
+          classes.map((classData) => (
+            <Box
+              key={classData}
+              sx={{
+                width: "300px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                p: 2,
+                border: "1px solid black",
+                borderRadius: "5px",
+              }}
+            >
+              <Typography>Class Code: {classData}</Typography>
+            </Box>
+          ))}
+      </Box>
       <Dialog
         open={open}
         onClose={() => {

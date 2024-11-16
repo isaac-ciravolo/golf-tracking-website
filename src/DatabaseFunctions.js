@@ -6,6 +6,8 @@ import {
   getDoc,
   setDoc,
   deleteDoc,
+  addDoc,
+  onSnapshot,
 } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 import generateClassCode from "./util/ClassCode";
@@ -241,4 +243,30 @@ export const logOut = (callback) => {
     .catch((error) => {
       return error.message;
     });
+};
+
+export const addGame = async (userId, gameData) => {
+  try {
+    const gamesCollectionRef = collection(db, "users", userId, "games");
+    console.log(gameData);
+    await addDoc(gamesCollectionRef, gameData);
+    return "Success!";
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const listenToGames = (userId, setGames) => {
+  const gamesCollectionRef = collection(db, "users", userId, "games");
+
+  const unsubscribe = onSnapshot(gamesCollectionRef, (querySnapshot) => {
+    const games = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log("Collection data:", games);
+    setGames(games);
+  });
+
+  return unsubscribe;
 };
