@@ -59,9 +59,9 @@ const UserView = ({ user }) => {
   return (
     <Box
       sx={{
-        display: "flex",
         width: "100%",
         height: "100%",
+        display: "flex",
       }}
     >
       <Box
@@ -69,103 +69,84 @@ const UserView = ({ user }) => {
           width: "200px",
           height: "100%",
           backgroundColor: "lightGray",
-          position: "fixed",
-          paddingTop: 3,
           display: "flex",
           flexDirection: "column",
-          gap: 3,
-          zIndex: 100,
+          gap: 1,
         }}
       >
         <Typography textAlign="center" fontWeight={"bold"}>
           Select Games
         </Typography>
+        <Button
+          variant="contained"
+          sx={{ width: "90%", height: "48.5px" }}
+          onClick={() => setSelectedGames(games)}
+        >
+          ALL ROUNDS
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ width: "90%", height: "48.5px" }}
+          onClick={() => setSelectedGames([])}
+        >
+          DESELECT ALL
+        </Button>
         <Box
           sx={{
-            width: "100%",
-            height: "90%",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
             gap: 1,
+            alignItems: "center",
+            width: "100%",
+            overflow: "scroll",
+            flexGrow: 1,
           }}
         >
-          <Button
-            variant="contained"
-            sx={{ width: "90%", height: "48.5px" }}
-            onClick={() => setSelectedGames(games)}
-          >
-            ALL ROUNDS
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ width: "90%", height: "48.5px" }}
-            onClick={() => setSelectedGames([])}
-          >
-            DESELECT ALL
-          </Button>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 1,
-              alignItems: "center",
-              width: "100%",
-              overflow: "scroll",
-              flexGrow: 1,
-            }}
-          >
-            {games.length &&
-              games.map((game) => (
-                <Box
-                  key={game.id}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
+          {/* {games.length &&
+            games.map((game) => (
+              <Box
+                key={game.id}
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <ToggleButton
+                  color="primary"
+                  value={selectedGames.includes(game)}
+                  selected={selectedGames.includes(game)}
+                  onClick={() => {
+                    if (selectedGames.includes(game)) {
+                      setSelectedGames(selectedGames.filter((g) => g !== game));
+                    } else {
+                      setSelectedGames([...selectedGames, game]);
+                    }
                   }}
+                  sx={{ width: "90%" }}
                 >
-                  <ToggleButton
-                    color="primary"
-                    value={selectedGames.includes(game)}
-                    selected={selectedGames.includes(game)}
-                    onClick={() => {
-                      if (selectedGames.includes(game)) {
-                        setSelectedGames(
-                          selectedGames.filter((g) => g !== game)
-                        );
-                      } else {
-                        setSelectedGames([...selectedGames, game]);
-                      }
-                    }}
-                    sx={{ width: "90%" }}
-                  >
-                    {game.title}
-                  </ToggleButton>
-                </Box>
-              ))}
-          </Box>
-          <Button
-            variant="contained"
-            sx={{ width: "90%", height: "48.5px" }}
-            onClick={() => setSelectedGames(games)}
-          >
-            ADD / EDIT ROUNDS
-          </Button>
+                  {game.title}
+                </ToggleButton>
+              </Box>
+            ))} */}
         </Box>
+        <Button
+          variant="contained"
+          sx={{ width: "90%", height: "48.5px" }}
+          onClick={() => setSelectedGames(games)}
+        >
+          ADD / EDIT ROUNDS
+        </Button>
       </Box>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          width: "100%",
-          marginLeft: "200px",
-          position: "relative",
+          flexGrow: 1,
         }}
       >
         <Box
           sx={{
-            position: "fixed",
             width: "100%",
             height: "130px",
             backgroundColor: "rgb(240, 240, 240)",
@@ -199,7 +180,7 @@ const UserView = ({ user }) => {
             </Tabs>
           </Box>
         </Box>
-        <Box sx={{ marginTop: "130px", width: "1200px" }}>
+        <Box sx={{ flexGrow: 1, width: "100%" }}>
           <Box
             sx={{
               width: "100%",

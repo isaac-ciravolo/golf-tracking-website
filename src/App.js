@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import "./styles.css";
 
-import { createTheme, ThemeProvider } from "@mui/material";
+import { Box, createTheme, ThemeProvider } from "@mui/material";
 
 import Header from "./components/header.js";
 import UserView from "./User/UserView.js";
@@ -59,35 +59,45 @@ const App = () => {
   }, []);
 
   return (
-    <div className="App">
+    <div className="App" style={{ width: "100vw", height: "100vh" }}>
       <ThemeProvider theme={theme}>
         <Header showLogOut={user !== null} />
-        <div style={{ height: "100px" }}></div>
-
-        <Routes>
-          <Route
-            path="/"
-            element={user ? <Navigate to="/profile" /> : <LoginView />}
-          />
-          <Route path="/login" element={<LoginView />} />
-          <Route path="/signup" element={<SignUpView />} />
-          <Route
-            path="/profile"
-            element={
-              user && user.name ? (
-                isCoach ? (
-                  <CoachView user={user} />
-                ) : (
-                  <UserView user={user} />
-                )
-              ) : (
-                <LoadingView />
-              )
-            }
-          />
-          <Route path="/view/:id" element={<ReadOnlyUserView />} />
-          <Route path="/editGames" element={<GameView user={user} />} />
-        </Routes>
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div style={{ width: "100%", height: "100px" }}></div>
+          <Box sx={{ width: "100%", flexGrow: 1 }}>
+            <Routes>
+              <Route
+                path="/"
+                element={user ? <Navigate to="/profile" /> : <LoginView />}
+              />
+              <Route path="/login" element={<LoginView />} />
+              <Route path="/signup" element={<SignUpView />} />
+              <Route
+                path="/profile"
+                element={
+                  user && user.name ? (
+                    isCoach ? (
+                      <CoachView user={user} />
+                    ) : (
+                      <UserView user={user} />
+                    )
+                  ) : (
+                    <LoadingView />
+                  )
+                }
+              />
+              <Route path="/view/:id" element={<ReadOnlyUserView />} />
+              <Route path="/editGames" element={<GameView user={user} />} />
+            </Routes>
+          </Box>
+        </Box>
       </ThemeProvider>
     </div>
   );
