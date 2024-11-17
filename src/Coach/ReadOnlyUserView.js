@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import OverviewView from "../User/OverviewView.js";
 import DrivingView from "../User/DrivingView.js";
 import ApproachView from "../User/ApproachView.js";
-import GreenView from "../User/GreenView.js";
+import PuttingView from "../User/PuttingView.js";
 import CardView from "../User/CardView.js";
 import AdvancedView from "../User/AdvancedView.js";
 import ClassesView from "../User/ClassesView.js";
@@ -202,7 +202,7 @@ const ReadOnlyUserView = () => {
               ...(value !== 3 && { display: "none" }),
             }}
           >
-            <GreenView
+            <PuttingView
               currentHoles={currentHoles}
               numGames={selectedGames.length}
             />

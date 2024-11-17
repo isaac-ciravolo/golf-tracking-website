@@ -6,7 +6,7 @@ import HalfPizzaGraph from "../components/HalfPizzaGraph.js";
 
 import { clubs, upAndDown, colors } from "../util/Constants.js";
 
-const GreenView = ({ currentHoles, numGames }) => {
+const PuttingView = ({ currentHoles, numGames }) => {
   const [selectedClub, setSelectedClub] = useState("-");
   const [selectedData, setSelectedData] = useState([]);
   const [selectedTotal, setSelectedTotal] = useState(0);
@@ -121,6 +121,7 @@ const GreenView = ({ currentHoles, numGames }) => {
         width: "100%",
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
         gap: 3,
       }}
     >
@@ -325,4 +326,4 @@ const GreenView = ({ currentHoles, numGames }) => {
   );
 };
 
-export default GreenView;
+export default PuttingView;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import OverviewView from "./OverviewView.js";
 import DrivingView from "./DrivingView.js";
 import ApproachView from "./ApproachView.js";
-import GreenView from "./GreenView.js";
+import PuttingView from "./PuttingView.js";
 import CardView from "./CardView.js";
 import AdvancedView from "./AdvancedView.js";
 import ClassesView from "./ClassesView.js";
@@ -71,7 +71,9 @@ const UserView = ({ user }) => {
           backgroundColor: "lightGray",
           display: "flex",
           flexDirection: "column",
-          gap: 1,
+          gap: 2,
+          alignItems: "center",
+          p: 3,
         }}
       >
         <Typography textAlign="center" fontWeight={"bold"}>
@@ -98,11 +100,11 @@ const UserView = ({ user }) => {
             gap: 1,
             alignItems: "center",
             width: "100%",
-            overflow: "scroll",
-            flexGrow: 1,
+            overflowY: "auto",
+            maxHeight: "calc(100% - 300px)",
           }}
         >
-          {/* {games.length &&
+          {games.length &&
             games.map((game) => (
               <Box
                 key={game.id}
@@ -128,15 +130,12 @@ const UserView = ({ user }) => {
                   {game.title}
                 </ToggleButton>
               </Box>
-            ))} */}
+            ))}
         </Box>
-        <Button
-          variant="contained"
-          sx={{ width: "90%", height: "48.5px" }}
-          onClick={() => setSelectedGames(games)}
-        >
+        <Button variant="contained" sx={{ width: "90%", height: "48.5px" }}>
           ADD / EDIT ROUNDS
         </Button>
+        <Box sx={{ width: "100%", height: "10px" }}></Box>
       </Box>
       <Box
         sx={{
@@ -175,12 +174,18 @@ const UserView = ({ user }) => {
               <Tab label="Approach" index={2} />
               <Tab label="Putting" index={3} />
               <Tab label="Card" index={4} />
-              <Tab label="Classes" index={6} />
-              <Tab label="Add Round" index={7} />
+              <Tab label="Classes" index={5} />
             </Tabs>
           </Box>
         </Box>
-        <Box sx={{ flexGrow: 1, width: "100%" }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            width: "100%",
+            overflowY: "auto",
+            overflowX: "hidden",
+          }}
+        >
           <Box
             sx={{
               width: "100%",
@@ -218,7 +223,7 @@ const UserView = ({ user }) => {
               ...(value !== 3 && { display: "none" }),
             }}
           >
-            <GreenView
+            <PuttingView
               currentHoles={currentHoles}
               numGames={selectedGames.length}
             />
@@ -239,29 +244,11 @@ const UserView = ({ user }) => {
               ...(value !== 5 && { display: "none" }),
             }}
           >
-            <AdvancedView currentHoles={currentHoles} />
-          </Box>
-          <Box
-            sx={{
-              width: "100%",
-              p: 3,
-              ...(value !== 6 && { display: "none" }),
-            }}
-          >
             <ClassesView
               userId={user.id}
               userName={user.name}
               classes={user.classes}
             />
-          </Box>
-          <Box
-            sx={{
-              width: "100%",
-              p: 3,
-              ...(value !== 7 && { display: "none" }),
-            }}
-          >
-            <InputGameView userId={user.id} />
           </Box>
         </Box>
       </Box>
