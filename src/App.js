@@ -41,11 +41,13 @@ const theme = createTheme({
 const App = () => {
   const [isCoach, setIsCoach] = useState(false);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     fetchUser((newUser, newCoach) => {
+      setLoading(false);
       if (!newUser && !newCoach) {
         if (location.pathname !== "/login" && location.pathname !== "/signup")
           navigate("/login");
@@ -67,49 +69,53 @@ const App = () => {
     >
       <ThemeProvider theme={theme}>
         <Header showLogOut={user !== null} />
-        <Box
-          sx={{
-            width: "100vw",
-            height: "calc(100vh - 100px)",
-            marginTop: "100px",
-          }}
-        >
-          <Routes>
-            <Route
-              path="/"
-              element={user ? <Navigate to="/analysis" /> : <LoginView />}
-            />
-            <Route path="/login" element={<LoginView />} />
-            <Route path="/signup" element={<SignUpView />} />
-            <Route
-              path="/analysis"
-              element={
-                user && user.name ? (
-                  isCoach ? (
-                    <CoachView user={user} />
+        {loading ? (
+          <LoadingView />
+        ) : (
+          <Box
+            sx={{
+              width: "100vw",
+              height: "calc(100vh - 100px)",
+              marginTop: "100px",
+            }}
+          >
+            <Routes>
+              <Route
+                path="/"
+                element={user ? <Navigate to="/analysis" /> : <LoginView />}
+              />
+              <Route path="/login" element={<LoginView />} />
+              <Route path="/signup" element={<SignUpView />} />
+              <Route
+                path="/analysis"
+                element={
+                  user && user.name ? (
+                    isCoach ? (
+                      <CoachView user={user} />
+                    ) : (
+                      <UserView user={user} />
+                    )
                   ) : (
-                    <UserView user={user} />
+                    <LoadingView />
                   )
-                ) : (
-                  <LoadingView />
-                )
-              }
-            />
-            <Route path="/analysis/:id" element={<ReadOnlyUserView />} />
-            <Route path="/editGames" element={<GameView user={user} />} />
-            <Route
-              path="/settings"
-              element={
-                user &&
-                (!isCoach ? (
-                  <UserSettings user={user} />
-                ) : (
-                  <CoachSettings user={user} />
-                ))
-              }
-            />
-          </Routes>
-        </Box>
+                }
+              />
+              <Route path="/analysis/:id" element={<ReadOnlyUserView />} />
+              <Route path="/editGames" element={<GameView user={user} />} />
+              <Route
+                path="/settings"
+                element={
+                  user &&
+                  (!isCoach ? (
+                    <UserSettings user={user} />
+                  ) : (
+                    <CoachSettings user={user} />
+                  ))
+                }
+              />
+            </Routes>
+          </Box>
+        )}
       </ThemeProvider>
     </Box>
   );

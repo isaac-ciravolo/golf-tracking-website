@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { listenToGames } from "../DatabaseFunctions";
 import { Box, Button, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import EditGameView from "./EditGameView";
 const GameView = ({ user }) => {
+  const navigate = useNavigate();
   const [games, setGames] = useState([]);
-  const [value, setValue] = useState(0);
+  const [selectedGame, setSelectedGame] = useState(null);
 
   useEffect(() => {
-    console.log(user);
     if (user && user.id) {
       let unsubscribe;
 
@@ -24,33 +26,59 @@ const GameView = ({ user }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (selectedGame !== null) {
+      games.forEach((game) => {
+        if (game.id === selectedGame) {
+          setSelectedGame(game);
+        }
+      });
+    }
+  }, [games]);
+
   return (
     <Box sx={{ display: "flex", width: "100%", height: "100%" }}>
       <Box
         sx={{
           width: "200px",
-          height: "100vh",
+          height: "calc(100vh - 100px)",
           backgroundColor: "lightGray",
-          position: "fixed",
           display: "flex",
           flexDirection: "column",
           gap: 3,
           zIndex: 100,
+          alignItems: "center",
+          p: 3,
         }}
-      ></Box>
-
+      >
+        <Button
+          variant="contained"
+          sx={{ width: "90%", height: "48.5px" }}
+          onClick={() => {
+            navigate("/analysis");
+          }}
+        >
+          ANALYSIS
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ width: "90%", height: "48.5px" }}
+          onClick={() => {
+            setSelectedGame(null);
+          }}
+        >
+          GAMES LIST
+        </Button>
+      </Box>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           width: "100%",
-          marginLeft: "200px",
-          position: "relative",
         }}
       >
         <Box
           sx={{
-            position: "fixed",
             width: "100%",
             height: "130px",
             backgroundColor: "rgb(240, 240, 240)",
@@ -58,43 +86,81 @@ const GameView = ({ user }) => {
           }}
         >
           <Box sx={{ p: 3 }}>
-            <Box sx={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "baseline",
+              }}
+            >
               <Typography variant="h3" fontWeight="bold">
                 {user && user.name && user.name.toUpperCase()}
+              </Typography>
+              <Typography variant="h6" fontWeight="bold" color="gray">
+                Edit Games
               </Typography>
             </Box>
           </Box>
         </Box>
-        <Box sx={{ marginTop: "130px", width: "1200px" }}>
-          <Box
-            sx={{
-              width: "100%",
-              p: 3,
-              ...(value !== 0 && { display: "none" }),
-            }}
-          >
-            <Box>
+        <Box sx={{ width: "100%", height: "100%" }}>
+          {selectedGame === null ? (
+            <Box
+              sx={{
+                width: "100%",
+                height: "calc(100vh - 230px)",
+                ...(selectedGame !== null && { display: "none" }),
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 3,
+              }}
+            >
+              <Button
+                variant="contained"
+                sx={{
+                  height: "100px",
+                  width: "90%",
+                }}
+              >
+                <Typography fontSize="40px" fontWeight={"bold"}>
+                  Add Game
+                </Typography>
+              </Button>
               <Box
-                sx={{ display: "flex", flexDirection: "column", gap: "10px" }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 3,
+                  overflowY: "scroll",
+                  overflowX: "hidden",
+                  width: "100%",
+                  height: "100%",
+                  alignItems: "center",
+                }}
               >
                 {games.map((game) => (
                   <Button
                     key={game.id}
-                    variant="contained"
-                    sx={{ height: "100px", width: "300px" }}
+                    variant="outlined"
+                    sx={{
+                      height: "100px",
+                      width: "90%",
+                      border: "5px solid",
+                    }}
+                    onClick={() => {
+                      setSelectedGame(game);
+                    }}
                   >
-                    <Typography fontSize="20px">{game.title}</Typography>
+                    <Typography fontSize="40px" fontWeight={"bold"}>
+                      {game.title}
+                    </Typography>
                   </Button>
                 ))}
-                <Button
-                  variant="contained"
-                  sx={{ height: "100px", width: "300px" }}
-                >
-                  <Typography fontSize="20px">Add Game</Typography>
-                </Button>
               </Box>
             </Box>
-          </Box>
+          ) : (
+            <EditGameView game={selectedGame} user={user} />
+          )}
         </Box>
       </Box>
     </Box>

@@ -32,9 +32,7 @@ const Cell = ({ text, bold = false, color = "white" }) => {
 
 const CardView = ({ currentHoles }) => {
   return (
-    <Box
-      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-    >
+    <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box
         sx={{
           display: "flex",
