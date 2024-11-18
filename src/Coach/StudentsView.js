@@ -9,7 +9,9 @@ const StudentsView = ({ students }) => {
         return (
           <Box key={student} sx={{ display: "flex", flexDirection: "row" }}>
             <Typography>{student}</Typography>
-            <Button onClick={() => navigate("/view/" + student)}>View</Button>
+            <Button onClick={() => navigate("/analysis/" + student)}>
+              View
+            </Button>
           </Box>
         );
       })}

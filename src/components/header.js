@@ -1,8 +1,9 @@
 import { AppBar, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { logOut } from "../DatabaseFunctions";
+import { useNavigate } from "react-router-dom";
 
 function Header({ showLogOut }) {
+  const navigate = useNavigate();
   return (
     <AppBar
       sx={{
@@ -30,9 +31,11 @@ function Header({ showLogOut }) {
             backgroundColor: "gray",
           }}
           variant="contained"
-          onClick={logOut}
+          onClick={() => {
+            navigate("/settings");
+          }}
         >
-          Log Out
+          Settings
         </Button>
       )}
     </AppBar>

@@ -233,16 +233,13 @@ export const fetchStudent = async (studentId) => {
   }
 };
 
-export const logOut = (callback) => {
-  const auth = getAuth();
-
-  signOut(auth)
-    .then(() => {
-      callback();
-    })
-    .catch((error) => {
-      return error.message;
-    });
+export const logOut = () => {
+  try {
+    const auth = getAuth();
+    signOut(auth);
+  } catch (error) {
+    return error.message;
+  }
 };
 
 export const addGame = async (userId, gameData) => {
@@ -269,4 +266,20 @@ export const listenToGames = (userId, setGames) => {
   });
 
   return unsubscribe;
+};
+
+export const deleteAccount = async (userId) => {
+  try {
+    const userDocRef = doc(db, "users", userId);
+    await deleteDoc(userDocRef);
+
+    const user = auth.currentUser;
+    if (user && user.uid === userId) {
+      await user.delete();
+    }
+
+    return "Success!";
+  } catch (error) {
+    return error.message;
+  }
 };

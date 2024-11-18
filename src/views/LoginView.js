@@ -14,7 +14,7 @@ function LoginView() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/profile");
+      navigate("/analysis");
     } catch (error) {
       if (error.message === "Firebase: Error (auth/invalid-email).")
         setErrorMessage("Invalid email");
@@ -25,71 +25,79 @@ function LoginView() {
   };
 
   return (
-    <Paper
-      style={{
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
         display: "flex",
-        margin: "auto",
-        width: "500px",
-
-        padding: "20px",
-        marginTop: "50px",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingTop: 10,
       }}
     >
-      <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-          }}
-        >
-          <Typography variant="h3" fontWeight="bold">
-            Login
-          </Typography>
-
-          <TextField
-            label="Email address"
-            type="email"
-            fullWidth
-            variant="outlined"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setErrorMessage("");
+      <Paper
+        sx={{
+          display: "flex",
+          width: "500px",
+          p: 3,
+        }}
+      >
+        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
             }}
-          />
-
-          <TextField
-            label="Password"
-            type="password"
-            fullWidth
-            variant="outlined"
-            placeholder="Enter password"
-            value={password}
-            sx={{ width: "100%" }}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setErrorMessage("");
-            }}
-          />
-
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{ height: "50px", width: "100%", fontSize: "20px" }}
           >
-            LOGIN
-          </Button>
+            <Typography variant="h3" fontWeight="bold">
+              Login
+            </Typography>
 
-          <Typography>
-            New User? <Link href="/signup">Register Here</Link>
-          </Typography>
-          <Typography color="error">{errorMessage}</Typography>
-        </Box>
-      </form>
-    </Paper>
+            <TextField
+              label="Email address"
+              type="email"
+              fullWidth
+              variant="outlined"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setErrorMessage("");
+              }}
+            />
+
+            <TextField
+              label="Password"
+              type="password"
+              fullWidth
+              variant="outlined"
+              placeholder="Enter password"
+              value={password}
+              sx={{ width: "100%" }}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setErrorMessage("");
+              }}
+            />
+
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{ height: "50px", width: "100%", fontSize: "20px" }}
+            >
+              LOGIN
+            </Button>
+
+            <Typography>
+              New User? <Link href="/signup">Register Here</Link>
+            </Typography>
+            <Typography color="error">{errorMessage}</Typography>
+          </Box>
+        </form>
+      </Paper>
+    </Box>
   );
 }
 

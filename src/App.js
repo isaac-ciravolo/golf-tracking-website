@@ -18,6 +18,8 @@ import SignUpView from "./views/SignUpView.js";
 import CoachView from "./Coach/CoachView.js";
 import ReadOnlyUserView from "./Coach/ReadOnlyUserView.js";
 import GameView from "./Games/GameView.js";
+import UserSettings from "./User/UserSettings.js";
+import CoachSettings from "./Coach/CoachSettings.js";
 
 import { fetchUser } from "./DatabaseFunctions.js";
 
@@ -93,8 +95,19 @@ const App = () => {
                 )
               }
             />
-            <Route path="/view/:id" element={<ReadOnlyUserView />} />
+            <Route path="/analysis/:id" element={<ReadOnlyUserView />} />
             <Route path="/editGames" element={<GameView user={user} />} />
+            <Route
+              path="/settings"
+              element={
+                user &&
+                (!isCoach ? (
+                  <UserSettings user={user} />
+                ) : (
+                  <CoachSettings user={user} />
+                ))
+              }
+            />
           </Routes>
         </Box>
       </ThemeProvider>
