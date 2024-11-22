@@ -17,23 +17,18 @@ const TitleDateInput = ({ userId }) => {
       return;
     }
 
-    try {
-      const res = await addGame(userId, {
-        createdDate: new Date().getTime() / 1000,
-        title: title,
-        holes: [],
-        gameDate: date.unix(),
-      });
+    const res = await addGame(userId, {
+      createdDate: new Date().getTime() / 1000,
+      title: title,
+      holes: [],
+      gameDate: date.unix(),
+    });
 
-      if (res === "Success!") {
-        setTitle("");
-        setDate(null);
-      } else {
-        console.error("Error saving document:", res);
-        alert("Error saving event. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error saving document:", error);
+    if (res === "Success!") {
+      setTitle("");
+      setDate(null);
+    } else {
+      console.error("Error saving document:", res);
       alert("Error saving event. Please try again.");
     }
   };

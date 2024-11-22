@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter";
-import { addGame } from "../DatabaseFunctions";
-
-const EditGameView = ({ game, userId }) => {
+import { deleteGame, updateGame } from "../DatabaseFunctions";
+const EditGameView = ({ game, userId, back }) => {
   const [selectedHole, setSelectedHole] = useState(null);
   return (
     <Box
@@ -13,6 +12,7 @@ const EditGameView = ({ game, userId }) => {
         alignItems: "center",
         paddingTop: 3,
         gap: 3,
+        position: "relative",
       }}
     >
       <Typography variant="h2" fontWeight="bold">
@@ -28,6 +28,26 @@ const EditGameView = ({ game, userId }) => {
           </Button>
         </Box>
       ))}
+
+      <Button
+        variant="contained"
+        sx={{ position: "absolute", right: "20px", top: "20px" }}
+        onClick={async () => {
+          const res = await deleteGame(userId, game.id);
+          if (res !== "Success!") {
+            alert("Error deleting game");
+          }
+        }}
+      >
+        Delete Game
+      </Button>
+      <Button
+        variant="contained"
+        sx={{ position: "absolute", left: "20px", top: "20px" }}
+        onClick={back}
+      >
+        Back
+      </Button>
     </Box>
   );
 };

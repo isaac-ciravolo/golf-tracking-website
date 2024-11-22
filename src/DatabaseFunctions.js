@@ -245,7 +245,6 @@ export const logOut = () => {
 export const addGame = async (userId, gameData) => {
   try {
     const gamesCollectionRef = collection(db, "users", userId, "games");
-    console.log(gameData);
     await addDoc(gamesCollectionRef, gameData);
     return "Success!";
   } catch (error) {
@@ -278,6 +277,26 @@ export const deleteAccount = async (userId) => {
       await user.delete();
     }
 
+    return "Success!";
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const deleteGame = async (userId, gameId) => {
+  try {
+    const gameDocRef = doc(db, "users", userId, "games", gameId);
+    await deleteDoc(gameDocRef);
+    return "Success!";
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const updateGame = async (userId, gameId, gameData) => {
+  try {
+    const gameDocRef = doc(db, "users", userId, "games", gameId);
+    await setDoc(gameDocRef, gameData);
     return "Success!";
   } catch (error) {
     return error.message;

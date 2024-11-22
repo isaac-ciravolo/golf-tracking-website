@@ -16,6 +16,7 @@ import formatDateFromMilliseconds from "../util/DateConverter.js";
 import { listenToGames } from "../DatabaseFunctions.js";
 import { useNavigate } from "react-router-dom";
 import LoadingView from "../views/LoadingView.js";
+import ClassesView from "./ClassesView.js";
 
 const UserView = ({ user }) => {
   const [games, setGames] = useState([]);
@@ -245,7 +246,7 @@ const UserView = ({ user }) => {
                   ...(value !== 4 && { display: "none" }),
                 }}
               >
-                <CardView currentHoles={currentHoles} />
+                <ClassesView currentHoles={currentHoles} />
               </Box>
             </Box>
           </Box>
