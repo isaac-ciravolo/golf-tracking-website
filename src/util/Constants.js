@@ -66,6 +66,6 @@ export {
   approachShots,
   arr0to9,
   colors,
-  upAndDown,
+  upAndDown as yesAndNo,
   sortingOptions,
 };

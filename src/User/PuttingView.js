@@ -4,7 +4,7 @@ import { CustomSelect } from "../components/CustomComponents.js";
 import PercentBox from "../components/PercentBox.js";
 import HalfPizzaGraph from "../components/HalfPizzaGraph.js";
 
-import { clubs, upAndDown, colors } from "../util/Constants.js";
+import { clubs, yesAndNo, colors } from "../util/Constants.js";
 
 const PuttingView = ({ currentHoles, numGames }) => {
   const [selectedClub, setSelectedClub] = useState("-");
@@ -20,10 +20,10 @@ const PuttingView = ({ currentHoles, numGames }) => {
   useEffect(() => {
     const newSelectedData = [];
     let newSelectedTotal = 0;
-    upAndDown.slice(1, upAndDown.length).forEach((shot) => {
+    yesAndNo.slice(1, yesAndNo.length).forEach((shot) => {
       const newValue = getCount(currentHoles, {
-        upAndDownClub: selectedClub,
-        upAndDown: shot,
+        yesAndNoClub: selectedClub,
+        yesAndNo: shot,
       });
       newSelectedData.push({
         value: newValue,
@@ -36,8 +36,8 @@ const PuttingView = ({ currentHoles, numGames }) => {
     setSelectedTotal(newSelectedTotal);
     const newAllData = [];
     let newAllTotal = 0;
-    upAndDown.slice(1, upAndDown.length).forEach((shot) => {
-      const newValue = getCount(currentHoles, { upAndDown: shot });
+    yesAndNo.slice(1, yesAndNo.length).forEach((shot) => {
+      const newValue = getCount(currentHoles, { yesAndNo: shot });
       newAllData.push({
         value: newValue,
         label: shot,

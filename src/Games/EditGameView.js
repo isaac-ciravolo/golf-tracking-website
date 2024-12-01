@@ -2,9 +2,15 @@ import { useState, useEffect } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter";
 import { deleteGame, updateGame } from "../DatabaseFunctions";
+import EditHoleView from "./EditHoleView";
 const EditGameView = ({ game, userId, back }) => {
-  const [selectedHole, setSelectedHole] = useState(null);
-  return (
+  const [selectedHoleIndex, setSelectedHoleIndex] = useState(-1);
+  useEffect(() => {
+    console.log(selectedHoleIndex);
+  }, [selectedHoleIndex]);
+  return selectedHoleIndex !== -1 ? (
+    <EditHoleView game={game} index={selectedHoleIndex} />
+  ) : (
     <Box
       sx={{
         display: "flex",
@@ -23,7 +29,10 @@ const EditGameView = ({ game, userId, back }) => {
 
       {game.holes.map((hole, index) => (
         <Box key={index} sx={{ display: "flex", flexDirection: "row" }}>
-          <Button variant="contained">
+          <Button
+            variant="contained"
+            onClick={() => setSelectedHoleIndex(index)}
+          >
             Hole {index + 1}: Par {hole.par}
           </Button>
         </Box>
