@@ -190,7 +190,7 @@ const UserView = ({ user }) => {
                   <Tab label="Tee Shot" index={1} />
                   <Tab label="Approach" index={2} />
                   <Tab label="Putting" index={3} />
-                  <Tab label="Card" index={4} />
+                  <Tab label="Classes" index={4} />
                 </Tabs>
               </Box>
             </Box>
@@ -246,7 +246,7 @@ const UserView = ({ user }) => {
                   ...(value !== 4 && { display: "none" }),
                 }}
               >
-                <ClassesView currentHoles={currentHoles} />
+                <ClassesView userId={user.id} userName={user.name} />
               </Box>
             </Box>
           </Box>

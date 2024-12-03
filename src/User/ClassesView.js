@@ -1,13 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Dialog, Typography, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { addRequest } from "../DatabaseFunctions.js";
+import { addRequest, fetchClasses } from "../DatabaseFunctions.js";
 
-const ClassesView = ({ userId, userName, classes }) => {
+const ClassesView = ({ userId, userName }) => {
   const [open, setOpen] = useState(false);
   const [classCode, setClassCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [classes, setClasses] = useState([]);
+
+  useEffect(() => {
+    if (userId) {
+      const fetchUserClasses = async () => {
+        try {
+          const classesData = await fetchClasses(userId);
+          setClasses(classesData);
+        } catch (error) {
+          alert("Failed to fetch classes:", error);
+        }
+      };
+
+      fetchUserClasses();
+    }
+  }, [userId]);
+
   return (
     <Box
       sx={{
@@ -33,14 +50,15 @@ const ClassesView = ({ userId, userName, classes }) => {
               sx={{
                 width: "300px",
                 display: "flex",
-                flexDirection: "column",
                 gap: "10px",
+                flexDirection: "column",
                 p: 2,
                 border: "1px solid black",
                 borderRadius: "5px",
               }}
             >
-              <Typography>Class Code: {classData}</Typography>
+              <Typography>{classData.name}</Typography>
+              <Typography>Class Code: {classData.id}</Typography>
             </Box>
           ))}
       </Box>

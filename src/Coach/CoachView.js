@@ -197,7 +197,7 @@ const CoachView = ({ user }) => {
             loading={loading}
             onClick={async () => {
               setLoading(true);
-              const error = await createClass(className);
+              const error = await createClass(className, user.id);
               setLoading(false);
 
               if (error) {

@@ -191,28 +191,53 @@ export const fetchGames = async (userId) => {
   }
 };
 
-export const fetchClasses = async (coachId) => {
+export const fetchClasses = async (id) => {
   try {
-    const userDocRef = doc(db, "coaches", coachId);
+    const coachDocRef = doc(db, "coaches", id);
+    const coachDocSnap = await getDoc(coachDocRef);
+    if (coachDocSnap.exists()) {
+      const coachData = coachDocSnap.data();
+      const coachClasses = await Promise.all(
+        coachData.classes.map(async (classId) => {
+          const classDocRef = doc(db, "classes", classId);
+          const classDocSnap = await getDoc(classDocRef);
+
+          if (classDocSnap.exists()) {
+            return {
+              id: classId,
+              ...classDocSnap.data(),
+            };
+          }
+          return null;
+        })
+      );
+
+      const filteredClasses = coachClasses.filter((cls) => cls !== null);
+      return filteredClasses;
+    }
+
+    const userDocRef = doc(db, "users", id);
     const userDocSnap = await getDoc(userDocRef);
-    const userData = userDocSnap.data();
-    const userClasses = await Promise.all(
-      userData.classes.map(async (classId) => {
-        const classDocRef = doc(db, "classes", classId);
-        const classDocSnap = await getDoc(classDocRef);
+    if (userDocSnap.exists()) {
+      const userData = userDocSnap.data();
+      const userClasses = await Promise.all(
+        userData.classes.map(async (classId) => {
+          const classDocRef = doc(db, "classes", classId);
+          const classDocSnap = await getDoc(classDocRef);
 
-        if (classDocSnap.exists()) {
-          return {
-            id: classId,
-            ...classDocSnap.data(),
-          };
-        }
-        return null;
-      })
-    );
+          if (classDocSnap.exists()) {
+            return {
+              id: classId,
+              ...classDocSnap.data(),
+            };
+          }
+          return null;
+        })
+      );
 
-    const filteredClasses = userClasses.filter((cls) => cls !== null);
-    return filteredClasses;
+      const filteredClasses = userClasses.filter((cls) => cls !== null);
+      return filteredClasses;
+    }
   } catch (error) {
     return error.message;
   }
@@ -260,7 +285,6 @@ export const listenToGames = (userId, setGames) => {
       id: doc.id,
       ...doc.data(),
     }));
-    console.log("Collection data:", games);
     setGames(games);
   });
 
