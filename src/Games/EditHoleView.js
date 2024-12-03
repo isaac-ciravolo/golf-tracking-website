@@ -5,7 +5,8 @@ import {
 } from "../components/CustomComponents";
 import { Box, Button } from "@mui/material";
 import { clubs, teeShots, approachShots, yesAndNo } from "../util/Constants";
-const EditHoleView = ({ game, index, goBack }) => {
+import { updateGame } from "../DatabaseFunctions";
+const EditHoleView = ({ userId, game, index, goBack }) => {
   const [par, setPar] = useState(null);
   const [yardage, setYardage] = useState(null);
   const [score, setScore] = useState(null);
@@ -37,7 +38,43 @@ const EditHoleView = ({ game, index, goBack }) => {
     }
   }, [game]);
 
-  const saveHole = (e) => {};
+  const saveHole = async (e) => {
+    const oldHole = game.holes[index];
+    const newHole = {
+      par: par,
+      yardage: yardage,
+      score: score,
+      teeClub: teeClub,
+      teeShot: teeShot,
+      approachClub: approachClub,
+      approachShot: approachShot,
+      upAndDown: upAndDown,
+      totalPutts: totalPutts,
+      firstPuttDist: firstPuttDist,
+      penaltyStrokes: penaltyStrokes,
+      shotsInside100: shotsInside100,
+    };
+    game.holes[index] = newHole;
+
+    const res = await updateGame(userId, game.id, game);
+
+    if (res !== "Success!") {
+      alert("Error saving hole " + res);
+      game.holes[index] = oldHole;
+    }
+    goBack();
+  };
+
+  const deleteHole = async (e) => {
+    const oldHole = game.holes[index];
+    game.holes.splice(index, 1);
+    const res = await updateGame(userId, game.id, game);
+    if (res !== "Success!") {
+      alert("Error deleting hole " + res);
+      game.holes.splice(index, 0, oldHole);
+    }
+    goBack();
+  };
 
   return (
     <Box
@@ -47,7 +84,7 @@ const EditHoleView = ({ game, index, goBack }) => {
       }}
     >
       <Box sx={{ p: 3 }}>
-        {yardage && (
+        {approachClub && (
           <Box
             sx={{
               display: "flex",
@@ -56,20 +93,38 @@ const EditHoleView = ({ game, index, goBack }) => {
               alignItems: "center",
             }}
           >
-            <Button
-              onClick={saveHole}
-              variant="contained"
-              sx={{ width: "200px", height: "50px" }}
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                gap: 3,
+                justifyContent: "center",
+                m: 4,
+              }}
             >
-              Save Hole
-            </Button>
-            <Button
-              onClick={() => goBack()}
-              variant="contained"
-              sx={{ width: "200px", height: "50px" }}
-            >
-              Back
-            </Button>
+              <Button
+                onClick={saveHole}
+                variant="contained"
+                sx={{ width: "200px", height: "50px" }}
+              >
+                Save Hole
+              </Button>
+              <Button
+                onClick={() => goBack()}
+                variant="contained"
+                sx={{ width: "200px", height: "50px" }}
+              >
+                Back
+              </Button>
+              <Button
+                onClick={deleteHole}
+                variant="contained"
+                sx={{ width: "200px", height: "50px" }}
+              >
+                Delete Hole
+              </Button>
+            </Box>
+
             <CustomSelect
               name="Par"
               onChange={(e) => setPar(e.target.value)}

@@ -40,7 +40,7 @@ const GameView = ({ user }) => {
     if (selectedGame !== null) {
       let foundGame = false;
       games.forEach((game) => {
-        if (game.id === selectedGame) {
+        if (game.id === selectedGame.id) {
           setSelectedGame(game);
           foundGame = true;
         }
