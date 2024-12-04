@@ -3,9 +3,9 @@ import {
   CustomSelect,
   CustomNumberInput,
 } from "../components/CustomComponents";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { clubs, teeShots, approachShots, yesAndNo } from "../util/Constants";
-const EditHoleView = ({ game, index }) => {
+const EditHoleView = ({ game, index, goBack }) => {
   const [par, setPar] = useState(null);
   const [yardage, setYardage] = useState(null);
   const [score, setScore] = useState(null);
@@ -20,7 +20,6 @@ const EditHoleView = ({ game, index }) => {
   const [shotsInside100, setShotsInside100] = useState(null);
 
   useEffect(() => {
-    console.log(game.holes[index]);
     if (game.holes[index]) {
       const hole = game.holes[index];
       setPar(hole.par);
@@ -38,11 +37,39 @@ const EditHoleView = ({ game, index }) => {
     }
   }, [game]);
 
+  const saveHole = (e) => {};
+
   return (
-    <Box sx={{ width: "100%", height: "100%" }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+      }}
+    >
       <Box sx={{ p: 3 }}>
         {yardage && (
-          <>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 1,
+              alignItems: "center",
+            }}
+          >
+            <Button
+              onClick={saveHole}
+              variant="contained"
+              sx={{ width: "200px", height: "50px" }}
+            >
+              Save Hole
+            </Button>
+            <Button
+              onClick={() => goBack()}
+              variant="contained"
+              sx={{ width: "200px", height: "50px" }}
+            >
+              Back
+            </Button>
             <CustomSelect
               name="Par"
               onChange={(e) => setPar(e.target.value)}
@@ -115,7 +142,7 @@ const EditHoleView = ({ game, index }) => {
               defaultValue={shotsInside100}
               onChange={(e) => setShotsInside100(e.target.value)}
             />
-          </>
+          </Box>
         )}
       </Box>
     </Box>

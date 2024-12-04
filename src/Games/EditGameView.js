@@ -9,7 +9,11 @@ const EditGameView = ({ game, userId, back }) => {
     console.log(selectedHoleIndex);
   }, [selectedHoleIndex]);
   return selectedHoleIndex !== -1 ? (
-    <EditHoleView game={game} index={selectedHoleIndex} />
+    <EditHoleView
+      game={game}
+      index={selectedHoleIndex}
+      goBack={() => setSelectedHoleIndex(-1)}
+    />
   ) : (
     <Box
       sx={{
@@ -19,6 +23,7 @@ const EditGameView = ({ game, userId, back }) => {
         paddingTop: 3,
         gap: 3,
         position: "relative",
+        overflow: "scroll",
       }}
     >
       <Typography variant="h2" fontWeight="bold">

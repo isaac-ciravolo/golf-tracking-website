@@ -43,7 +43,12 @@ export const CustomNumberInput = ({
 }) => {
   const classes = useStyles();
   return (
-    <Box display="flex" alignItems="center" gap={2} sx={{ height: "30px" }}>
+    <Box
+      display="flex"
+      alignItems="center"
+      gap={2}
+      sx={{ height: "30px", width: "100%" }}
+    >
       <Box className={classes.labelContainer}>
         <Typography className={classes.label}>{name}</Typography>
       </Box>
