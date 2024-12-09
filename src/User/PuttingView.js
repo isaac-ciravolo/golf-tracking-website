@@ -190,6 +190,7 @@ const PuttingView = ({ currentHoles, numGames }) => {
             </Typography>
           </Paper>
         </Paper>
+
         <Paper
           sx={{
             width: "500px",
@@ -240,6 +241,124 @@ const PuttingView = ({ currentHoles, numGames }) => {
             );
           })}
         </Paper>
+      </Box>
+      <Box sx={{ display: "flex", gap: 3 }}>
+        <Paper
+          sx={{
+            width: "500px",
+            height: "500px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 3,
+            p: 3,
+          }}
+        >
+          <Paper
+            sx={{
+              width: "300px",
+              height: "125px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography noWrap fontWeight={"bold"}>
+              {"Putts per GIR"}
+            </Typography>
+            <Typography noWrap variant="h4">
+              {(
+                currentHoles
+                  .filter((hole) => hole.approachShot === "GIR")
+                  .reduce((acc, hole) => acc + hole.totalPutts, 0) /
+                currentHoles.filter((hole) => hole.approachShot === "GIR")
+                  .length
+              ).toFixed(2)}
+            </Typography>
+          </Paper>
+          <Paper
+            sx={{
+              width: "300px",
+              height: "125px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography noWrap fontWeight={"bold"}>
+              {"Putts per Missed GIR"}
+            </Typography>
+            <Typography noWrap variant="h4">
+              {(
+                currentHoles
+                  .filter((hole) => hole.approachShot !== "GIR")
+                  .reduce((acc, hole) => acc + hole.totalPutts, 0) /
+                currentHoles.filter((hole) => hole.approachShot !== "GIR")
+                  .length
+              ).toFixed(2)}
+            </Typography>
+          </Paper>
+        </Paper>
+        <Box sx={{ display: "flex", gap: 3 }}>
+          <Paper
+            sx={{
+              width: "500px",
+              height: "500px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 3,
+              p: 3,
+            }}
+          >
+            <Paper
+              sx={{
+                width: "300px",
+                height: "125px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography noWrap fontWeight={"bold"}>
+                {"1 Putt Percentage"}
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(
+                  (currentHoles.filter((hole) => hole.totalPutts === 1).length /
+                    currentHoles.length) *
+                  100
+                ).toFixed(2) + "%"}
+              </Typography>
+            </Paper>
+            <Paper
+              sx={{
+                width: "300px",
+                height: "125px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography noWrap fontWeight={"bold"}>
+                {"3 Putt Percentage"}
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(
+                  (currentHoles.filter((hole) => hole.totalPutts >= 3).length /
+                    currentHoles.length) *
+                  100
+                ).toFixed(2) + "%"}
+              </Typography>
+            </Paper>
+          </Paper>
+        </Box>
       </Box>
       <Box sx={{ display: "flex", gap: 3 }}>
         <Paper

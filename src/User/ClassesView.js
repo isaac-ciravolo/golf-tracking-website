@@ -14,7 +14,9 @@ const ClassesView = ({ userId, userName }) => {
     if (userId) {
       const fetchUserClasses = async () => {
         try {
+          console.log(userId);
           const classesData = await fetchClasses(userId);
+          console.log(classesData);
           setClasses(classesData);
         } catch (error) {
           alert("Failed to fetch classes:", error);
@@ -24,6 +26,10 @@ const ClassesView = ({ userId, userName }) => {
       fetchUserClasses();
     }
   }, [userId]);
+
+  useEffect(() => {
+    console.log(classes);
+  }, [classes]);
 
   return (
     <Box
@@ -44,6 +50,7 @@ const ClassesView = ({ userId, userName }) => {
       </Button>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         {classes &&
+          classes.length > 0 &&
           classes.map((classData) => (
             <Box
               key={classData}
