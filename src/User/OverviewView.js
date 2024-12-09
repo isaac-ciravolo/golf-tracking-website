@@ -202,6 +202,40 @@ const OverviewView = ({ currentHoles, numGames }) => {
           </Paper>
         </Box>
       </Paper>
+      {/* <Paper
+        sx={{
+          width: "200px",
+          height: "200px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography noWrap fontWeight={"bold"}>
+          Greens Per Round
+        </Typography>
+        <Typography noWrap variant="h4">
+          {(totalPars / numGames).toFixed(2)}
+        </Typography>
+      </Paper>
+      <Paper
+        sx={{
+          width: "200px",
+          height: "200px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography noWrap fontWeight={"bold"}>
+          Up and Down Per Round
+        </Typography>
+        <Typography noWrap variant="h4">
+          {(totalScore / numGames).toFixed(2)}
+        </Typography>
+      </Paper> */}
       <Paper
         sx={{
           width: "500px",
