@@ -41,18 +41,18 @@ const EditHoleView = ({ userId, game, index, goBack }) => {
   const saveHole = async (e) => {
     const oldHole = game.holes[index];
     const newHole = {
-      par: par,
-      yardage: yardage,
-      score: score,
+      par: Number(par),
+      yardage: Number(yardage),
+      score: Number(score),
       teeClub: teeClub,
       teeShot: teeShot,
       approachClub: approachClub,
       approachShot: approachShot,
       upAndDown: upAndDown,
-      totalPutts: totalPutts,
-      firstPuttDist: firstPuttDist,
-      penaltyStrokes: penaltyStrokes,
-      shotsInside100: shotsInside100,
+      totalPutts: Number(totalPutts),
+      firstPuttDist: Number(firstPuttDist),
+      penaltyStrokes: Number(penaltyStrokes),
+      shotsInside100: Number(shotsInside100),
     };
     game.holes[index] = newHole;
 

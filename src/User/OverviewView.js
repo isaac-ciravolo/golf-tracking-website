@@ -75,11 +75,13 @@ const OverviewView = ({ currentHoles, numGames }) => {
     currentHoles.forEach((hole) => {
       newTotalPutts += hole.totalPutts;
       newTotalScore += hole.score;
+      console.log(hole.score);
       newTotalPars += hole.par;
     });
     setTotalPutts(newTotalPutts);
     setTotalScore(newTotalScore);
     setTotalPars(newTotalPars);
+    console.log(newTotalScore);
   }, [currentHoles]);
 
   const getCount = (currHoles, conditions) => {
