@@ -142,15 +142,9 @@ const GamesListView = ({ userId }) => {
                 gameDate: date.unix(),
               };
               const res = await addGame(userId, newGame);
-              const newGames = games;
-              newGames.push(newGame);
-              newGames.sort((a, b) => b.gameDate - a.gameDate);
-              setGames(newGames);
 
               if (res === "Success!") {
-                setGameName("");
-                setDate(null);
-                setOpen(false);
+                window.location.reload();
               } else {
                 setErrorMessage(res);
               }
