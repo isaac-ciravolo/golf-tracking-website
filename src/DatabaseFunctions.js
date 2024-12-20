@@ -326,3 +326,18 @@ export const updateGame = async (userId, gameId, gameData) => {
     return error.message;
   }
 };
+
+export const fetchGame = async (userId, gameId) => {
+  try {
+    const gameDocRef = doc(db, "users", userId, "games", gameId);
+    const gameDocSnap = await getDoc(gameDocRef);
+
+    if (!gameDocSnap.exists()) {
+      return "Game not found.";
+    }
+
+    return gameDocSnap.data();
+  } catch (error) {
+    return error.message;
+  }
+};

@@ -2,9 +2,24 @@ import { useState, useEffect } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter";
 import { deleteGame, updateGame } from "../DatabaseFunctions";
-import EditHoleView from "./EditHoleView";
-const EditGameView = ({ game, userId, back }) => {
-  const [selectedHoleIndex, setSelectedHoleIndex] = useState(-1);
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchGame } from "../DatabaseFunctions";
+import LoadingView from "../views/LoadingView";
+const EditGameView = ({ userId }) => {
+  const [game, setGame] = useState(null);
+  const navigate = useNavigate();
+  const { gameId } = useParams();
+
+  useEffect(() => {
+    if (!userId) return;
+    const fetchData = async () => {
+      const newGame = await fetchGame(userId, gameId);
+      setGame(newGame);
+      console.log(newGame);
+    };
+    fetchData();
+  }, [userId]);
+
   const addHole = async () => {
     const newHole = {
       par: "-",
@@ -26,14 +41,7 @@ const EditGameView = ({ game, userId, back }) => {
       alert("Error adding hole");
     }
   };
-  return selectedHoleIndex !== -1 ? (
-    <EditHoleView
-      userId={userId}
-      game={game}
-      index={selectedHoleIndex}
-      goBack={() => setSelectedHoleIndex(-1)}
-    />
-  ) : (
+  return game ? (
     <Box
       sx={{
         display: "flex",
@@ -55,7 +63,7 @@ const EditGameView = ({ game, userId, back }) => {
         <Box key={index} sx={{ display: "flex", flexDirection: "row" }}>
           <Button
             variant="contained"
-            onClick={() => setSelectedHoleIndex(index)}
+            onClick={() => navigate("/editGames/" + game.id + "/" + index)}
           >
             Hole {index + 1}: Par {hole.par}
           </Button>
@@ -77,7 +85,7 @@ const EditGameView = ({ game, userId, back }) => {
       <Button
         variant="contained"
         sx={{ position: "absolute", left: "20px", top: "20px" }}
-        onClick={back}
+        onClick={() => navigate("/editGames")}
       >
         Back
       </Button>
@@ -89,6 +97,8 @@ const EditGameView = ({ game, userId, back }) => {
         Add Hole
       </Button>
     </Box>
+  ) : (
+    <LoadingView />
   );
 };
 

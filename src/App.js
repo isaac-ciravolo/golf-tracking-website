@@ -17,9 +17,10 @@ import LoginView from "./views/LoginView.js";
 import SignUpView from "./views/SignUpView.js";
 import CoachView from "./Coach/CoachView.js";
 import ReadOnlyUserView from "./Coach/ReadOnlyUserView.js";
-import GameView from "./Games/GameView.js";
 import UserSettings from "./User/UserSettings.js";
 import CoachSettings from "./Coach/CoachSettings.js";
+import EditGameView from "./Games/EditGameView.js";
+import GamesView from "./Games/GamesView.js";
 
 import { fetchUser } from "./DatabaseFunctions.js";
 
@@ -77,6 +78,7 @@ const App = () => {
               width: "100vw",
               height: "calc(100vh - 100px)",
               marginTop: "100px",
+              overflow: "hidden",
             }}
           >
             <Routes>
@@ -101,7 +103,7 @@ const App = () => {
                 }
               />
               <Route path="/analysis/:id" element={<ReadOnlyUserView />} />
-              <Route path="/editGames" element={<GameView user={user} />} />
+              <Route path="/editGames/*" element={<GamesView user={user} />} />
               <Route
                 path="/settings"
                 element={
