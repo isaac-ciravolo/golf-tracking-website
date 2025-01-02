@@ -17,6 +17,7 @@ import { listenToGames } from "../DatabaseFunctions.js";
 import { useNavigate } from "react-router-dom";
 import LoadingView from "../views/LoadingView.js";
 import ClassesView from "./ClassesView.js";
+import ShortGameView from "./ShortGameView.js";
 
 const UserView = ({ user }) => {
   const [games, setGames] = useState([]);
@@ -190,8 +191,9 @@ const UserView = ({ user }) => {
                   <Tab label="Overview" index={0} />
                   <Tab label="Tee Shot" index={1} />
                   <Tab label="Approach" index={2} />
-                  <Tab label="Putting" index={3} />
-                  <Tab label="Classes" index={4} />
+                  <Tab label="Short Game" index={3} />
+                  <Tab label="Putting" index={4} />
+                  <Tab label="Classes" index={5} />
                 </Tabs>
               </Box>
             </Box>
@@ -236,7 +238,7 @@ const UserView = ({ user }) => {
                   ...(value !== 3 && { display: "none" }),
                 }}
               >
-                <PuttingView
+                <ShortGameView
                   currentHoles={currentHoles}
                   numGames={selectedGames.length}
                 />
@@ -245,6 +247,17 @@ const UserView = ({ user }) => {
                 sx={{
                   width: "100%",
                   ...(value !== 4 && { display: "none" }),
+                }}
+              >
+                <PuttingView
+                  currentHoles={currentHoles}
+                  numGames={selectedGames.length}
+                />
+              </Box>
+              <Box
+                sx={{
+                  width: "100%",
+                  ...(value !== 5 && { display: "none" }),
                 }}
               >
                 <ClassesView userId={user.id} userName={user.name} />

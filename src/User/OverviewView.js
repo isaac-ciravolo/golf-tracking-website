@@ -152,6 +152,7 @@ const OverviewView = ({ currentHoles, numGames }) => {
   };
 
   return (
+    <>
     <Box
       sx={{
         height: "100%",
@@ -202,40 +203,7 @@ const OverviewView = ({ currentHoles, numGames }) => {
           </Paper>
         </Box>
       </Paper>
-      {/* <Paper
-        sx={{
-          width: "200px",
-          height: "200px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Typography noWrap fontWeight={"bold"}>
-          Greens Per Round
-        </Typography>
-        <Typography noWrap variant="h4">
-          {(totalPars / numGames).toFixed(2)}
-        </Typography>
-      </Paper>
-      <Paper
-        sx={{
-          width: "200px",
-          height: "200px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Typography noWrap fontWeight={"bold"}>
-          Up and Down Per Round
-        </Typography>
-        <Typography noWrap variant="h4">
-          {(totalScore / numGames).toFixed(2)}
-        </Typography>
-      </Paper> */}
+      
       <Paper
         sx={{
           width: "500px",
@@ -312,6 +280,70 @@ const OverviewView = ({ currentHoles, numGames }) => {
         </Paper>
       </Paper>
     </Box>
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 3,
+        padding: 3,
+      }}
+    >
+    <Paper
+        sx={{
+          width: "500px",
+          height: "500px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 3,
+          padding: 3,
+        }}
+      >
+        <Typography fontWeight="bold" variant="h6">
+          Scoring Averages
+        </Typography>
+      <Paper
+        sx={{
+          width: "200px",
+          height: "200px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        
+        <Typography noWrap fontWeight={"bold"}>
+          Greens Per Round
+        </Typography>
+        <Typography noWrap variant="h4">
+          {(totalPars / numGames).toFixed(2)}
+        </Typography>
+      </Paper>
+      <Paper
+        sx={{
+          width: "200px",
+          height: "200px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography noWrap fontWeight={"bold"}>
+          Up and Down Per Round
+        </Typography>
+        <Typography noWrap variant="h4">
+          {(totalScore / numGames).toFixed(2)}
+        </Typography>
+      </Paper>
+      </Paper>
+      </Box>
+    </>
   );
 };
 
