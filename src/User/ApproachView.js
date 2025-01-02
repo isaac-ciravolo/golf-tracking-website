@@ -3,7 +3,7 @@ import { Box, Grid2, Paper, Typography } from "@mui/material";
 import { CustomSelect } from "../components/CustomComponents.js";
 import BigPieChart from "../components/BigPieChart.js";
 import PercentBox from "../components/PercentBox.js";
-import { clubs, approachShots, colors } from "../util/Constants.js";
+import { clubs, approachShots, colors, teeShots } from "../util/Constants.js";
 import PizzaGraph from "../components/PizzaGraph.js";
 
 const ApproachView = ({ currentHoles }) => {
@@ -64,64 +64,144 @@ const ApproachView = ({ currentHoles }) => {
         height: "100%",
         width: "100%",
         display: "flex",
-        justifyContent: "center",
+        flexDirection: "column",
         alignItems: "center",
         gap: 3,
       }}
     >
-      <Paper
-        sx={{
-          width: "500px",
-          height: "600px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 3,
-          paddingLeft: 3,
-          paddingRight: 3,
-        }}
-      >
-        <Typography fontWeight={"bold"}>All Clubs</Typography>
-        {allData.length > 0 && (
-          <PizzaGraph
-            sliceData={allData.filter((slice) => slice.label !== "GIR")}
-            circleData={allData.find((slice) => slice.label === "GIR")}
+      <Box sx={{ display: "flex", gap: 3 }}>
+        <Paper
+          sx={{
+            width: "500px",
+            height: "600px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 3,
+            paddingLeft: 3,
+            paddingRight: 3,
+          }}
+        >
+          <Typography fontWeight={"bold"}>All Clubs</Typography>
+          {allData.length > 0 && (
+            <PizzaGraph
+              sliceData={allData.filter((slice) => slice.label !== "GIR")}
+              circleData={allData.find((slice) => slice.label === "GIR")}
+            />
+          )}
+        </Paper>
+        <Paper
+          sx={{
+            width: "500px",
+            height: "600px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 3,
+            paddingLeft: 3,
+            paddingRight: 3,
+          }}
+        >
+          <CustomSelect
+            name={"Select Club"}
+            onChange={(e) => setSelectedClub(e.target.value)}
+            defaultValue={selectedClub}
+            options={clubs.map((club) => {
+              if (
+                club === "-" ||
+                getCount(currentHoles, { approachClub: club }) > 0
+              )
+                return { value: club, label: club };
+            })}
           />
-        )}
-      </Paper>
-      <Paper
-        sx={{
-          width: "500px",
-          height: "600px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 3,
-          paddingLeft: 3,
-          paddingRight: 3,
-        }}
-      >
-        <CustomSelect
-          name={"Select Club"}
-          onChange={(e) => setSelectedClub(e.target.value)}
-          defaultValue={selectedClub}
-          options={clubs.map((club) => {
-            if (
-              club === "-" ||
-              getCount(currentHoles, { approachClub: club }) > 0
-            )
-              return { value: club, label: club };
-          })}
-        />
-        {selectedData.length > 0 && (
-          <PizzaGraph
-            sliceData={selectedData.filter((slice) => slice.label !== "GIR")}
-            circleData={selectedData.find((slice) => slice.label === "GIR")}
-          />
-        )}
-      </Paper>
+          {selectedData.length > 0 && (
+            <PizzaGraph
+              sliceData={selectedData.filter((slice) => slice.label !== "GIR")}
+              circleData={selectedData.find((slice) => slice.label === "GIR")}
+            />
+          )}
+        </Paper>
+      </Box>
+      <Box sx={{ display: "flex", gap: 3 }}>
+        <Paper
+          sx={{
+            width: "500px",
+            height: "500px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 3,
+            p: 3,
+          }}
+        >
+          <Paper
+            sx={{
+              width: "300px",
+              height: "125px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography noWrap fontWeight={"bold"}>
+              {"GIRs per Round"}
+            </Typography>
+            <Typography noWrap variant="h4">
+              {currentHoles
+                .filter((hole) => hole.approachShot === "GIR")
+                .length.toFixed(2)}
+            </Typography>
+          </Paper>
+          <Paper
+            sx={{
+              width: "300px",
+              height: "125px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography noWrap fontWeight={"bold"}>
+              {"GIRs when from Fairway"}
+            </Typography>
+            <Typography noWrap variant="h4">
+              {currentHoles
+                .filter(
+                  (hole) =>
+                    hole.approachShot === "GIR" && hole.teeShot === "Fairway"
+                )
+                .length.toFixed(2)}
+            </Typography>
+          </Paper>
+          <Paper
+            sx={{
+              width: "300px",
+              height: "125px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography noWrap fontWeight={"bold"}>
+              {"GIRs when not from Fairway"}
+            </Typography>
+            <Typography noWrap variant="h4">
+              {currentHoles
+                .filter(
+                  (hole) =>
+                    hole.approachShot === "GIR" && hole.teeShot !== "Fairway"
+                )
+                .length.toFixed(2)}
+            </Typography>
+          </Paper>
+        </Paper>
+      </Box>
     </Box>
   );
 };
