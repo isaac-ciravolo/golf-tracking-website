@@ -116,7 +116,16 @@ const ShortGameView = ({ currentHoles }) => {
   };
 
   return (
-    <div>
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 3,
+      }}
+    >
       <Box sx={{ display: "flex", gap: 3 }}>
         <Paper
           sx={{
@@ -200,7 +209,7 @@ const ShortGameView = ({ currentHoles }) => {
       </Box>
       <Paper
         sx={{
-          width: "500px",
+          width: "1075px",
           minHeight: "500px",
           display: "flex",
           flexDirection: "column",
@@ -246,7 +255,7 @@ const ShortGameView = ({ currentHoles }) => {
           );
         })}
       </Paper>
-    </div>
+    </Box>
   );
 };
 

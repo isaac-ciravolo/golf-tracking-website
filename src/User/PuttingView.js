@@ -128,7 +128,7 @@ const PuttingView = ({ currentHoles, numGames }) => {
       <Box sx={{ display: "flex", gap: 3 }}>
         <Paper
           sx={{
-            width: "500px",
+            width: "1075px",
             height: "500px",
             display: "flex",
             flexDirection: "column",
