@@ -3,6 +3,7 @@ import { useNavigate, Routes, Route } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import GamesListView from "./GamesListView";
 import EditGameView from "./EditGameView";
+import GameRouter from "./GameRouter";
 
 const GamesView = ({ user }) => {
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ const GamesView = ({ user }) => {
         >
           <Routes>
             <Route path="" element={<GamesListView userId={user.id} />} />
-            <Route path=":gameId" element={<EditGameView userId={user.id} />} />
+            <Route path=":gameId/*" element={<GameRouter userId={user.id} />} />
           </Routes>
         </Box>
       </Box>

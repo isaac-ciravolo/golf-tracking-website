@@ -5,8 +5,9 @@ import {
 } from "../components/CustomComponents";
 import { Box, Button } from "@mui/material";
 import { clubs, teeShots, approachShots, yesAndNo } from "../util/Constants";
-import { updateGame } from "../DatabaseFunctions";
-const EditHoleView = ({ userId, game, index, goBack }) => {
+import { fetchGame, updateGame } from "../DatabaseFunctions";
+import { useNavigate, useParams } from "react-router-dom";
+const EditHoleView = ({ userId }) => {
   const [par, setPar] = useState(null);
   const [yardage, setYardage] = useState(null);
   const [score, setScore] = useState(null);
@@ -19,27 +20,38 @@ const EditHoleView = ({ userId, game, index, goBack }) => {
   const [firstPuttDist, setFirstPuttDist] = useState(null);
   const [penaltyStrokes, setPenaltyStrokes] = useState(null);
   const [shotsInside100, setShotsInside100] = useState(null);
+  const [game, setGame] = useState(null);
+  const { gameId, holeIndex } = useParams();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (game.holes[index]) {
-      const hole = game.holes[index];
-      setPar(hole.par);
-      setYardage(hole.yardage);
-      setScore(hole.score);
-      setTeeClub(hole.teeClub);
-      setTeeShot(hole.teeShot);
-      setApproachClub(hole.approachClub);
-      setApproachShot(hole.approachShot);
-      setUpAndDown(hole.upAndDown);
-      setTotalPutts(hole.totalPutts);
-      setFirstPuttDist(hole.firstPuttDist);
-      setPenaltyStrokes(hole.penaltyStrokes);
-      setShotsInside100(hole.shotsInside100);
-    }
-  }, [game]);
+    const fetchHole = async () => {
+      const newGame = await fetchGame(userId, gameId);
+
+      if (newGame && newGame.holes[holeIndex]) {
+        const hole = newGame.holes[holeIndex];
+        setPar(hole.par);
+        setYardage(hole.yardage);
+        setScore(hole.score);
+        setTeeClub(hole.teeClub);
+        setTeeShot(hole.teeShot);
+        setApproachClub(hole.approachClub);
+        setApproachShot(hole.approachShot);
+        setUpAndDown(hole.upAndDown);
+        setTotalPutts(hole.totalPutts);
+        setFirstPuttDist(hole.firstPuttDist);
+        setPenaltyStrokes(hole.penaltyStrokes);
+        setShotsInside100(hole.shotsInside100);
+        setGame(newGame);
+      }
+    };
+
+    fetchHole();
+  }, []);
 
   const saveHole = async (e) => {
-    const oldHole = game.holes[index];
+    const oldHole = game.holes[holeIndex];
     const newHole = {
       par: Number(par),
       yardage: Number(yardage),
@@ -54,26 +66,27 @@ const EditHoleView = ({ userId, game, index, goBack }) => {
       penaltyStrokes: Number(penaltyStrokes),
       shotsInside100: Number(shotsInside100),
     };
-    game.holes[index] = newHole;
+    game.holes[holeIndex] = newHole;
 
-    const res = await updateGame(userId, game.id, game);
+    const res = await updateGame(userId, gameId, game);
 
     if (res !== "Success!") {
       alert("Error saving hole " + res);
-      game.holes[index] = oldHole;
+      game.holes[holeIndex] = oldHole;
     }
-    goBack();
+
+    navigate("/editGames/" + gameId);
   };
 
   const deleteHole = async (e) => {
-    const oldHole = game.holes[index];
-    game.holes.splice(index, 1);
-    const res = await updateGame(userId, game.id, game);
+    const oldHole = game.holes[holeIndex];
+    game.holes.splice(holeIndex, 1);
+    const res = await updateGame(userId, gameId, game);
     if (res !== "Success!") {
       alert("Error deleting hole " + res);
-      game.holes.splice(index, 0, oldHole);
+      game.holes.splice(holeIndex, 0, oldHole);
     }
-    goBack();
+    navigate("/editGames/" + gameId);
   };
 
   return (
@@ -110,7 +123,9 @@ const EditHoleView = ({ userId, game, index, goBack }) => {
                 Save Hole
               </Button>
               <Button
-                onClick={() => goBack()}
+                onClick={() => {
+                  navigate("/editGames/" + gameId);
+                }}
                 variant="contained"
                 sx={{ width: "200px", height: "50px" }}
               >

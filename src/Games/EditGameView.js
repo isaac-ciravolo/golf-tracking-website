@@ -36,11 +36,13 @@ const EditGameView = ({ userId }) => {
       shotsInside100: 0,
     };
     game.holes.push(newHole);
-    const res = await updateGame(userId, game.id, game);
+    const res = await updateGame(userId, gameId, game);
     if (res !== "Success!") {
-      alert("Error adding hole");
+      alert("Error adding hole: " + res);
     }
+    window.location.reload();
   };
+
   return game ? (
     <Box
       sx={{
@@ -63,7 +65,7 @@ const EditGameView = ({ userId }) => {
         <Box key={index} sx={{ display: "flex", flexDirection: "row" }}>
           <Button
             variant="contained"
-            onClick={() => navigate("/editGames/" + game.id + "/" + index)}
+            onClick={() => navigate("/editGames/" + gameId + "/" + index)}
           >
             Hole {index + 1}: Par {hole.par}
           </Button>
@@ -74,7 +76,7 @@ const EditGameView = ({ userId }) => {
         variant="contained"
         sx={{ position: "absolute", right: "20px", top: "20px" }}
         onClick={async () => {
-          const res = await deleteGame(userId, game.id);
+          const res = await deleteGame(userId, gameId);
           if (res !== "Success!") {
             alert("Error deleting game");
           }
