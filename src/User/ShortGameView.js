@@ -207,54 +207,119 @@ const ShortGameView = ({ currentHoles }) => {
           </Box>
         </Paper>
       </Box>
-      <Paper
-        sx={{
-          width: "1075px",
-          minHeight: "500px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          p: 3,
-        }}
-      >
-        <Typography gutterBottom textAlign={"center"} fontWeight={"bold"}>
-          Approach Club First Putt Distance when GIR
-        </Typography>
-        <Grid2 sx={{ marginBottom: "10px" }} container>
-          <Grid2 size={4}>
-            <Typography fontWeight={"bold"} noWrap>
-              Club
-            </Typography>
-          </Grid2>
-          <Grid2 size={4}>
-            <Typography fontWeight={"bold"} noWrap>
-              Distance
-            </Typography>
-          </Grid2>
-          <Grid2 size={4}>
-            <Typography fontWeight={"bold"} noWrap>
-              Count
-            </Typography>
-          </Grid2>
-        </Grid2>
-        {clubFirstPuttDistData.map((data, index) => {
-          const color = getColorFromDistance(data.dist / maxDistance); // Get interpolated color
-
-          return (
-            <Grid2 container spacing={1} key={index}>
-              <Grid2 size={4}>
-                <Typography noWrap>{data.club}</Typography>
-              </Grid2>
-              <Grid2 size={4}>
-                <Typography noWrap>{data.dist.toFixed(2) + " feet"}</Typography>
-              </Grid2>
-              <Grid2 size={4}>
-                <Typography noWrap>{data.count + " holes"}</Typography>
-              </Grid2>
+      <Box sx={{ display: "flex", gap: 3 }}>
+        <Paper
+          sx={{
+            width: "500px",
+            minHeight: "500px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            p: 3,
+          }}
+        >
+          <Typography gutterBottom textAlign={"center"} fontWeight={"bold"}>
+            Approach Club First Putt Distance when GIR
+          </Typography>
+          <Grid2 sx={{ marginBottom: "10px" }} container>
+            <Grid2 size={4}>
+              <Typography fontWeight={"bold"} noWrap>
+                Club
+              </Typography>
             </Grid2>
-          );
-        })}
-      </Paper>
+            <Grid2 size={4}>
+              <Typography fontWeight={"bold"} noWrap>
+                Distance
+              </Typography>
+            </Grid2>
+            <Grid2 size={4}>
+              <Typography fontWeight={"bold"} noWrap>
+                Count
+              </Typography>
+            </Grid2>
+          </Grid2>
+          {clubFirstPuttDistData.map((data, index) => {
+            const color = getColorFromDistance(data.dist / maxDistance); // Get interpolated color
+
+            return (
+              <Grid2 container spacing={1} key={index}>
+                <Grid2 size={4}>
+                  <Typography noWrap>{data.club}</Typography>
+                </Grid2>
+                <Grid2 size={4}>
+                  <Typography noWrap>
+                    {data.dist.toFixed(2) + " feet"}
+                  </Typography>
+                </Grid2>
+                <Grid2 size={4}>
+                  <Typography noWrap>{data.count + " holes"}</Typography>
+                </Grid2>
+              </Grid2>
+            );
+          })}
+        </Paper>
+        <Paper
+          sx={{
+            width: "500px",
+            height: "500px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 3,
+            p: 3,
+          }}
+        >
+          <Paper
+            sx={{
+              width: "300px",
+              height: "125px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography noWrap fontWeight={"bold"}>
+              {"Sand Save %"}
+            </Typography>
+            <Typography noWrap variant="h4">
+              {(
+                (getCount(currentHoles, {
+                  upAndDownShot: "Sand",
+                  upAndDown: true,
+                }) /
+                  getCount(currentHoles, { upAndDownShot: "Sand" })) *
+                100
+              ).toFixed(2) + "%"}
+            </Typography>
+          </Paper>
+          <Paper
+            sx={{
+              width: "300px",
+              height: "125px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography noWrap fontWeight={"bold"}>
+              {"Scrambling %"}
+            </Typography>
+            <Typography noWrap variant="h4">
+              {(
+                (getCount(currentHoles, {
+                  upAndDown: true,
+                  gir: false,
+                }) /
+                  getCount(currentHoles, { gir: false })) *
+                100
+              ).toFixed(2) + "%"}
+            </Typography>
+          </Paper>
+        </Paper>
+      </Box>
     </Box>
   );
 };
