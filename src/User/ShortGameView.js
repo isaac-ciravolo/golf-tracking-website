@@ -4,7 +4,7 @@ import { CustomSelect } from "../components/CustomComponents.js";
 import PercentBox from "../components/PercentBox.js";
 import HalfPizzaGraph from "../components/HalfPizzaGraph.js";
 
-import { clubs, yesAndNo, colors } from "../util/Constants.js";
+import { clubs, yesAndNo, colors, approachShots } from "../util/Constants.js";
 
 const ShortGameView = ({ currentHoles }) => {
   const [selectedClub, setSelectedClub] = useState("-");
@@ -16,6 +16,7 @@ const ShortGameView = ({ currentHoles }) => {
   const [parCounts, setParCounts] = useState({});
   const [clubFirstPuttDistData, setClubFirstPuttDistData] = useState([]);
   const [maxDistance, setMaxDistance] = useState(0);
+  const [sandSave, setSandSave] = useState(0);
 
   useEffect(() => {
     const newSelectedData = [];
@@ -96,6 +97,23 @@ const ShortGameView = ({ currentHoles }) => {
       let add = 1;
       Object.keys(hole).forEach((key) => {
         if (conditions[key] !== undefined && conditions[key] !== hole[key])
+          add = 0;
+      });
+      count += add;
+    });
+    return count;
+  };
+
+  const getCountTwoParams = (currHoles, conditions1, conditions2) => {
+    let count = 0;
+    currHoles.forEach((hole) => {
+      let add = 1;
+      Object.keys(conditions1).forEach((key) => {
+        if (conditions1[key] !== undefined && conditions1[key] !== hole[key])
+          add = 0;
+      });
+      Object.keys(conditions2).forEach((key) => {
+        if (conditions2[key] !== undefined && conditions2[key] !== hole[key])
           add = 0;
       });
       count += add;
@@ -286,10 +304,10 @@ const ShortGameView = ({ currentHoles }) => {
             <Typography noWrap variant="h4">
               {(
                 (getCount(currentHoles, {
-                  upAndDownShot: "Sand",
-                  upAndDown: true,
+                  approachShots: "Sand",
+                  upAndDown: "Yes",
                 }) /
-                  getCount(currentHoles, { upAndDownShot: "Sand" })) *
+                  getCount(currentHoles, { approachShots: "Sand" })) *
                 100
               ).toFixed(2) + "%"}
             </Typography>
@@ -310,10 +328,21 @@ const ShortGameView = ({ currentHoles }) => {
             <Typography noWrap variant="h4">
               {(
                 (getCount(currentHoles, {
-                  upAndDown: true,
-                  gir: false,
+                  upAndDown: "Yes",
+                  approachShots: "GIR",
                 }) /
-                  getCount(currentHoles, { gir: false })) *
+                  getCount(currentHoles, {
+                    approachShots: [
+                      "Short Right",
+                      "Short Left",
+                      "Left",
+                      "Long Left",
+                      "Long Right",
+                      "Right",
+                      "Sand",
+                      "-",
+                    ],
+                  })) *
                 100
               ).toFixed(2) + "%"}
             </Typography>

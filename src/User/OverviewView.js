@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid2, Paper } from "@mui/material";
-import { colors } from "../util/Constants.js";
+import { approachShots, colors } from "../util/Constants.js";
 
 const OverviewView = ({ currentHoles, numGames }) => {
   const [scoringAverages, setScoringAverages] = useState({});
@@ -9,6 +9,7 @@ const OverviewView = ({ currentHoles, numGames }) => {
   const [totalPutts, setTotalPutts] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
   const [totalPars, setTotalPars] = useState(0);
+  const [totalGIR, setTotalGIR] = useState(0);
 
   const ParPaper = ({ par }) => {
     return (
@@ -153,37 +154,159 @@ const OverviewView = ({ currentHoles, numGames }) => {
 
   return (
     <>
-    <Box
-      sx={{
-        height: "100%",
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 3,
-      }}
-    >
-      <Paper
+      <Box
         sx={{
-          width: "500px",
-          height: "500px",
+          height: "100%",
+          width: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
+          justifyContent: "center",
+          gap: 3,
+        }}
+      >
+        <Paper
+          sx={{
+            width: "500px",
+            height: "500px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 3,
+            padding: 3,
+          }}
+        >
+          <Typography fontWeight="bold" variant="h6">
+            Scoring Averages
+          </Typography>
+          <Box sx={{ display: "flex", gap: 3 }}>
+            <ParPaper par={3} />
+            <ParPaper par={4} />
+          </Box>
+          <Box sx={{ display: "flex", gap: 3 }}>
+            <ParPaper par={5} />
+            <Paper
+              sx={{
+                width: "200px",
+                height: "200px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography noWrap fontWeight={"bold"}>
+                Average Score
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(totalScore / numGames).toFixed(2)}
+              </Typography>
+            </Paper>
+          </Box>
+        </Paper>
+
+        <Paper
+          sx={{
+            width: "500px",
+            height: "500px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 3,
+            padding: 3,
+          }}
+        >
+          <Typography fontWeight="bold" variant="h6">
+            Statistics
+          </Typography>
+          <Paper
+            sx={{
+              width: "300px",
+              height: "125px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography noWrap fontWeight={"bold"}>
+              Fairway %
+            </Typography>
+            <Typography
+              noWrap
+              variant="h4"
+              color={getColorFromPercentage(fairwayPercentage)}
+            >
+              {fairwayPercentage.toFixed(2) + "%"}
+            </Typography>
+          </Paper>
+          <Paper
+            sx={{
+              width: "300px",
+              height: "125px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography noWrap fontWeight={"bold"}>
+              Green in Regulation %
+            </Typography>
+            <Typography
+              noWrap
+              variant="h4"
+              color={getColorFromPercentage(girPercentage)}
+            >
+              {girPercentage.toFixed(2) + "%"}
+            </Typography>
+          </Paper>
+          <Paper
+            sx={{
+              width: "300px",
+              height: "125px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography noWrap fontWeight={"bold"}>
+              Putts Per Round
+            </Typography>
+            <Typography noWrap variant="h4">
+              {(totalPutts / numGames).toFixed(2)}
+            </Typography>
+          </Paper>
+        </Paper>
+      </Box>
+      <Box
+        sx={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           gap: 3,
           padding: 3,
         }}
       >
-        <Typography fontWeight="bold" variant="h6">
-          Scoring Averages
-        </Typography>
-        <Box sx={{ display: "flex", gap: 3 }}>
-          <ParPaper par={3} />
-          <ParPaper par={4} />
-        </Box>
-        <Box sx={{ display: "flex", gap: 3 }}>
-          <ParPaper par={5} />
+        <Paper
+          sx={{
+            width: "500px",
+            height: "500px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 3,
+            padding: 3,
+          }}
+        >
+          <Typography fontWeight="bold" variant="h6">
+            Scoring Averages
+          </Typography>
           <Paper
             sx={{
               width: "200px",
@@ -195,153 +318,34 @@ const OverviewView = ({ currentHoles, numGames }) => {
             }}
           >
             <Typography noWrap fontWeight={"bold"}>
-              Average Score
+              Greens Per Round
             </Typography>
             <Typography noWrap variant="h4">
-              {(totalScore / numGames).toFixed(2)}
+              {(
+                getCount(currentHoles, { approachShots: "GIR" }) / numGames
+              ).toFixed(2)}
             </Typography>
           </Paper>
-        </Box>
-      </Paper>
-      
-      <Paper
-        sx={{
-          width: "500px",
-          height: "500px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 3,
-          padding: 3,
-        }}
-      >
-        <Typography fontWeight="bold" variant="h6">
-          Statistics
-        </Typography>
-        <Paper
-          sx={{
-            width: "300px",
-            height: "125px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography noWrap fontWeight={"bold"}>
-            Fairway %
-          </Typography>
-          <Typography
-            noWrap
-            variant="h4"
-            color={getColorFromPercentage(fairwayPercentage)}
+          <Paper
+            sx={{
+              width: "200px",
+              height: "200px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            {fairwayPercentage.toFixed(2) + "%"}
-          </Typography>
+            <Typography noWrap fontWeight={"bold"}>
+              Up and Down Per Round
+            </Typography>
+            <Typography noWrap variant="h4">
+              {(
+                getCount(currentHoles, { upAndDown: "Yes" }) / numGames
+              ).toFixed(2)}
+            </Typography>
+          </Paper>
         </Paper>
-        <Paper
-          sx={{
-            width: "300px",
-            height: "125px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography noWrap fontWeight={"bold"}>
-            Green in Regulation %
-          </Typography>
-          <Typography
-            noWrap
-            variant="h4"
-            color={getColorFromPercentage(girPercentage)}
-          >
-            {girPercentage.toFixed(2) + "%"}
-          </Typography>
-        </Paper>
-        <Paper
-          sx={{
-            width: "300px",
-            height: "125px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography noWrap fontWeight={"bold"}>
-            Putts Per Round
-          </Typography>
-          <Typography noWrap variant="h4">
-            {(totalPutts / numGames).toFixed(2)}
-          </Typography>
-        </Paper>
-      </Paper>
-    </Box>
-    <Box
-      sx={{
-        height: "100%",
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 3,
-        padding: 3,
-      }}
-    >
-    <Paper
-        sx={{
-          width: "500px",
-          height: "500px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 3,
-          padding: 3,
-        }}
-      >
-        <Typography fontWeight="bold" variant="h6">
-          Scoring Averages
-        </Typography>
-      <Paper
-        sx={{
-          width: "200px",
-          height: "200px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        
-        <Typography noWrap fontWeight={"bold"}>
-          Greens Per Round
-        </Typography>
-        <Typography noWrap variant="h4">
-          {(totalPars / numGames).toFixed(2)}
-        </Typography>
-      </Paper>
-      <Paper
-        sx={{
-          width: "200px",
-          height: "200px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Typography noWrap fontWeight={"bold"}>
-          Up and Down Per Round
-        </Typography>
-        <Typography noWrap variant="h4">
-          {(totalScore / numGames).toFixed(2)}
-        </Typography>
-      </Paper>
-      </Paper>
       </Box>
     </>
   );
