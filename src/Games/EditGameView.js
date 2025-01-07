@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter";
 import { deleteGame, updateGame } from "../DatabaseFunctions";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,7 +23,6 @@ const EditGameView = ({ userId }) => {
     const fetchData = async () => {
       const newGame = await fetchGame(userId, gameId);
       setGame(newGame);
-      console.log(newGame);
     };
     fetchData();
   }, [userId]);
@@ -46,13 +53,13 @@ const EditGameView = ({ userId }) => {
   return game ? (
     <Box
       sx={{
+        width: "100%",
         display: "flex",
+        height: "calc(100vh - 230px)",
         flexDirection: "column",
         alignItems: "center",
-        paddingTop: 3,
         gap: 3,
         position: "relative",
-        overflow: "scroll",
       }}
     >
       <Typography variant="h2" fontWeight="bold">
@@ -61,16 +68,27 @@ const EditGameView = ({ userId }) => {
         {formatDateFromMilliseconds(game.gameDate)}
       </Typography>
 
-      {game.holes.map((hole, index) => (
-        <Box key={index} sx={{ display: "flex", flexDirection: "row" }}>
-          <Button
-            variant="contained"
-            onClick={() => navigate("/editGames/" + gameId + "/" + index)}
-          >
-            Hole {index + 1}: Par {hole.par}
-          </Button>
-        </Box>
-      ))}
+      <List
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
+          overflowY: "scroll",
+        }}
+      >
+        {game.holes.map((hole, index) => (
+          <ListItem key={index}>
+            <ListItemButton
+              sx={{ width: "100%", height: "50px" }}
+              onClick={() => navigate("/editGames/" + gameId + "/" + index)}
+            >
+              Hole {index + 1}: Par {hole.par}
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
 
       <Button
         variant="contained"

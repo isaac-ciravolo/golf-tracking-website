@@ -5,6 +5,7 @@ import PercentBox from "../components/PercentBox.js";
 import HalfPizzaGraph from "../components/HalfPizzaGraph.js";
 
 import { clubs, yesAndNo, colors, approachShots } from "../util/Constants.js";
+import { getCountAnd, getCountOr } from "../util/GetCount.js";
 
 const ShortGameView = ({ currentHoles }) => {
   const [selectedClub, setSelectedClub] = useState("-");
@@ -22,7 +23,7 @@ const ShortGameView = ({ currentHoles }) => {
     const newSelectedData = [];
     let newSelectedTotal = 0;
     yesAndNo.slice(1, yesAndNo.length).forEach((shot) => {
-      const newValue = getCount(currentHoles, {
+      const newValue = getCountAnd(currentHoles, {
         yesAndNoClub: selectedClub,
         yesAndNo: shot,
       });
@@ -38,7 +39,7 @@ const ShortGameView = ({ currentHoles }) => {
     const newAllData = [];
     let newAllTotal = 0;
     yesAndNo.slice(1, yesAndNo.length).forEach((shot) => {
-      const newValue = getCount(currentHoles, { yesAndNo: shot });
+      const newValue = getCountAnd(currentHoles, { yesAndNo: shot });
       newAllData.push({
         value: newValue,
         label: shot,
@@ -89,20 +90,20 @@ const ShortGameView = ({ currentHoles }) => {
     setParCounts(newParCounts);
     setClubFirstPuttDistData(newClubFirstPuttDistData);
     setMaxDistance(newMaxDistance);
-  }, [currentHoles, selectedClub]);
 
-  const getCount = (currHoles, conditions) => {
-    let count = 0;
-    currHoles.forEach((hole) => {
-      let add = 1;
-      Object.keys(hole).forEach((key) => {
-        if (conditions[key] !== undefined && conditions[key] !== hole[key])
-          add = 0;
-      });
-      count += add;
-    });
-    return count;
-  };
+    console.log(
+      getCountAnd(currentHoles, {
+        upAndDown: "Yes",
+        approachShot: "GIR",
+      })
+    );
+
+    console.log(
+      getCountAnd(currentHoles, {
+        approachShot: "GIR",
+      })
+    );
+  }, [currentHoles, selectedClub]);
 
   const getCountTwoParams = (currHoles, conditions1, conditions2) => {
     let count = 0;
@@ -199,7 +200,7 @@ const ShortGameView = ({ currentHoles }) => {
             options={clubs.map((club) => {
               if (
                 club === "-" ||
-                getCount(currentHoles, { upAndDownClub: club }) > 0
+                getCountAnd(currentHoles, { upAndDownClub: club }) > 0
               )
                 return { value: club, label: club };
             })}
@@ -303,11 +304,11 @@ const ShortGameView = ({ currentHoles }) => {
             </Typography>
             <Typography noWrap variant="h4">
               {(
-                (getCount(currentHoles, {
-                  approachShots: "Sand",
+                (getCountAnd(currentHoles, {
+                  approachShot: "Sand",
                   upAndDown: "Yes",
                 }) /
-                  getCount(currentHoles, { approachShots: "Sand" })) *
+                  getCountAnd(currentHoles, { approachShot: "Sand" })) *
                 100
               ).toFixed(2) + "%"}
             </Typography>
@@ -327,22 +328,11 @@ const ShortGameView = ({ currentHoles }) => {
             </Typography>
             <Typography noWrap variant="h4">
               {(
-                (getCount(currentHoles, {
-                  upAndDown: "Yes",
-                  approachShots: "GIR",
-                }) /
-                  getCount(currentHoles, {
-                    approachShots: [
-                      "Short Right",
-                      "Short Left",
-                      "Left",
-                      "Long Left",
-                      "Long Right",
-                      "Right",
-                      "Sand",
-                      "-",
-                    ],
-                  })) *
+                ((currentHoles.length -
+                  getCountAnd(currentHoles, { approachShot: "GIR" }) -
+                  getCountAnd(currentHoles, { approachShot: "Sand" })) /
+                  (currentHoles.length -
+                    getCountAnd(currentHoles, { approachShot: "GIR" }))) *
                 100
               ).toFixed(2) + "%"}
             </Typography>

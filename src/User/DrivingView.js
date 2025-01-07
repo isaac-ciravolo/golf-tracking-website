@@ -5,6 +5,7 @@ import PercentBox from "../components/PercentBox.js";
 import HalfPizzaGraph from "../components/HalfPizzaGraph.js";
 
 import { clubs, teeShots, colors } from "../util/Constants.js";
+import { getCountAnd } from "../util/GetCount.js";
 
 const DrivingView = ({ currentHoles }) => {
   const [selectedClub, setSelectedClub] = useState("-");
@@ -18,12 +19,12 @@ const DrivingView = ({ currentHoles }) => {
     let newSelectedTotal = 0;
     teeShots.slice(1, teeShots.length).forEach((shot) => {
       const newValue =
-        getCount(currentHoles, {
+        getCountAnd(currentHoles, {
           teeClub: selectedClub,
           teeShot: shot,
           par: 4,
         }) +
-        getCount(currentHoles, {
+        getCountAnd(currentHoles, {
           teeClub: selectedClub,
           teeShot: shot,
           par: 5,
@@ -41,8 +42,8 @@ const DrivingView = ({ currentHoles }) => {
     let newAllTotal = 0;
     teeShots.slice(1, teeShots.length).forEach((shot) => {
       const newValue =
-        getCount(currentHoles, { teeShot: shot, par: 4 }) +
-        getCount(currentHoles, { teeShot: shot, par: 5 });
+        getCountAnd(currentHoles, { teeShot: shot, par: 4 }) +
+        getCountAnd(currentHoles, { teeShot: shot, par: 5 });
       newAllData.push({
         value: newValue,
         label: shot,
@@ -53,19 +54,6 @@ const DrivingView = ({ currentHoles }) => {
     setAllData(newAllData);
     setAllTotal(newAllTotal);
   }, [currentHoles, selectedClub]);
-
-  const getCount = (currHoles, conditions) => {
-    let count = 0;
-    currHoles.forEach((hole) => {
-      let add = 1;
-      Object.keys(hole).forEach((key) => {
-        if (conditions[key] !== undefined && conditions[key] !== hole[key])
-          add = 0;
-      });
-      count += add;
-    });
-    return count;
-  };
 
   return (
     <Box
@@ -132,8 +120,8 @@ const DrivingView = ({ currentHoles }) => {
           options={clubs.map((club) => {
             if (
               club === "-" ||
-              getCount(currentHoles, { teeClub: club, par: 4 }) +
-                getCount(currentHoles, { teeClub: club, par: 5 }) >
+              getCountAnd(currentHoles, { teeClub: club, par: 4 }) +
+                getCountAnd(currentHoles, { teeClub: club, par: 5 }) >
                 0
             )
               return { value: club, label: club };

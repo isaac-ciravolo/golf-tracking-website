@@ -7,6 +7,7 @@ import {
   CustomCheckboxDropdown,
 } from "../components/CustomComponents.js";
 import { clubs, teeShots, approachShots, arr0to9 } from "../util/Constants.js";
+import { getCountAnd } from "../util/GetCount.js";
 
 const AdvancedView = ({ currentHoles }) => {
   const [filteredHoles, setFilteredHoles] = useState([]);
@@ -101,19 +102,6 @@ const AdvancedView = ({ currentHoles }) => {
     selectedPenaltyStrokes,
     selectedShotsInside100Yards,
   ]);
-
-  const getCount = (currHoles, conditions) => {
-    let count = 0;
-    currHoles.forEach((hole) => {
-      let add = 1;
-      Object.keys(hole).forEach((key) => {
-        if (conditions[key] !== undefined && conditions[key] !== hole[key])
-          add = 0;
-      });
-      count += add;
-    });
-    return count;
-  };
 
   return (
     <Box sx={{ p: 3 }}>
@@ -276,7 +264,7 @@ const AdvancedView = ({ currentHoles }) => {
               return {
                 id: par,
                 label: par.toString(),
-                value: getCount(filteredHoles, { par: par }),
+                value: getCountAnd(filteredHoles, { par: par }),
               };
             })}
           />
@@ -286,7 +274,7 @@ const AdvancedView = ({ currentHoles }) => {
               return {
                 id: score,
                 label: score.toString(),
-                value: getCount(filteredHoles, { score: score }),
+                value: getCountAnd(filteredHoles, { score: score }),
               };
             })}
           />
@@ -297,7 +285,7 @@ const AdvancedView = ({ currentHoles }) => {
               return {
                 id: club,
                 label: club,
-                value: getCount(filteredHoles, { teeClub: club }),
+                value: getCountAnd(filteredHoles, { teeClub: club }),
               };
             })}
           />
@@ -307,7 +295,7 @@ const AdvancedView = ({ currentHoles }) => {
               return {
                 id: shot,
                 label: shot,
-                value: getCount(filteredHoles, { teeShot: shot }),
+                value: getCountAnd(filteredHoles, { teeShot: shot }),
               };
             })}
           />
@@ -317,7 +305,7 @@ const AdvancedView = ({ currentHoles }) => {
               return {
                 id: club,
                 label: club,
-                value: getCount(filteredHoles, { approachClub: club }),
+                value: getCountAnd(filteredHoles, { approachClub: club }),
               };
             })}
           />
@@ -327,7 +315,7 @@ const AdvancedView = ({ currentHoles }) => {
               return {
                 id: shot,
                 label: shot,
-                value: getCount(filteredHoles, { approachShot: shot }),
+                value: getCountAnd(filteredHoles, { approachShot: shot }),
               };
             })}
           />
@@ -337,19 +325,19 @@ const AdvancedView = ({ currentHoles }) => {
               {
                 id: 0,
                 label: "Yes",
-                value: getCount(filteredHoles, { upAndDown: "Yes" }),
+                value: getCountAnd(filteredHoles, { upAndDown: "Yes" }),
                 color: "#468f15",
               },
               {
                 id: 1,
                 label: "No",
-                value: getCount(filteredHoles, { upAndDown: "No" }),
+                value: getCountAnd(filteredHoles, { upAndDown: "No" }),
                 color: "#94042b",
               },
               {
                 id: 2,
                 label: "-",
-                value: getCount(filteredHoles, { upAndDown: "-" }),
+                value: getCountAnd(filteredHoles, { upAndDown: "-" }),
                 color: "#a0a0a0",
               },
             ]}
@@ -361,7 +349,7 @@ const AdvancedView = ({ currentHoles }) => {
               return {
                 id: putt,
                 label: putt.toString(),
-                value: getCount(filteredHoles, {
+                value: getCountAnd(filteredHoles, {
                   totalPutts: putt,
                 }),
               };
@@ -374,7 +362,7 @@ const AdvancedView = ({ currentHoles }) => {
               return {
                 id: penalty,
                 label: penalty.toString(),
-                value: getCount(filteredHoles, {
+                value: getCountAnd(filteredHoles, {
                   penaltyStrokes: penalty,
                 }),
               };
@@ -386,7 +374,7 @@ const AdvancedView = ({ currentHoles }) => {
               return {
                 id: shots,
                 label: shots.toString(),
-                value: getCount(filteredHoles, {
+                value: getCountAnd(filteredHoles, {
                   shotsInside100: shots,
                 }),
               };

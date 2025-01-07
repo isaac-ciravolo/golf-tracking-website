@@ -5,6 +5,7 @@ import BigPieChart from "../components/BigPieChart.js";
 import PercentBox from "../components/PercentBox.js";
 import { clubs, approachShots, colors, teeShots } from "../util/Constants.js";
 import PizzaGraph from "../components/PizzaGraph.js";
+import { getCountAnd } from "../util/GetCount.js";
 
 const ApproachView = ({ currentHoles }) => {
   const [selectedClub, setSelectedClub] = useState("-");
@@ -17,7 +18,7 @@ const ApproachView = ({ currentHoles }) => {
     const newSelectedData = [];
     let newSelectedTotal = 0;
     approachShots.slice(1, approachShots.length).forEach((shot) => {
-      const newValue = getCount(currentHoles, {
+      const newValue = getCountAnd(currentHoles, {
         approachClub: selectedClub,
         approachShot: shot,
       });
@@ -33,7 +34,7 @@ const ApproachView = ({ currentHoles }) => {
     const newAllData = [];
     let newAllTotal = 0;
     approachShots.slice(1, approachShots.length).forEach((shot) => {
-      const newValue = getCount(currentHoles, { approachShot: shot });
+      const newValue = getCountAnd(currentHoles, { approachShot: shot });
       newAllData.push({
         value: newValue,
         label: shot,
@@ -44,19 +45,6 @@ const ApproachView = ({ currentHoles }) => {
     setAllData(newAllData);
     setAllTotal(newAllTotal);
   }, [currentHoles, selectedClub]);
-
-  const getCount = (currHoles, conditions) => {
-    let count = 0;
-    currHoles.forEach((hole) => {
-      let add = 1;
-      Object.keys(hole).forEach((key) => {
-        if (conditions[key] !== undefined && conditions[key] !== hole[key])
-          add = 0;
-      });
-      count += add;
-    });
-    return count;
-  };
 
   return (
     <Box
@@ -111,7 +99,7 @@ const ApproachView = ({ currentHoles }) => {
             options={clubs.map((club) => {
               if (
                 club === "-" ||
-                getCount(currentHoles, { approachClub: club }) > 0
+                getCountAnd(currentHoles, { approachClub: club }) > 0
               )
                 return { value: club, label: club };
             })}

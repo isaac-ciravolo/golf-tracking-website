@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid2, Paper } from "@mui/material";
 import { approachShots, colors } from "../util/Constants.js";
-
+import { getCountAnd } from "../util/GetCount.js";
 const OverviewView = ({ currentHoles, numGames }) => {
   const [scoringAverages, setScoringAverages] = useState({});
   const [fairwayPercentage, setFairwayPercentage] = useState(0);
@@ -59,14 +59,15 @@ const OverviewView = ({ currentHoles, numGames }) => {
 
     // Calculate fairway percentage
     setFairwayPercentage(
-      ((getCount(currentHoles, { teeShot: "Fairway", par: 4 }) +
-        getCount(currentHoles, { teeShot: "Fairway", par: 5 })) /
-        (getCount(currentHoles, { par: 4 }) +
-          getCount(currentHoles, { par: 5 }))) *
+      ((getCountAnd(currentHoles, { teeShot: "Fairway", par: 4 }) +
+        getCountAnd(currentHoles, { teeShot: "Fairway", par: 5 })) /
+        (getCountAnd(currentHoles, { par: 4 }) +
+          getCountAnd(currentHoles, { par: 5 }))) *
         100
     );
     setGirPercentage(
-      (getCount(currentHoles, { approachShot: "GIR" }) / currentHoles.length) *
+      (getCountAnd(currentHoles, { approachShot: "GIR" }) /
+        currentHoles.length) *
         100
     );
 
@@ -82,19 +83,6 @@ const OverviewView = ({ currentHoles, numGames }) => {
     setTotalScore(newTotalScore);
     setTotalPars(newTotalPars);
   }, [currentHoles]);
-
-  const getCount = (currHoles, conditions) => {
-    let count = 0;
-    currHoles.forEach((hole) => {
-      let add = 1;
-      Object.keys(hole).forEach((key) => {
-        if (conditions[key] !== undefined && conditions[key] !== hole[key])
-          add = 0;
-      });
-      count += add;
-    });
-    return count;
-  };
 
   const getColorFromScore = (score, par) => {
     const green = { r: 144, g: 238, b: 144 }; // Light green
@@ -322,7 +310,7 @@ const OverviewView = ({ currentHoles, numGames }) => {
             </Typography>
             <Typography noWrap variant="h4">
               {(
-                getCount(currentHoles, { approachShots: "GIR" }) / numGames
+                getCountAnd(currentHoles, { approachShots: "GIR" }) / numGames
               ).toFixed(2)}
             </Typography>
           </Paper>
@@ -341,7 +329,7 @@ const OverviewView = ({ currentHoles, numGames }) => {
             </Typography>
             <Typography noWrap variant="h4">
               {(
-                getCount(currentHoles, { upAndDown: "Yes" }) / numGames
+                getCountAnd(currentHoles, { upAndDown: "Yes" }) / numGames
               ).toFixed(2)}
             </Typography>
           </Paper>

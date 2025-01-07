@@ -71,10 +71,9 @@ const GamesListView = ({ userId }) => {
             overflow: "scroll",
           }}
         >
-          {games.map((game) => (
-            <ListItem>
+          {games.map((game, index) => (
+            <ListItem key={index}>
               <ListItemButton
-                key={game.id}
                 onClick={() => {
                   navigate("/editGames/" + game.id);
                 }}

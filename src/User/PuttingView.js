@@ -5,6 +5,7 @@ import PercentBox from "../components/PercentBox.js";
 import HalfPizzaGraph from "../components/HalfPizzaGraph.js";
 
 import { clubs, yesAndNo, colors } from "../util/Constants.js";
+import { getCountAnd } from "../util/GetCount.js";
 
 const PuttingView = ({ currentHoles, numGames }) => {
   const [selectedClub, setSelectedClub] = useState("-");
@@ -21,7 +22,7 @@ const PuttingView = ({ currentHoles, numGames }) => {
     const newSelectedData = [];
     let newSelectedTotal = 0;
     yesAndNo.slice(1, yesAndNo.length).forEach((shot) => {
-      const newValue = getCount(currentHoles, {
+      const newValue = getCountAnd(currentHoles, {
         yesAndNoClub: selectedClub,
         yesAndNo: shot,
       });
@@ -37,7 +38,7 @@ const PuttingView = ({ currentHoles, numGames }) => {
     const newAllData = [];
     let newAllTotal = 0;
     yesAndNo.slice(1, yesAndNo.length).forEach((shot) => {
-      const newValue = getCount(currentHoles, { yesAndNo: shot });
+      const newValue = getCountAnd(currentHoles, { yesAndNo: shot });
       newAllData.push({
         value: newValue,
         label: shot,
@@ -89,19 +90,6 @@ const PuttingView = ({ currentHoles, numGames }) => {
     setClubFirstPuttDistData(newClubFirstPuttDistData);
     setMaxDistance(newMaxDistance);
   }, [currentHoles, selectedClub]);
-
-  const getCount = (currHoles, conditions) => {
-    let count = 0;
-    currHoles.forEach((hole) => {
-      let add = 1;
-      Object.keys(hole).forEach((key) => {
-        if (conditions[key] !== undefined && conditions[key] !== hole[key])
-          add = 0;
-      });
-      count += add;
-    });
-    return count;
-  };
 
   const getColorFromDistance = (distanceRatio) => {
     const green = { r: 144, g: 238, b: 144 }; // light green
