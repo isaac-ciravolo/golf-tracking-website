@@ -172,6 +172,19 @@ export const fetchUser = async (callback) => {
   }
 };
 
+export const fetchUserById = async (userId) => {
+  try {
+    const userDocRef = doc(db, "users", userId);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+      return userDocSnap.data();
+    }
+  } catch (error) {
+    return error.message;
+  }
+};
+
 export const fetchGames = async (userId) => {
   try {
     const userDocRef = doc(db, "users", userId);
