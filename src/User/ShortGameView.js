@@ -328,9 +328,16 @@ const ShortGameView = ({ currentHoles }) => {
             </Typography>
             <Typography noWrap variant="h4">
               {(
-                ((currentHoles.length -
-                  getCountAnd(currentHoles, { approachShot: "GIR" }) -
-                  getCountAnd(currentHoles, { approachShot: "Sand" })) /
+                (getCountAnd(currentHoles, {
+                  approachShots: [
+                    "Short Right",
+                    "Short Left",
+                    "Long Right",
+                    "Long Left",
+                    "Sand",
+                  ],
+                  upAndDown: "Yes",
+                }) /
                   (currentHoles.length -
                     getCountAnd(currentHoles, { approachShot: "GIR" }))) *
                 100
