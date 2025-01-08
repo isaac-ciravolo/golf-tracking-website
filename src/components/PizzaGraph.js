@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 
-const PizzaGraph = ({ sliceData, circleData }) => {
+const PizzaGraph = ({ sliceData, circleData, sandData }) => {
   const bigRadius = 250; // Max radius of the pizza
   const smallCircleRadius = 80; // Radius for the inner small gray background circle
+  const superSmallCircleRadius = 40;
   const numberOfSlices = sliceData.length;
   const angleStep = (2 * Math.PI) / numberOfSlices; // Full circle angle (2π radians)
 
@@ -145,6 +146,35 @@ const PizzaGraph = ({ sliceData, circleData }) => {
             r={smallCircleRadius}
             fill="lightgray"
           />
+
+          <circle
+            cx={bigRadius * 2 - superSmallCircleRadius}
+            cy={bigRadius * 2 - superSmallCircleRadius}
+            r={superSmallCircleRadius}
+            fill="lightgray"
+          />
+          {sandData && (
+            <>
+              <circle
+                cx={bigRadius * 2 - superSmallCircleRadius}
+                cy={bigRadius * 2 - superSmallCircleRadius}
+                r={Math.sqrt(sandData.value / sum) * superSmallCircleRadius}
+                fill={`${sandData.color}80`}
+                stroke="none"
+              />
+              <text
+                x={bigRadius * 2 - superSmallCircleRadius}
+                y={bigRadius * 2 - superSmallCircleRadius}
+                fill="black"
+                fontSize="16"
+                fontWeight="bold"
+                textAnchor="middle"
+                alignmentBaseline="middle"
+              >
+                {sandData.label}: {Math.round((sandData.value / sum) * 100)}%
+              </text>
+            </>
+          )}
 
           {/* Inner colored circle proportional to circleData.value */}
           {circleData && (

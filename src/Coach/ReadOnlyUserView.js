@@ -121,7 +121,7 @@ const ReadOnlyUserView = () => {
                 alignItems: "center",
                 width: "100%",
                 overflowY: "auto",
-                maxHeight: "calc(100% - 300px)",
+                maxHeight: "calc(100% - 250px)",
               }}
             >
               {games.length &&
@@ -154,16 +154,6 @@ const ReadOnlyUserView = () => {
                   </Box>
                 ))}
             </Box>
-            <Button
-              variant="contained"
-              sx={{ width: "90%", height: "48.5px" }}
-              onClick={() => {
-                navigate("/editGames");
-              }}
-            >
-              ADD / EDIT ROUNDS
-            </Button>
-            <Box sx={{ width: "100%", height: "10px" }}></Box>
           </Box>
           <Box
             sx={{

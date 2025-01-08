@@ -74,8 +74,11 @@ const ApproachView = ({ currentHoles }) => {
           <Typography fontWeight={"bold"}>All Clubs</Typography>
           {allData.length > 0 && (
             <PizzaGraph
-              sliceData={allData.filter((slice) => slice.label !== "GIR")}
+              sliceData={allData.filter(
+                (slice) => slice.label !== "GIR" && slice.label !== "Sand"
+              )}
               circleData={allData.find((slice) => slice.label === "GIR")}
+              sandData={allData.find((slice) => slice.label === "Sand")}
             />
           )}
         </Paper>
@@ -106,8 +109,11 @@ const ApproachView = ({ currentHoles }) => {
           />
           {selectedData.length > 0 && (
             <PizzaGraph
-              sliceData={selectedData.filter((slice) => slice.label !== "GIR")}
+              sliceData={selectedData.filter(
+                (slice) => slice.label !== "GIR" && slice.label !== "Sand"
+              )}
               circleData={selectedData.find((slice) => slice.label === "GIR")}
+              sandData={selectedData.find((slice) => slice.label === "Sand")}
             />
           )}
         </Paper>

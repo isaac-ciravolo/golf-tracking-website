@@ -52,6 +52,7 @@ const colors = {
   "Long Right": "#B14AFF",
   Yes: "#11C02E",
   No: "#eb6b54",
+  Sand: "#FFA54A",
 };
 
 const sortingOptions = [

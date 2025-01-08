@@ -145,7 +145,7 @@ const CoachView = ({ user }) => {
             }}
           >
             {selectedClass && (
-              <StudentsView students={selectedClass.students} />
+              <StudentsView studentIds={selectedClass.students} />
             )}
           </Box>
           <Box

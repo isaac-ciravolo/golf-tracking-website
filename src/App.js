@@ -111,7 +111,7 @@ const App = () => {
                   (!isCoach ? (
                     <UserSettings user={user} />
                   ) : (
-                    <CoachSettings user={user} />
+                    <CoachSettings coach={user} />
                   ))
                 }
               />

@@ -1,15 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-const StudentsView = ({ students }) => {
+import { fetchStudent } from "../DatabaseFunctions";
+const StudentsView = ({ studentIds }) => {
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    const temp = async () => {
+      const newStudents = await Promise.all(
+        studentIds.map(async (student) => {
+          const studentData = await fetchStudent(student);
+          return { ...studentData, id: student };
+        })
+      );
+      setStudents(newStudents);
+    };
+
+    if (studentIds.length > 0) temp();
+  }, [studentIds]);
+
   const navigate = useNavigate();
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       {students.map((student) => {
         return (
-          <Box key={student} sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography>{student}</Typography>
-            <Button onClick={() => navigate("/analysis/" + student)}>
+          <Box key={student.id} sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography>{student.name}</Typography>
+            <Button onClick={() => navigate("/analysis/" + student.id)}>
               View
             </Button>
           </Box>
