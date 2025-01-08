@@ -95,6 +95,8 @@ function SignUpView() {
         justifyContent: "center",
         alignItems: "flex-start",
         paddingTop: 10,
+        overflowY: "auto",
+        marginBottom: 10,
       }}
     >
       <Paper

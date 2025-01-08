@@ -33,6 +33,7 @@ function LoginView() {
         justifyContent: "center",
         alignItems: "flex-start",
         paddingTop: 10,
+        overflowY: "auto",
       }}
     >
       <Paper

@@ -278,6 +278,7 @@ export const logOut = () => {
   } catch (error) {
     return error.message;
   }
+  return "Success!";
 };
 
 export const addGame = async (userId, gameData) => {
