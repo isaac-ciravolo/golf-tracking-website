@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Dialog, Typography, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { addRequest, fetchClasses } from "../DatabaseFunctions.js";
+import { addRequest, fetchClasses, leaveClass } from "../DatabaseFunctions.js";
 
 const ClassesView = ({ userId, userName }) => {
-  const [open, setOpen] = useState(false);
+  const [openJoinClass, setOpenJoinClass] = useState(false);
+  const [openLeaveClass, setOpenLeaveClass] = useState(false);
+  const [classToLeave, setClassToLeave] = useState("");
   const [classCode, setClassCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,7 +38,7 @@ const ClassesView = ({ userId, userName }) => {
       }}
     >
       <Button
-        onClick={() => setOpen(true)}
+        onClick={() => setOpenJoinClass(true)}
         variant="contained"
         sx={{ width: "300px", fontSize: "20px" }}
       >
@@ -60,13 +62,22 @@ const ClassesView = ({ userId, userName }) => {
             >
               <Typography>{classData.name}</Typography>
               <Typography>Class Code: {classData.id}</Typography>
+              <Button
+                variant="contained"
+                onClick={async () => {
+                  setOpenLeaveClass(true);
+                  setClassToLeave(classData);
+                }}
+              >
+                Leave Class
+              </Button>
             </Box>
           ))}
       </Box>
       <Dialog
-        open={open}
+        open={openJoinClass}
         onClose={() => {
-          if (!loading) setOpen(false);
+          if (!loading) setOpenJoinClass(false);
         }}
       >
         <Box
@@ -101,18 +112,56 @@ const ClassesView = ({ userId, userName }) => {
             loading={loading}
             onClick={async () => {
               setLoading(true);
-              console.log(classCode, userId);
               const error = await addRequest(classCode, userId, userName);
               setLoading(false);
-              console.log(error);
               if (error === "Success!") {
-                setOpen(false);
+                setOpenJoinClass(false);
               } else {
                 setErrorMessage(error);
               }
             }}
           >
             JOIN CLASS
+          </LoadingButton>
+          <Typography color="error">{errorMessage}</Typography>
+        </Box>
+      </Dialog>
+      <Dialog
+        open={openLeaveClass}
+        onClose={() => {
+          if (!loading) setOpenLeaveClass(false);
+        }}
+      >
+        <Box
+          sx={{
+            width: "500px",
+            p: 3,
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <Typography variant="h3" fontWeight="bold">
+            Leave {classToLeave.name}?
+          </Typography>
+          <LoadingButton
+            variant="contained"
+            fullWidth
+            sx={{ height: "50px", width: "100%", fontSize: "20px" }}
+            loading={loading}
+            onClick={async () => {
+              setLoading(true);
+              const res = await leaveClass(classToLeave.id, userId);
+              setLoading(false);
+              if (res === "Success!") {
+                setClasses(classes.filter((c) => c.id !== classToLeave.id));
+                setOpenLeaveClass(false);
+              } else {
+                alert("Failed to leave class:", res);
+              }
+            }}
+          >
+            LEAVE CLASS
           </LoadingButton>
           <Typography color="error">{errorMessage}</Typography>
         </Box>

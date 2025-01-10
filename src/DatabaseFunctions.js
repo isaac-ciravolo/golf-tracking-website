@@ -58,6 +58,28 @@ export const fetchClass = async (classCode) => {
   return classDocSnap.data();
 };
 
+export const leaveClass = async (classCode, userId) => {
+  try {
+    const userDocRef = doc(db, "users", userId);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (!userDocSnap.exists()) {
+      return "User not found.";
+    }
+
+    const userData = userDocSnap.data();
+    const updatedClasses = userData.classes.filter(
+      (code) => code !== classCode
+    );
+
+    await setDoc(userDocRef, { ...userData, classes: updatedClasses });
+
+    return "Success!";
+  } catch (error) {
+    return error.message;
+  }
+};
+
 export const addRequest = async (classCode, userId, userName) => {
   try {
     const classDocRef = doc(db, "classes", classCode);

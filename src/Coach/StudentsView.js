@@ -16,7 +16,7 @@ const StudentsView = ({ studentIds }) => {
       setStudents(newStudents);
     };
 
-    if (studentIds.length > 0) temp();
+    temp();
   }, [studentIds]);
 
   const navigate = useNavigate();
