@@ -126,6 +126,11 @@ const CoachView = ({ user }) => {
               <Typography variant="h3" fontWeight="bold">
                 {user.name && user.name.toUpperCase()}
               </Typography>
+              {selectedClass && (
+                <Typography>
+                  {selectedClass.name} ({selectedClass.id})
+                </Typography>
+              )}
             </Box>
             <Tabs
               value={value}
