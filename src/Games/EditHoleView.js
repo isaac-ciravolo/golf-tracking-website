@@ -93,128 +93,129 @@ const EditHoleView = ({ userId }) => {
     <Box
       sx={{
         width: "100%",
-        height: "100%",
+        height: "calc(100vh - 230px)",
+        overflowY: "auto",
+        boxSizing: "border-box",
+        p: 3,
       }}
     >
-      <Box sx={{ p: 3 }}>
-        {approachClub && (
+      {approachClub && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+            alignItems: "center",
+          }}
+        >
           <Box
             sx={{
+              width: "100%",
               display: "flex",
-              flexDirection: "column",
-              gap: 1,
-              alignItems: "center",
+              gap: 3,
+              justifyContent: "center",
+              marginBottom: 3,
             }}
           >
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                gap: 3,
-                justifyContent: "center",
-                m: 4,
-              }}
+            <Button
+              onClick={saveHole}
+              variant="contained"
+              sx={{ width: "200px", height: "50px" }}
             >
-              <Button
-                onClick={saveHole}
-                variant="contained"
-                sx={{ width: "200px", height: "50px" }}
-              >
-                Save Hole
-              </Button>
-              <Button
-                onClick={() => {
-                  navigate("/editGames/" + gameId);
-                }}
-                variant="contained"
-                sx={{ width: "200px", height: "50px" }}
-              >
-                Back
-              </Button>
-              <Button
-                onClick={deleteHole}
-                variant="contained"
-                sx={{ width: "200px", height: "50px" }}
-              >
-                Delete Hole
-              </Button>
-            </Box>
-
-            <CustomSelect
-              name="Par"
-              onChange={(e) => setPar(e.target.value)}
-              defaultValue={par}
-              options={["-", 3, 4, 5].map((par) => ({
-                value: par,
-                label: par,
-              }))}
-            />
-            <CustomNumberInput
-              name="Yardage"
-              defaultValue={yardage}
-              onChange={(e) => setYardage(e.target.value)}
-            />
-            <CustomNumberInput
-              name="Score"
-              defaultValue={score}
-              onChange={(e) => setScore(e.target.value)}
-            />
-            <CustomSelect
-              name="Tee Club"
-              onChange={(e) => setTeeClub(e.target.value)}
-              defaultValue={teeClub}
-              options={clubs.map((club) => ({ value: club, label: club }))}
-            />
-            <CustomSelect
-              name="Tee Shot"
-              onChange={(e) => setTeeShot(e.target.value)}
-              defaultValue={teeShot}
-              options={teeShots.map((shot) => ({ value: shot, label: shot }))}
-            />
-            <CustomSelect
-              name="Approach Club"
-              onChange={(e) => setApproachClub(e.target.value)}
-              defaultValue={approachClub}
-              options={clubs.map((club) => ({ value: club, label: club }))}
-            />
-            <CustomSelect
-              name="Approach Shot"
-              onChange={(e) => setApproachShot(e.target.value)}
-              defaultValue={approachShot}
-              options={approachShots.map((shot) => ({
-                value: shot,
-                label: shot,
-              }))}
-            />
-            <CustomSelect
-              name="Up and Down"
-              onChange={(e) => setUpAndDown(e.target.value)}
-              defaultValue={upAndDown}
-              options={yesAndNo.map((shot) => ({ value: shot, label: shot }))}
-            />
-            <CustomNumberInput
-              name="Total Putts"
-              defaultValue={totalPutts}
-              onChange={(e) => setTotalPutts(e.target.value)}
-            />
-            <CustomNumberInput
-              name="First Putt Distance"
-              defaultValue={firstPuttDist}
-              onChange={(e) => setFirstPuttDist(e.target.value)}
-            />
-            <CustomNumberInput
-              name="Penalty Strokes"
-              defaultValue={penaltyStrokes}
-              onChange={(e) => setPenaltyStrokes(e.target.value)}
-            />
-            <CustomNumberInput
-              name="Shots Inside 100"
-              defaultValue={shotsInside100}
-              onChange={(e) => setShotsInside100(e.target.value)}
-            />
+              Save Hole
+            </Button>
+            <Button
+              onClick={() => {
+                navigate("/editGames/" + gameId);
+              }}
+              variant="contained"
+              sx={{ width: "200px", height: "50px" }}
+            >
+              Back
+            </Button>
+            <Button
+              onClick={deleteHole}
+              variant="contained"
+              sx={{ width: "200px", height: "50px" }}
+            >
+              Delete Hole
+            </Button>
           </Box>
-        )}
-      </Box>
+
+          <CustomSelect
+            name="Par"
+            onChange={(e) => setPar(e.target.value)}
+            defaultValue={par}
+            options={["-", 3, 4, 5].map((par) => ({
+              value: par,
+              label: par,
+            }))}
+          />
+          <CustomNumberInput
+            name="Yardage"
+            defaultValue={yardage}
+            onChange={(e) => setYardage(e.target.value)}
+          />
+          <CustomNumberInput
+            name="Score"
+            defaultValue={score}
+            onChange={(e) => setScore(e.target.value)}
+          />
+          <CustomSelect
+            name="Tee Club"
+            onChange={(e) => setTeeClub(e.target.value)}
+            defaultValue={teeClub}
+            options={clubs.map((club) => ({ value: club, label: club }))}
+          />
+          <CustomSelect
+            name="Tee Shot"
+            onChange={(e) => setTeeShot(e.target.value)}
+            defaultValue={teeShot}
+            options={teeShots.map((shot) => ({ value: shot, label: shot }))}
+          />
+          <CustomSelect
+            name="Approach Club"
+            onChange={(e) => setApproachClub(e.target.value)}
+            defaultValue={approachClub}
+            options={clubs.map((club) => ({ value: club, label: club }))}
+          />
+          <CustomSelect
+            name="Approach Shot"
+            onChange={(e) => setApproachShot(e.target.value)}
+            defaultValue={approachShot}
+            options={approachShots.map((shot) => ({
+              value: shot,
+              label: shot,
+            }))}
+          />
+          <CustomSelect
+            name="Up and Down"
+            onChange={(e) => setUpAndDown(e.target.value)}
+            defaultValue={upAndDown}
+            options={yesAndNo.map((shot) => ({ value: shot, label: shot }))}
+          />
+          <CustomNumberInput
+            name="Total Putts"
+            defaultValue={totalPutts}
+            onChange={(e) => setTotalPutts(e.target.value)}
+          />
+          <CustomNumberInput
+            name="First Putt Distance"
+            defaultValue={firstPuttDist}
+            onChange={(e) => setFirstPuttDist(e.target.value)}
+          />
+          <CustomNumberInput
+            name="Penalty Strokes"
+            defaultValue={penaltyStrokes}
+            onChange={(e) => setPenaltyStrokes(e.target.value)}
+          />
+          <CustomNumberInput
+            name="Shots Inside 100"
+            defaultValue={shotsInside100}
+            onChange={(e) => setShotsInside100(e.target.value)}
+          />
+        </Box>
+      )}
     </Box>
   );
 };

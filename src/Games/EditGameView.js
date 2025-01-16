@@ -97,6 +97,8 @@ const EditGameView = ({ userId }) => {
           const res = await deleteGame(userId, gameId);
           if (res !== "Success!") {
             alert("Error deleting game");
+          } else {
+            navigate("/editGames");
           }
         }}
       >
