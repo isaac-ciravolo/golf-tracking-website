@@ -10,7 +10,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
-import generateClassCode from "./util/ClassCode";
+import generateClassCode from "../util/ClassCode";
 
 export const createClass = async (className, coachId) => {
   try {

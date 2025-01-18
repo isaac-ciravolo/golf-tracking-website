@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { auth, db } from "../firebase";
+import { auth, db } from "../firebase/firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import {
@@ -14,6 +14,7 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { sortingOptions } from "../util/Constants";
+import { useAuth } from "../firebase/AuthContext";
 
 function SignUpView() {
   const [email, setEmail] = useState("");
@@ -67,6 +68,7 @@ function SignUpView() {
             name: name,
             joined: new Date().getTime() / 1000,
             sortBy: sortingOptions[0],
+            classes: [],
           });
         } else {
           await setDoc(doc(db, "coaches", user.uid), {

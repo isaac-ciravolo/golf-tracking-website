@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { addGame, fetchGames } from "../DatabaseFunctions";
+import { addGame, fetchGames } from "../firebase/DatabaseFunctions";
 import formatDateFromMilliseconds from "../util/DateConverter";
 
 const GamesListView = ({ userId }) => {

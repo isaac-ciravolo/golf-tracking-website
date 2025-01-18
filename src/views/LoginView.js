@@ -1,26 +1,52 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { auth } from "../firebase";
-import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase/firebase";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Typography, Paper, Box, Button, TextField, Link } from "@mui/material";
-
+import {
+  doSignInWithEmailAndPassword,
+  doSignInWithGoogle,
+} from "../firebase/auth.js";
+import { useAuth } from "../firebase/AuthContext.js";
 function LoginView() {
+  const { userLoggedIn } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/analysis");
-    } catch (error) {
-      if (error.message === "Firebase: Error (auth/invalid-email).")
-        setErrorMessage("Invalid email");
-      else if (error.message === "Firebase: Error (auth/invalid-credential).")
-        setErrorMessage("Invalid email or password");
-      else setErrorMessage(error.message);
+
+    if (!isSigningIn) {
+      setIsSigningIn(true);
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        navigate("/analysis");
+      } catch (error) {
+        if (error.message === "Firebase: Error (auth/invalid-email).")
+          setErrorMessage("Invalid email");
+        else if (error.message === "Firebase: Error (auth/invalid-credential).")
+          setErrorMessage("Invalid email or password");
+        else setErrorMessage(error.message);
+        setIsSigningIn(false);
+      }
+    }
+  };
+
+  const onGoogleSignIn = async () => {
+    e.preventDefault();
+    if (!isSigningIn) {
+      setIsSigningIn(true);
+      try {
+        await doSignInWithGoogle();
+        navigate("/analysis");
+      } catch (error) {
+        setErrorMessage(error.message);
+        setIsSigningIn(false);
+      }
     }
   };
 
@@ -36,6 +62,7 @@ function LoginView() {
         overflowY: "auto",
       }}
     >
+      {userLoggedIn && <Navigate to={"/analysis"} replace={true} />}
       <Paper
         sx={{
           display: "flex",
@@ -43,7 +70,7 @@ function LoginView() {
           p: 3,
         }}
       >
-        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+        <form onSubmit={onSubmit} style={{ width: "100%" }}>
           <Box
             sx={{
               display: "flex",

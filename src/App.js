@@ -19,10 +19,9 @@ import CoachView from "./Coach/CoachView.js";
 import ReadOnlyUserView from "./Coach/ReadOnlyUserView.js";
 import UserSettings from "./User/UserSettings.js";
 import CoachSettings from "./Coach/CoachSettings.js";
-import EditGameView from "./Games/EditGameView.js";
 import GamesView from "./Games/GamesView.js";
 
-import { fetchUser } from "./DatabaseFunctions.js";
+import { fetchUser } from "./firebase/DatabaseFunctions.js";
 
 const theme = createTheme({
   components: {

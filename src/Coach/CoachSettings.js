@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Box, Typography, Button, Dialog } from "@mui/material";
-import { logOut, deleteAccount } from "../DatabaseFunctions";
+import { logOut, deleteAccount } from "../firebase/DatabaseFunctions";
 import { useNavigate } from "react-router-dom";
 const CoachSettings = ({ coach }) => {
   const [showLogOutDialog, setShowLogOutDialog] = useState(false);

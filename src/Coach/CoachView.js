@@ -12,7 +12,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import RequestsView from "./RequestsView";
 import StudentsView from "./StudentsView";
-import { fetchClasses, createClass } from "../DatabaseFunctions";
+import { fetchClasses, createClass } from "../firebase/DatabaseFunctions";
 
 const CoachView = ({ user }) => {
   const [coachClasses, setCoachClasses] = useState([]);

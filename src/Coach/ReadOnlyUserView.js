@@ -12,7 +12,7 @@ import {
   ToggleButton,
 } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
-import { listenToGames, fetchUserById } from "../DatabaseFunctions.js";
+import { listenToGames, fetchUserById } from "../firebase/DatabaseFunctions.js";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingView from "../views/LoadingView.js";
 import ShortGameView from "../User/ShortGameView.js";

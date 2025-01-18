@@ -5,7 +5,7 @@ import {
 } from "../components/CustomComponents";
 import { Box, Button } from "@mui/material";
 import { clubs, teeShots, approachShots, yesAndNo } from "../util/Constants";
-import { fetchGame, updateGame } from "../DatabaseFunctions";
+import { fetchGame, updateGame } from "../firebase/DatabaseFunctions";
 import { useNavigate, useParams } from "react-router-dom";
 const EditHoleView = ({ userId }) => {
   const [par, setPar] = useState(null);

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Dialog, Typography, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { addRequest, fetchClasses, leaveClass } from "../DatabaseFunctions.js";
+import {
+  addRequest,
+  fetchClasses,
+  leaveClass,
+} from "../firebase/DatabaseFunctions.js";
 
 const ClassesView = ({ userId, userName }) => {
   const [openJoinClass, setOpenJoinClass] = useState(false);

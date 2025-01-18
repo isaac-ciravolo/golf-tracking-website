@@ -9,9 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter";
-import { deleteGame, updateGame } from "../DatabaseFunctions";
+import { deleteGame, updateGame } from "../firebase/DatabaseFunctions";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchGame } from "../DatabaseFunctions";
+import { fetchGame } from "../firebase/DatabaseFunctions";
 import LoadingView from "../views/LoadingView";
 const EditGameView = ({ userId }) => {
   const [game, setGame] = useState(null);

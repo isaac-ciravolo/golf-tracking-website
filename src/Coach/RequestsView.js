@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, Paper } from "@mui/material";
-import { fetchRequests, acceptRequest } from "../DatabaseFunctions";
+import { fetchRequests, acceptRequest } from "../firebase/DatabaseFunctions";
 const RequestsView = ({ classCode }) => {
   const [requests, setRequests] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
