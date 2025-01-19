@@ -1,9 +1,11 @@
 import { AppBar, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../firebase/AuthContext";
 
-function Header({ showLogOut }) {
+function Header() {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   return (
     <AppBar
       sx={{
@@ -23,7 +25,7 @@ function Header({ showLogOut }) {
         </Typography>
       </Link>
 
-      {showLogOut && (
+      {currentUser != null && (
         <Button
           sx={{
             position: "absolute",

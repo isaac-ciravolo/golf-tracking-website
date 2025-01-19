@@ -6,8 +6,10 @@ import {
   fetchClasses,
   leaveClass,
 } from "../firebase/DatabaseFunctions.js";
+import { useAuth } from "../firebase/AuthContext.js";
 
-const ClassesView = ({ userId, userName }) => {
+const ClassesView = () => {
+  const { currentUser: user } = useAuth();
   const [openJoinClass, setOpenJoinClass] = useState(false);
   const [openLeaveClass, setOpenLeaveClass] = useState(false);
   const [classToLeave, setClassToLeave] = useState("");
@@ -17,10 +19,10 @@ const ClassesView = ({ userId, userName }) => {
   const [classes, setClasses] = useState([]);
 
   useEffect(() => {
-    if (userId) {
+    if (user) {
       const fetchUserClasses = async () => {
         try {
-          const classesData = await fetchClasses(userId);
+          const classesData = await fetchClasses(user.id);
           setClasses(classesData);
         } catch (error) {
           alert("Failed to fetch classes:", error);
@@ -29,7 +31,7 @@ const ClassesView = ({ userId, userName }) => {
 
       fetchUserClasses();
     }
-  }, [userId]);
+  }, [user]);
 
   return (
     <Box
@@ -116,7 +118,7 @@ const ClassesView = ({ userId, userName }) => {
             loading={loading}
             onClick={async () => {
               setLoading(true);
-              const error = await addRequest(classCode, userId, userName);
+              const error = await addRequest(classCode, user.id, user.name);
               setLoading(false);
               if (error === "Success!") {
                 setOpenJoinClass(false);
@@ -155,7 +157,7 @@ const ClassesView = ({ userId, userName }) => {
             loading={loading}
             onClick={async () => {
               setLoading(true);
-              const res = await leaveClass(classToLeave.id, userId);
+              const res = await leaveClass(classToLeave.id, user.id);
               setLoading(false);
               if (res === "Success!") {
                 setClasses(classes.filter((c) => c.id !== classToLeave.id));

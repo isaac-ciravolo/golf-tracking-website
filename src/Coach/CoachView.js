@@ -13,8 +13,10 @@ import { LoadingButton } from "@mui/lab";
 import RequestsView from "./RequestsView";
 import StudentsView from "./StudentsView";
 import { fetchClasses, createClass } from "../firebase/DatabaseFunctions";
+import { useAuth } from "../firebase/AuthContext";
 
-const CoachView = ({ user }) => {
+const CoachView = () => {
+  const { currentUser: user } = useAuth();
   const [coachClasses, setCoachClasses] = useState([]);
   const [value, setValue] = useState(0);
   const [selectedClass, setSelectedClass] = useState(null);
@@ -124,7 +126,7 @@ const CoachView = ({ user }) => {
           <Box sx={{ p: 3 }}>
             <Box sx={{ display: "flex", alignItems: "baseline", gap: 4 }}>
               <Typography variant="h3" fontWeight="bold">
-                {user.name && user.name.toUpperCase()}
+                {user.name.toUpperCase()}
               </Typography>
               {selectedClass && (
                 <Typography>

@@ -37,7 +37,11 @@ export const doPasswordReset = async (email) => {
 };
 
 export const doSendEmailVerification = async () => {
-  return sendEmailVerification(auth.currentUser, {
-    url: `${window.location.origin}/analysis`,
-  });
+  try {
+    return sendEmailVerification(auth.currentUser, {
+      url: `${window.location.origin}/analysis`,
+    });
+  } catch (error) {
+    return null;
+  }
 };
