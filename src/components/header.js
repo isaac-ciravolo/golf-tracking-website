@@ -2,7 +2,7 @@ import { AppBar, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../firebase/AuthContext";
-import Logo from "../components/eaglePic.jpg";
+import Logo from "../components/logo192.png";
 
 function Header() {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ function Header() {
         alt="Logo"
         style={{
           position: "absolute",
-          left: 10,
+          left: 20,
           width: "80px",
           height: "80px",
         }}
