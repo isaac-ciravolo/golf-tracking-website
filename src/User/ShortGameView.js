@@ -332,14 +332,25 @@ const ShortGameView = ({ currentHoles }) => {
                   approachShots: [
                     "Short Right",
                     "Short Left",
+                    "Left",
+                    "Right",
                     "Long Right",
                     "Long Left",
                     "Sand",
                   ],
                   upAndDown: "Yes",
                 }) /
-                  (currentHoles.length -
-                    getCountAnd(currentHoles, { approachShot: "GIR" }))) *
+                  getCountAnd(currentHoles, {
+                    approachShots: [
+                      "Short Right",
+                      "Short Left",
+                      "Left",
+                      "Right",
+                      "Long Right",
+                      "Long Left",
+                      "Sand",
+                    ],
+                  })) *
                 100
               ).toFixed(2) + "%"}
             </Typography>

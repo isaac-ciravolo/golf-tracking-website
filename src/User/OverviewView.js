@@ -310,7 +310,7 @@ const OverviewView = ({ currentHoles, numGames }) => {
             </Typography>
             <Typography noWrap variant="h4">
               {(
-                getCountAnd(currentHoles, { approachShots: "GIR" }) / numGames
+                getCountAnd(currentHoles, { approachShot: "GIR" }) / numGames
               ).toFixed(2)}
             </Typography>
           </Paper>
