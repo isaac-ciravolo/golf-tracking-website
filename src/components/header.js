@@ -2,6 +2,7 @@ import { AppBar, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../firebase/AuthContext";
+import Logo from "../components/eaglePic.jpg";
 
 function Header() {
   const navigate = useNavigate();
@@ -16,6 +17,16 @@ function Header() {
         alignItems: "center",
       }}
     >
+      <img
+        src={Logo}
+        alt="Logo"
+        style={{
+          position: "absolute",
+          left: 10,
+          width: "80px",
+          height: "80px",
+        }}
+      />
       <Link
         to="/"
         style={{ textDecoration: "none", color: "inherit" }} // Remove underline and keep text color
@@ -24,7 +35,6 @@ function Header() {
           Eagle Eye Analytics
         </Typography>
       </Link>
-
       {currentUser != null && (
         <Button
           sx={{
