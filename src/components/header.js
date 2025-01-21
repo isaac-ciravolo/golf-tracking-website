@@ -2,7 +2,8 @@ import { AppBar, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../firebase/AuthContext";
-import Logo from "../components/logo192.png";
+import LogoEdit from "../images/eeaLogoEdit.png";
+import Logo from "../images/logo192.png";
 
 function Header() {
   const navigate = useNavigate();
@@ -22,18 +23,26 @@ function Header() {
         alt="Logo"
         style={{
           position: "absolute",
-          left: 20,
-          width: "80px",
-          height: "80px",
+          left: 60,
+          height: "130px",
         }}
       />
+
       <Link
         to="/"
         style={{ textDecoration: "none", color: "inherit" }} // Remove underline and keep text color
       >
-        <Typography variant="h4" fontWeight={"bold"}>
+        <img
+          src={LogoEdit}
+          alt="Logo"
+          style={{
+            marginTop: "20px",
+            height: "300px",
+          }}
+        />
+        {/* <Typography variant="h4" fontWeight={"bold"}>
           Eagle Eye Analytics
-        </Typography>
+        </Typography> */}
       </Link>
       {currentUser != null && (
         <Button
