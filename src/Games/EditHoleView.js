@@ -16,6 +16,7 @@ const EditHoleView = ({ userId }) => {
   const [approachClub, setApproachClub] = useState(null);
   const [approachShot, setApproachShot] = useState(null);
   const [upAndDown, setUpAndDown] = useState(null);
+  const [upAndDownClub, setUpAndDownClub] = useState(null);
   const [totalPutts, setTotalPutts] = useState(null);
   const [firstPuttDist, setFirstPuttDist] = useState(null);
   const [penaltyStrokes, setPenaltyStrokes] = useState(null);
@@ -39,6 +40,7 @@ const EditHoleView = ({ userId }) => {
         setApproachClub(hole.approachClub);
         setApproachShot(hole.approachShot);
         setUpAndDown(hole.upAndDown);
+        setUpAndDownClub(hole.upAndDownClub);
         setTotalPutts(hole.totalPutts);
         setFirstPuttDist(hole.firstPuttDist);
         setPenaltyStrokes(hole.penaltyStrokes);
@@ -61,6 +63,7 @@ const EditHoleView = ({ userId }) => {
       approachClub: approachClub,
       approachShot: approachShot,
       upAndDown: upAndDown,
+      upAndDownClub: upAndDownClub,
       totalPutts: Number(totalPutts),
       firstPuttDist: Number(firstPuttDist),
       penaltyStrokes: Number(penaltyStrokes),
@@ -161,18 +164,22 @@ const EditHoleView = ({ userId }) => {
             defaultValue={score}
             onChange={(e) => setScore(e.target.value)}
           />
-          <CustomSelect
-            name="Tee Club"
-            onChange={(e) => setTeeClub(e.target.value)}
-            defaultValue={teeClub}
-            options={clubs.map((club) => ({ value: club, label: club }))}
-          />
-          <CustomSelect
-            name="Tee Shot"
-            onChange={(e) => setTeeShot(e.target.value)}
-            defaultValue={teeShot}
-            options={teeShots.map((shot) => ({ value: shot, label: shot }))}
-          />
+          {(par === 4 || par === 5) && (
+            <>
+              <CustomSelect
+                name="Tee Club"
+                onChange={(e) => setTeeClub(e.target.value)}
+                defaultValue={teeClub}
+                options={clubs.map((club) => ({ value: club, label: club }))}
+              />
+              <CustomSelect
+                name="Tee Shot"
+                onChange={(e) => setTeeShot(e.target.value)}
+                defaultValue={teeShot}
+                options={teeShots.map((shot) => ({ value: shot, label: shot }))}
+              />
+            </>
+          )}
           <CustomSelect
             name="Approach Club"
             onChange={(e) => setApproachClub(e.target.value)}
@@ -188,12 +195,22 @@ const EditHoleView = ({ userId }) => {
               label: shot,
             }))}
           />
-          <CustomSelect
-            name="Up and Down"
-            onChange={(e) => setUpAndDown(e.target.value)}
-            defaultValue={upAndDown}
-            options={yesAndNo.map((shot) => ({ value: shot, label: shot }))}
-          />
+          {approachShot !== "GIR" && (
+            <>
+              <CustomSelect
+                name="Up and Down"
+                onChange={(e) => setUpAndDown(e.target.value)}
+                defaultValue={upAndDown}
+                options={yesAndNo.map((shot) => ({ value: shot, label: shot }))}
+              />
+              <CustomSelect
+                name="Up and Down Club"
+                onChange={(e) => setUpAndDownClub(e.target.value)}
+                defaultValue={upAndDownClub}
+                options={clubs.map((club) => ({ value: club, label: club }))}
+              />
+            </>
+          )}
           <CustomNumberInput
             name="Total Putts"
             defaultValue={totalPutts}

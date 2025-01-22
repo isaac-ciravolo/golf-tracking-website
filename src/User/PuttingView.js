@@ -102,6 +102,7 @@ const PuttingView = ({ currentHoles, numGames }) => {
 
     return `rgb(${r},${g},${b})`;
   };
+
   return (
     <Box
       sx={{

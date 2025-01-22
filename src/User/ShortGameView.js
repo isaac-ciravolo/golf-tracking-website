@@ -24,8 +24,8 @@ const ShortGameView = ({ currentHoles }) => {
     let newSelectedTotal = 0;
     yesAndNo.slice(1, yesAndNo.length).forEach((shot) => {
       const newValue = getCountAnd(currentHoles, {
-        yesAndNoClub: selectedClub,
-        yesAndNo: shot,
+        upAndDownClub: selectedClub,
+        upAndDown: shot,
       });
       newSelectedData.push({
         value: newValue,
@@ -38,8 +38,9 @@ const ShortGameView = ({ currentHoles }) => {
     setSelectedTotal(newSelectedTotal);
     const newAllData = [];
     let newAllTotal = 0;
+    console.log(currentHoles[0]);
     yesAndNo.slice(1, yesAndNo.length).forEach((shot) => {
-      const newValue = getCountAnd(currentHoles, { yesAndNo: shot });
+      const newValue = getCountAnd(currentHoles, { upAndDown: shot });
       newAllData.push({
         value: newValue,
         label: shot,
@@ -90,37 +91,7 @@ const ShortGameView = ({ currentHoles }) => {
     setParCounts(newParCounts);
     setClubFirstPuttDistData(newClubFirstPuttDistData);
     setMaxDistance(newMaxDistance);
-
-    console.log(
-      getCountAnd(currentHoles, {
-        upAndDown: "Yes",
-        approachShot: "GIR",
-      })
-    );
-
-    console.log(
-      getCountAnd(currentHoles, {
-        approachShot: "GIR",
-      })
-    );
   }, [currentHoles, selectedClub]);
-
-  const getCountTwoParams = (currHoles, conditions1, conditions2) => {
-    let count = 0;
-    currHoles.forEach((hole) => {
-      let add = 1;
-      Object.keys(conditions1).forEach((key) => {
-        if (conditions1[key] !== undefined && conditions1[key] !== hole[key])
-          add = 0;
-      });
-      Object.keys(conditions2).forEach((key) => {
-        if (conditions2[key] !== undefined && conditions2[key] !== hole[key])
-          add = 0;
-      });
-      count += add;
-    });
-    return count;
-  };
 
   const getColorFromDistance = (distanceRatio) => {
     const green = { r: 144, g: 238, b: 144 }; // light green
@@ -132,6 +103,14 @@ const ShortGameView = ({ currentHoles }) => {
     const b = Math.round(green.b + (orange.b - green.b) * distanceRatio);
 
     return `rgb(${r},${g},${b})`;
+  };
+
+  const getScramblingPercentage = () => {
+    let count = 0;
+    currentHoles.forEach((hole) => {
+      if (hole.approachShot !== "GIR" && hole.score <= hole.par) count += 1;
+    });
+    return (count / currentHoles.length) * 100;
   };
 
   return (
@@ -200,7 +179,15 @@ const ShortGameView = ({ currentHoles }) => {
             options={clubs.map((club) => {
               if (
                 club === "-" ||
-                getCountAnd(currentHoles, { upAndDownClub: club }) > 0
+                getCountAnd(currentHoles, {
+                  upAndDown: "Yes",
+                  upAndDownClub: club,
+                }) +
+                  getCountAnd(currentHoles, {
+                    upAndDown: "No",
+                    upAndDownClub: club,
+                  }) >
+                  0
               )
                 return { value: club, label: club };
             })}
@@ -329,32 +316,7 @@ const ShortGameView = ({ currentHoles }) => {
               {"Scrambling %"}
             </Typography>
             <Typography noWrap variant="h4">
-              {(
-                (getCountAnd(currentHoles, {
-                  approachShots: [
-                    "Short Right",
-                    "Short Left",
-                    "Left",
-                    "Right",
-                    "Long Right",
-                    "Long Left",
-                    "Sand",
-                  ],
-                  upAndDown: "Yes",
-                }) /
-                  getCountAnd(currentHoles, {
-                    approachShots: [
-                      "Short Right",
-                      "Short Left",
-                      "Left",
-                      "Right",
-                      "Long Right",
-                      "Long Left",
-                      "Sand",
-                    ],
-                  })) *
-                100
-              ).toFixed(2) + "%"}
+              {getScramblingPercentage().toFixed(2) + "%"}
             </Typography>
           </Paper>
         </Paper>

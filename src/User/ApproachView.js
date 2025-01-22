@@ -165,10 +165,12 @@ const ApproachView = ({ currentHoles, numGames }) => {
             </Typography>
             <Typography noWrap variant="h4">
               {(
-                getCountAnd(currentHoles, {
+                (getCountAnd(currentHoles, {
                   teeShot: "Fairway",
                   approachShot: "GIR",
-                }) / getCountAnd(currentHoles, { teeShot: "Fairway" })
+                }) /
+                  getCountAnd(currentHoles, { teeShot: "Fairway" })) *
+                100
               ).toFixed(2)}
             </Typography>
           </Paper>
@@ -187,12 +189,13 @@ const ApproachView = ({ currentHoles, numGames }) => {
             </Typography>
             <Typography noWrap variant="h4">
               {(
-                1 -
-                getCountAnd(currentHoles, {
-                  teeShot: "Fairway",
-                  approachShot: "GIR",
-                }) /
-                  getCountAnd(currentHoles, { teeShot: "Fairway" })
+                (1 -
+                  getCountAnd(currentHoles, {
+                    teeShot: "Fairway",
+                    approachShot: "GIR",
+                  }) /
+                    getCountAnd(currentHoles, { teeShot: "Fairway" })) *
+                100
               ).toFixed(2)}
             </Typography>
           </Paper>
