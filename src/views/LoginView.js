@@ -9,7 +9,6 @@ import {
   doSignInWithGoogle,
 } from "../firebase/auth.js";
 import { useAuth } from "../firebase/AuthContext.js";
-import loginLogo from "../images/eeaLoginLogo.png";
 
 function LoginView() {
   const { userLoggedIn } = useAuth();
@@ -67,7 +66,7 @@ function LoginView() {
       }}
     >
       <img
-        src={loginLogo}
+        src={"/images/eeaLoginLogo.png"}
         alt="EEA Logo"
         style={{ width: "548px", paddingRight: "100px" }}
       />

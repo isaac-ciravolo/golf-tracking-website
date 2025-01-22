@@ -33,14 +33,14 @@ const theme = createTheme({
 });
 
 const App = () => {
-  const { currentUser: user, isCoach } = useAuth();
+  const { isCoach, userLoggedIn } = useAuth();
   return (
     <Box
       className="App"
       style={{ width: "100vw", height: "100vh", overflow: "hidden" }}
     >
       <ThemeProvider theme={theme}>
-        <Header />
+        {userLoggedIn && <Header />}
         <Box
           sx={{
             width: "100vw",

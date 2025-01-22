@@ -206,7 +206,7 @@ const OverviewView = ({ currentHoles, numGames }) => {
           }}
         >
           <Typography fontWeight="bold" variant="h6">
-            Statistics
+            Key Statistics
           </Typography>
           <Paper
             sx={{
@@ -293,7 +293,7 @@ const OverviewView = ({ currentHoles, numGames }) => {
           }}
         >
           <Typography fontWeight="bold" variant="h6">
-            Scoring Averages
+            Scoring
           </Typography>
           <Paper
             sx={{

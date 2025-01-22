@@ -7,7 +7,7 @@ import { clubs, approachShots, colors, teeShots } from "../util/Constants.js";
 import PizzaGraph from "../components/PizzaGraph.js";
 import { getCountAnd } from "../util/GetCount.js";
 
-const ApproachView = ({ currentHoles }) => {
+const ApproachView = ({ currentHoles, numGames }) => {
   const [selectedClub, setSelectedClub] = useState("-");
   const [selectedData, setSelectedData] = useState([]);
   const [selectedTotal, setSelectedTotal] = useState(0);
@@ -145,9 +145,9 @@ const ApproachView = ({ currentHoles }) => {
               {"GIRs per Round"}
             </Typography>
             <Typography noWrap variant="h4">
-              {currentHoles
-                .filter((hole) => hole.approachShot === "GIR")
-                .length.toFixed(2)}
+              {(
+                getCountAnd(currentHoles, { approachShot: "GIR" }) / numGames
+              ).toFixed(2)}
             </Typography>
           </Paper>
           <Paper
@@ -164,12 +164,12 @@ const ApproachView = ({ currentHoles }) => {
               {"GIRs when from Fairway"}
             </Typography>
             <Typography noWrap variant="h4">
-              {currentHoles
-                .filter(
-                  (hole) =>
-                    hole.approachShot === "GIR" && hole.teeShot === "Fairway"
-                )
-                .length.toFixed(2)}
+              {(
+                getCountAnd(currentHoles, {
+                  teeShot: "Fairway",
+                  approachShot: "GIR",
+                }) / getCountAnd(currentHoles, { teeShot: "Fairway" })
+              ).toFixed(2)}
             </Typography>
           </Paper>
           <Paper
@@ -186,12 +186,14 @@ const ApproachView = ({ currentHoles }) => {
               {"GIRs when not from Fairway"}
             </Typography>
             <Typography noWrap variant="h4">
-              {currentHoles
-                .filter(
-                  (hole) =>
-                    hole.approachShot === "GIR" && hole.teeShot !== "Fairway"
-                )
-                .length.toFixed(2)}
+              {(
+                1 -
+                getCountAnd(currentHoles, {
+                  teeShot: "Fairway",
+                  approachShot: "GIR",
+                }) /
+                  getCountAnd(currentHoles, { teeShot: "Fairway" })
+              ).toFixed(2)}
             </Typography>
           </Paper>
         </Paper>

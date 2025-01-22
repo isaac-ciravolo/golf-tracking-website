@@ -4,8 +4,10 @@ import { Box, Button, Typography } from "@mui/material";
 import GamesListView from "./GamesListView";
 import EditGameView from "./EditGameView";
 import GameRouter from "./GameRouter";
+import { useAuth } from "../firebase/AuthContext";
 
-const GamesView = ({ user }) => {
+const GamesView = () => {
+  const { currentUser: user } = useAuth();
   const navigate = useNavigate();
 
   return (

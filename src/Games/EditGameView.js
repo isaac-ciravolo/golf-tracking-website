@@ -68,6 +68,44 @@ const EditGameView = ({ userId }) => {
         {formatDateFromMilliseconds(game.gameDate)}
       </Typography>
 
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          gap: 3,
+          justifyContent: "center",
+        }}
+      >
+        <Button
+          variant="contained"
+          onClick={async () => {
+            const res = await deleteGame(userId, gameId);
+            if (res !== "Success!") {
+              alert("Error deleting game");
+            } else {
+              navigate("/editGames");
+            }
+          }}
+          sx={{ width: "200px", height: "50px" }}
+        >
+          Delete Game
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => navigate("/editGames")}
+          sx={{ width: "200px", height: "50px" }}
+        >
+          Back
+        </Button>
+        <Button
+          variant="contained"
+          onClick={addHole}
+          sx={{ width: "200px", height: "50px" }}
+        >
+          Add Hole
+        </Button>
+      </Box>
+
       <List
         sx={{
           display: "flex",
@@ -89,35 +127,6 @@ const EditGameView = ({ userId }) => {
           </ListItem>
         ))}
       </List>
-
-      <Button
-        variant="contained"
-        sx={{ position: "absolute", right: "20px", top: "20px" }}
-        onClick={async () => {
-          const res = await deleteGame(userId, gameId);
-          if (res !== "Success!") {
-            alert("Error deleting game");
-          } else {
-            navigate("/editGames");
-          }
-        }}
-      >
-        Delete Game
-      </Button>
-      <Button
-        variant="contained"
-        sx={{ position: "absolute", left: "20px", top: "20px" }}
-        onClick={() => navigate("/editGames")}
-      >
-        Back
-      </Button>
-      <Button
-        variant="contained"
-        sx={{ position: "absolute", right: "200px", top: "20px" }}
-        onClick={addHole}
-      >
-        Add Hole
-      </Button>
     </Box>
   ) : (
     <LoadingView />
