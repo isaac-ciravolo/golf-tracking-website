@@ -60,7 +60,7 @@ const VerificationView = () => {
               loading={sendingEmail}
               onClick={async () => {
                 setSendingEmail(true);
-                res = await doSendEmailVerification();
+                const res = await doSendEmailVerification();
                 if (res !== "Success!") alert("Error: " + res);
                 setSendingEmail(false);
               }}
