@@ -49,7 +49,7 @@ const VerificationView = () => {
             </Typography>
 
             <Typography variant="h6" fontWeight="bold">
-              Click Send And Check Your Inbox!
+              Click To Send Email To Your Inbox!
             </Typography>
 
             <LoadingButton
@@ -60,7 +60,8 @@ const VerificationView = () => {
               loading={sendingEmail}
               onClick={async () => {
                 setSendingEmail(true);
-                await doSendEmailVerification();
+                res = await doSendEmailVerification();
+                if (res !== "Success!") alert("Error: " + res);
                 setSendingEmail(false);
               }}
             >

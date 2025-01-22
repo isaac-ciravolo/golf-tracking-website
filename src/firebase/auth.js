@@ -38,10 +38,11 @@ export const doPasswordReset = async (email) => {
 
 export const doSendEmailVerification = async () => {
   try {
-    return sendEmailVerification(auth.currentUser, {
+    sendEmailVerification(auth.currentUser, {
       url: `${window.location.origin}/analysis`,
     });
+    return "Success!";
   } catch (error) {
-    return null;
+    return error;
   }
 };
