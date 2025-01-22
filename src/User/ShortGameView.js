@@ -303,14 +303,16 @@ const ShortGameView = ({ currentHoles }) => {
               {"Sand Save %"}
             </Typography>
             <Typography noWrap variant="h4">
-              {(
-                (getCountAnd(currentHoles, {
-                  approachShot: "Sand",
-                  upAndDown: "Yes",
-                }) /
-                  getCountAnd(currentHoles, { approachShot: "Sand" })) *
-                100
-              ).toFixed(2) + "%"}
+              {getCountAnd(currentHoles, { approachShot: "Sand" }) === 0
+                ? "0.00"
+                : (
+                    (getCountAnd(currentHoles, {
+                      approachShot: "Sand",
+                      upAndDown: "Yes",
+                    }) /
+                      getCountAnd(currentHoles, { approachShot: "Sand" })) *
+                    100
+                  ).toFixed(2) + "%"}
             </Typography>
           </Paper>
           <Paper
