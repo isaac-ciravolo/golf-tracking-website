@@ -171,7 +171,7 @@ const ApproachView = ({ currentHoles, numGames }) => {
                 }) /
                   getCountAnd(currentHoles, { teeShot: "Fairway" })) *
                 100
-              ).toFixed(2)}
+              ).toFixed(2) + "%"}
             </Typography>
           </Paper>
           <Paper
@@ -196,7 +196,7 @@ const ApproachView = ({ currentHoles, numGames }) => {
                   }) /
                     getCountAnd(currentHoles, { teeShot: "Fairway" })) *
                 100
-              ).toFixed(2)}
+              ).toFixed(2) + "%"}
             </Typography>
           </Paper>
         </Paper>
