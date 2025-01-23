@@ -228,7 +228,10 @@ const ReadOnlyUserView = () => {
                   ...(value !== 2 && { display: "none" }),
                 }}
               >
-                <ApproachView currentHoles={currentHoles} />
+                <ApproachView
+                  currentHoles={currentHoles}
+                  numGames={selectedGames.length}
+                />
               </Box>
               <Box
                 sx={{
