@@ -1,0 +1,7 @@
+Make top left logo as button
+Separate 9 hole vs 18 holes
+
+Wish List
+If Fairway > 70% make it green
+between 60-70 make it orange
+<60 red

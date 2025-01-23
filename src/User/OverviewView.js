@@ -128,16 +128,21 @@ const OverviewView = ({ currentHoles, numGames }) => {
     return { r, g, b };
   };
 
-  const getColorFromPercentage = (percentage) => {
-    const green = hexToRgb(colors.Yes); // Green
-    const red = hexToRgb(colors.No); // Red
+  const getColorForFairway = (percentage) => {
+    if (percentage > 70) return colors.Yes;
+    else if (percentage > 60) return "rgb(255,165,0)";
+    else return colors.No;
+  };
 
-    // Calculate color interpolation
-    const ratio = 1 - percentage / 100;
-    const r = Math.round(green.r + (red.r - green.r) * ratio);
-    const g = Math.round(green.g + (red.g - green.g) * ratio);
-    const b = Math.round(green.b + (red.b - green.b) * ratio);
-    return `rgb(${r},${g},${b})`;
+  const getColorForGir = (percentage) => {
+    if (percentage > 66.666) return colors.Yes;
+    else if (percentage > 33.333) return "rgb(255,165,0)";
+    else return "rgb(255, 0, 0)";
+  };
+
+  const getColorForPuttsPerRound = (putts) => {
+    if (putts < 30) return colors.Yes;
+    else return "rgb(255, 0, 0)";
   };
 
   return (
@@ -224,7 +229,7 @@ const OverviewView = ({ currentHoles, numGames }) => {
             <Typography
               noWrap
               variant="h4"
-              color={getColorFromPercentage(fairwayPercentage)}
+              color={getColorForFairway(fairwayPercentage)}
             >
               {fairwayPercentage.toFixed(2) + "%"}
             </Typography>
@@ -245,7 +250,7 @@ const OverviewView = ({ currentHoles, numGames }) => {
             <Typography
               noWrap
               variant="h4"
-              color={getColorFromPercentage(girPercentage)}
+              color={getColorForGir(girPercentage)}
             >
               {girPercentage.toFixed(2) + "%"}
             </Typography>
@@ -263,7 +268,11 @@ const OverviewView = ({ currentHoles, numGames }) => {
             <Typography noWrap fontWeight={"bold"}>
               Putts Per Round
             </Typography>
-            <Typography noWrap variant="h4">
+            <Typography
+              noWrap
+              variant="h4"
+              color={getColorForPuttsPerRound(totalPutts / numGames)}
+            >
               {(totalPutts / numGames).toFixed(2)}
             </Typography>
           </Paper>
