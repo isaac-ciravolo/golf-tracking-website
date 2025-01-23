@@ -80,7 +80,7 @@ function SignUpView() {
           });
         }
       }
-      navigate("/verify");
+      //navigate("/verify");
     } catch (error) {
       if (error.message === "Firebase: Error (auth/email-already-in-use).")
         setErrorMessage("Email already in use");

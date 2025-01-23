@@ -325,12 +325,16 @@ const OverviewView = ({ currentHoles, numGames }) => {
             }}
           >
             <Typography noWrap fontWeight={"bold"}>
-              Up and Down Per Round
+              Up and Down %
             </Typography>
             <Typography noWrap variant="h4">
               {(
-                getCountAnd(currentHoles, { upAndDown: "Yes" }) / numGames
+                (getCountAnd(currentHoles, { upAndDown: "Yes" }) /
+                  (getCountAnd(currentHoles, { upAndDown: "Yes" }) +
+                    getCountAnd(currentHoles, { upAndDown: "No" }))) *
+                100
               ).toFixed(2)}
+              %
             </Typography>
           </Paper>
         </Paper>

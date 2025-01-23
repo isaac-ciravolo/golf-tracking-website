@@ -107,10 +107,14 @@ const ShortGameView = ({ currentHoles }) => {
 
   const getScramblingPercentage = () => {
     let count = 0;
+    let total = 0;
     currentHoles.forEach((hole) => {
-      if (hole.approachShot !== "GIR" && hole.score <= hole.par) count += 1;
+      if (hole.approachShot !== "GIR") {
+        total += 1;
+        if (hole.score <= hole.par) count += 1;
+      }
     });
-    return (count / currentHoles.length) * 100;
+    return (count / total) * 100;
   };
 
   return (

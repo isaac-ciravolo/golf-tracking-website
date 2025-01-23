@@ -38,14 +38,15 @@ export function AuthProvider({ children }) {
         setUserLoggedIn(true);
         setIsCoach(false);
         setLoading(false);
+        // if (
+        //   !user.emailVerified &&
+        //   (location.pathname !== "/verify" ||
+        //     location.pathname !== "/login" ||
+        //     location.pathname !== "/signup")
+        // ) {
+        //   navigate("/verify");
+        // } else
         if (
-          !user.emailVerified &&
-          (location.pathname !== "/verify" ||
-            location.pathname !== "/login" ||
-            location.pathname !== "/signup")
-        ) {
-          navigate("/verify");
-        } else if (
           location.pathname === "/login" ||
           location.pathname === "/signup" ||
           location.pathname === "/forgotpassword" ||
@@ -64,14 +65,15 @@ export function AuthProvider({ children }) {
         setUserLoggedIn(true);
         setIsCoach(true);
         setLoading(false);
+        // if (
+        //   !user.emailVerified &&
+        //   (location.pathname !== "/verify" ||
+        //     location.pathname !== "/login" ||
+        //     location.pathname !== "/signup")
+        // ) {
+        //   navigate("/verify");
+        // } else
         if (
-          !user.emailVerified &&
-          (location.pathname !== "/verify" ||
-            location.pathname !== "/login" ||
-            location.pathname !== "/signup")
-        ) {
-          navigate("/verify");
-        } else if (
           location.pathname === "/login" ||
           location.pathname === "/signup" ||
           location.pathname === "/forgotpassword" ||
