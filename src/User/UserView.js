@@ -11,14 +11,17 @@ import {
   Typography,
   Button,
   ToggleButton,
+  Icon,
 } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
-import { listenToGames } from "../firebase/DatabaseFunctions.js";
+import { fetchGames } from "../firebase/DatabaseFunctions.js";
 import { useNavigate } from "react-router-dom";
 import LoadingView from "../views/LoadingView.js";
 import ClassesView from "./ClassesView.js";
 import ShortGameView from "./ShortGameView.js";
 import { useAuth } from "../firebase/AuthContext.js";
+import { validGame } from "../util/ValidChecker.js";
+import WarningIcon from "@mui/icons-material/Warning";
 
 const UserView = () => {
   const { currentUser: user } = useAuth();
@@ -30,36 +33,33 @@ const UserView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const newSelectedGames = [];
     if (games) {
-      setSelectedGames(games);
+      for (let i = 0; i < games.length; i++)
+        if (validGame(games[i])) newSelectedGames.push(games[i]);
+      setSelectedGames(newSelectedGames);
       setLoading(false);
     }
   }, [games]);
 
   useEffect(() => {
-    if (user && user.id) {
-      let unsubscribe;
+    const temp = async () => {
+      if (user) {
+        const newGames = await fetchGames(user.id, setGames);
+        setGames(newGames);
+      }
+    };
 
-      const fetchData = async () => {
-        unsubscribe = await listenToGames(user.id, setGames);
-      };
-
-      fetchData();
-
-      return () => {
-        if (unsubscribe) {
-          unsubscribe();
-        }
-      };
-    }
+    temp();
   }, [user]);
 
   useEffect(() => {
     const newHoles = [];
     selectedGames.forEach((game) => {
-      game.holes.forEach((hole) => {
-        newHoles.push(hole);
-      });
+      if (validGame(game))
+        game.holes.forEach((hole) => {
+          newHoles.push(hole);
+        });
     });
     setCurrentHoles(newHoles);
   }, [selectedGames]);
@@ -114,7 +114,7 @@ const UserView = () => {
               maxHeight: "calc(100% - 300px)",
             }}
           >
-            {games.length &&
+            {games.length ? (
               games.map((game) => (
                 <Box
                   key={game.id}
@@ -124,25 +124,52 @@ const UserView = () => {
                     justifyContent: "center",
                   }}
                 >
-                  <ToggleButton
-                    color="primary"
-                    value={selectedGames.includes(game)}
-                    selected={selectedGames.includes(game)}
-                    onClick={() => {
-                      if (selectedGames.includes(game)) {
-                        setSelectedGames(
-                          selectedGames.filter((g) => g !== game)
-                        );
-                      } else {
-                        setSelectedGames([...selectedGames, game]);
-                      }
-                    }}
-                    sx={{ width: "90%" }}
-                  >
-                    {game.title}
-                  </ToggleButton>
+                  {validGame(game) ? (
+                    <>
+                      <ToggleButton
+                        color="primary"
+                        value={selectedGames.includes(game)}
+                        selected={selectedGames.includes(game)}
+                        onClick={() => {
+                          if (selectedGames.includes(game)) {
+                            setSelectedGames(
+                              selectedGames.filter((g) => g !== game)
+                            );
+                          } else {
+                            setSelectedGames([...selectedGames, game]);
+                          }
+                        }}
+                        sx={{ width: "90%" }}
+                      >
+                        {game.title}
+                      </ToggleButton>
+                    </>
+                  ) : (
+                    <Button
+                      color="error"
+                      variant="outlined"
+                      onClick={() => {
+                        navigate("/editGames/" + game.id);
+                      }}
+                      sx={{
+                        width: "90%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
+                    >
+                      {game.title}
+                      <Icon sx={{ display: "flex", alignItems: "center" }}>
+                        <WarningIcon />
+                      </Icon>
+                    </Button>
+                  )}
                 </Box>
-              ))}
+              ))
+            ) : (
+              <>Add a Game To Get Started!</>
+            )}
           </Box>
           <Button
             variant="contained"

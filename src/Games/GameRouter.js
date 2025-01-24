@@ -6,7 +6,7 @@ const GameRouter = ({ userId }) => {
   return (
     <Routes>
       <Route path="" element={<EditGameView userId={userId} />} />
-      <Route path=":holeIndex" element={<EditHoleView userId={userId} />} />
+      <Route path=":holeIndex" element={<EditHoleView />} />
     </Routes>
   );
 };

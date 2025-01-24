@@ -7,7 +7,8 @@ import { Box, Button } from "@mui/material";
 import { clubs, teeShots, approachShots, yesAndNo } from "../util/Constants";
 import { fetchGame, updateGame } from "../firebase/DatabaseFunctions";
 import { useNavigate, useParams } from "react-router-dom";
-const EditHoleView = ({ userId }) => {
+import { useAuth } from "../firebase/AuthContext";
+const EditHoleView = () => {
   const [par, setPar] = useState(null);
   const [yardage, setYardage] = useState(null);
   const [score, setScore] = useState(null);
@@ -23,15 +24,17 @@ const EditHoleView = ({ userId }) => {
   const [shotsInside100, setShotsInside100] = useState(null);
   const [game, setGame] = useState(null);
   const { gameId, holeIndex } = useParams();
+  const { currentUser: user } = useAuth();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHole = async () => {
-      const newGame = await fetchGame(userId, gameId);
+      const newGame = await fetchGame(user.id, gameId);
 
       if (newGame && newGame.holes[holeIndex]) {
         const hole = newGame.holes[holeIndex];
+        console.log(hole.par);
         setPar(hole.par);
         setYardage(hole.yardage);
         setScore(hole.score);
@@ -50,20 +53,20 @@ const EditHoleView = ({ userId }) => {
     };
 
     fetchHole();
-  }, []);
+  }, [user, gameId, holeIndex]);
 
   const saveHole = async (e) => {
     const oldHole = game.holes[holeIndex];
     const newHole = {
-      par: Number(par),
+      par: par === "-" ? "-" : Number(par),
       yardage: Number(yardage),
       score: Number(score),
-      teeClub: teeClub,
-      teeShot: teeShot,
+      teeClub: par === 3 ? "-" : teeClub,
+      teeShot: par === 3 ? "-" : teeShot,
       approachClub: approachClub,
       approachShot: approachShot,
-      upAndDown: upAndDown,
-      upAndDownClub: upAndDownClub,
+      upAndDown: approachShot === "GIR" ? "-" : upAndDown,
+      upAndDownClub: approachShot === "GIR" ? "-" : upAndDownClub,
       totalPutts: Number(totalPutts),
       firstPuttDist: Number(firstPuttDist),
       penaltyStrokes: Number(penaltyStrokes),
@@ -71,7 +74,7 @@ const EditHoleView = ({ userId }) => {
     };
     game.holes[holeIndex] = newHole;
 
-    const res = await updateGame(userId, gameId, game);
+    const res = await updateGame(user.id, gameId, game);
 
     if (res !== "Success!") {
       alert("Error saving hole " + res);
@@ -84,7 +87,7 @@ const EditHoleView = ({ userId }) => {
   const deleteHole = async (e) => {
     const oldHole = game.holes[holeIndex];
     game.holes.splice(holeIndex, 1);
-    const res = await updateGame(userId, gameId, game);
+    const res = await updateGame(user.id, gameId, game);
     if (res !== "Success!") {
       alert("Error deleting hole " + res);
       game.holes.splice(holeIndex, 0, oldHole);
