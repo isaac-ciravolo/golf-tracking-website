@@ -26,12 +26,6 @@ export const validHole = (hole) => {
   if (hole.approachShot !== "GIR" && hole.upAndDownClub === "-") {
     return false;
   }
-  if (hole.totalPutts === 0) {
-    return false;
-  }
-  if (hole.firstPuttDist === 0) {
-    return false;
-  }
   return true;
 };
 
