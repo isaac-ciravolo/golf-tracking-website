@@ -38,7 +38,6 @@ const ShortGameView = ({ currentHoles }) => {
     setSelectedTotal(newSelectedTotal);
     const newAllData = [];
     let newAllTotal = 0;
-    console.log(currentHoles[0]);
     yesAndNo.slice(1, yesAndNo.length).forEach((shot) => {
       const newValue = getCountAnd(currentHoles, { upAndDown: shot });
       newAllData.push({

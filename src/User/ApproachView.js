@@ -7,7 +7,14 @@ import { clubs, approachShots, colors, teeShots } from "../util/Constants.js";
 import PizzaGraph from "../components/PizzaGraph.js";
 import { getCountAnd } from "../util/GetCount.js";
 
-const ApproachView = ({ currentHoles, numGames }) => {
+const ApproachView = ({
+  currentHoles,
+  numGames,
+  currentNineHoles,
+  numNineHolesGames,
+  currentEighteenHoles,
+  numEighteenHoleGames,
+}) => {
   const [selectedClub, setSelectedClub] = useState("-");
   const [selectedData, setSelectedData] = useState([]);
   const [selectedTotal, setSelectedTotal] = useState(0);

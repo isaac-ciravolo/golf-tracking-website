@@ -7,7 +7,14 @@ import HalfPizzaGraph from "../components/HalfPizzaGraph.js";
 import { clubs, yesAndNo, colors } from "../util/Constants.js";
 import { getCountAnd } from "../util/GetCount.js";
 
-const PuttingView = ({ currentHoles, numGames }) => {
+const PuttingView = ({
+  currentHoles,
+  numGames,
+  currentNineHoles,
+  numNineHolesGames,
+  currentEighteenHoles,
+  numEighteenHoleGames,
+}) => {
   const [selectedClub, setSelectedClub] = useState("-");
   const [selectedData, setSelectedData] = useState([]);
   const [selectedTotal, setSelectedTotal] = useState(0);

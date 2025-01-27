@@ -29,15 +29,31 @@ const UserView = () => {
   const [value, setValue] = useState(0);
   const [currentHoles, setCurrentHoles] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
+  const [selectedNineHoleGames, setSelectedNineHoleGames] = useState([]);
+  const [selectedEighteenHoleGames, setSelectedEighteenHoleGames] = useState(
+    []
+  );
+  const [currentNineHoles, setCurrentNineHoles] = useState([]);
+  const [currentEighteenHoles, setCurrentEighteenHoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const newSelectedGames = [];
+    const newSelectedNineHoleGames = [];
+    const newSelectedEighteenHoleGames = [];
     if (games) {
       for (let i = 0; i < games.length; i++)
-        if (validGame(games[i])) newSelectedGames.push(games[i]);
+        if (validGame(games[i])) {
+          newSelectedGames.push(games[i]);
+          if (games[i].holes.length === 9)
+            newSelectedNineHoleGames.push(games[i]);
+          else if (games[i].holes.length === 18)
+            newSelectedEighteenHoleGames.push(games[i]);
+        }
       setSelectedGames(newSelectedGames);
+      setSelectedNineHoleGames(newSelectedNineHoleGames);
+      setSelectedEighteenHoleGames(newSelectedEighteenHoleGames);
       setLoading(false);
     }
   }, [games]);
@@ -63,6 +79,28 @@ const UserView = () => {
     });
     setCurrentHoles(newHoles);
   }, [selectedGames]);
+
+  useEffect(() => {
+    const newNineHoles = [];
+    selectedNineHoleGames.forEach((game) => {
+      if (validGame(game))
+        game.holes.forEach((hole) => {
+          newNineHoles.push(hole);
+        });
+    });
+    setCurrentNineHoles(newNineHoles);
+  }, [selectedNineHoleGames]);
+
+  useEffect(() => {
+    const newEighteenHoles = [];
+    selectedEighteenHoleGames.forEach((game) => {
+      if (validGame(game))
+        game.holes.forEach((hole) => {
+          newEighteenHoles.push(hole);
+        });
+    });
+    setCurrentEighteenHoles(newEighteenHoles);
+  }, [selectedEighteenHoleGames]);
 
   return (
     <>
@@ -240,6 +278,10 @@ const UserView = () => {
               <OverviewView
                 currentHoles={currentHoles}
                 numGames={selectedGames.length}
+                currentNineHoles={currentNineHoles}
+                numNineHolesGames={selectedNineHoleGames.length}
+                currentEighteenHoles={currentEighteenHoles}
+                numEighteenHolesGames={selectedEighteenHoleGames.length}
               />
             </Box>
             <Box
@@ -259,6 +301,10 @@ const UserView = () => {
               <ApproachView
                 currentHoles={currentHoles}
                 numGames={selectedGames.length}
+                currentNineHoles={currentNineHoles}
+                numNineHolesGames={selectedNineHoleGames.length}
+                currentEighteenHoles={currentEighteenHoles}
+                numEighteenHolesGames={selectedEighteenHoleGames.length}
               />
             </Box>
             <Box
@@ -281,6 +327,10 @@ const UserView = () => {
               <PuttingView
                 currentHoles={currentHoles}
                 numGames={selectedGames.length}
+                currentNineHoles={currentNineHoles}
+                numNineHolesGames={selectedNineHoleGames.length}
+                currentEighteenHoles={currentEighteenHoles}
+                numEighteenHolesGames={selectedEighteenHoleGames.length}
               />
             </Box>
             <Box

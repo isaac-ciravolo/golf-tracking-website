@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid2, Paper } from "@mui/material";
 import { approachShots, colors } from "../util/Constants.js";
 import { getCountAnd } from "../util/GetCount.js";
-const OverviewView = ({ currentHoles, numGames }) => {
+const OverviewView = ({
+  currentHoles,
+  numGames,
+  currentNineHoles,
+  numNineHolesGames,
+  currentEighteenHoles,
+  numEighteenHoleGames,
+}) => {
   const [scoringAverages, setScoringAverages] = useState({});
   const [fairwayPercentage, setFairwayPercentage] = useState(0);
   const [girPercentage, setGirPercentage] = useState(0);
