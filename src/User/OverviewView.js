@@ -8,12 +8,16 @@ const OverviewView = ({
   currentNineHoles,
   numNineHolesGames,
   currentEighteenHoles,
-  numEighteenHoleGames,
+  numEighteenHolesGames,
 }) => {
   const [scoringAverages, setScoringAverages] = useState({});
   const [fairwayPercentage, setFairwayPercentage] = useState(0);
   const [girPercentage, setGirPercentage] = useState(0);
   const [totalPutts, setTotalPutts] = useState(0);
+  const [totalNineHolePutts, setTotalNineHolePutts] = useState(0);
+  const [totalEighteenHolePutts, setTotalEighteenHolePutts] = useState(0);
+  const [totalNineHoleScore, setTotalNineHoleScore] = useState(0);
+  const [totalEighteenHoleScore, setTotalEighteenHoleScore] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
   const [totalPars, setTotalPars] = useState(0);
   const [totalGIR, setTotalGIR] = useState(0);
@@ -78,16 +82,29 @@ const OverviewView = ({
         100
     );
 
-    let newTotalPutts = 0;
-    let newTotalScore = 0;
+    let newNineTotalScore = 0;
+    let newNineTotalPutts = 0;
+    currentNineHoles.forEach((hole) => {
+      newNineTotalPutts += hole.totalPutts;
+      newNineTotalScore += hole.score;
+    });
+    setTotalNineHolePutts(newNineTotalPutts);
+    setTotalNineHoleScore(newNineTotalScore);
+
+    let newEighteenTotalScore = 0;
+    let newEighteenTotalPutts = 0;
+    currentEighteenHoles.forEach((hole) => {
+      newEighteenTotalPutts += hole.totalPutts;
+      newEighteenTotalScore += hole.score;
+    });
+    setTotalEighteenHolePutts(newEighteenTotalPutts);
+    setTotalEighteenHoleScore(newEighteenTotalScore);
+
     let newTotalPars = 0;
     currentHoles.forEach((hole) => {
-      newTotalPutts += hole.totalPutts;
-      newTotalScore += hole.score;
       newTotalPars += hole.par;
     });
-    setTotalPutts(newTotalPutts);
-    setTotalScore(newTotalScore);
+
     setTotalPars(newTotalPars);
   }, [currentHoles]);
 
@@ -196,10 +213,16 @@ const OverviewView = ({
               }}
             >
               <Typography noWrap fontWeight={"bold"}>
-                Average Score
+                Average 18 Hole Score
+              </Typography>
+              <Typography noWrap sx={{ marginBottom: "10px" }} variant="h4">
+                {(totalEighteenHoleScore / numEighteenHolesGames).toFixed(2)}
+              </Typography>
+              <Typography noWrap fontWeight={"bold"}>
+                Average 9 Hole Score
               </Typography>
               <Typography noWrap variant="h4">
-                {(totalScore / numGames).toFixed(2)}
+                {(totalNineHoleScore / numNineHolesGames).toFixed(2)}
               </Typography>
             </Paper>
           </Box>
@@ -262,27 +285,54 @@ const OverviewView = ({
               {girPercentage.toFixed(2) + "%"}
             </Typography>
           </Paper>
-          <Paper
-            sx={{
-              width: "300px",
-              height: "125px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography noWrap fontWeight={"bold"}>
-              Putts Per Round
-            </Typography>
-            <Typography
-              noWrap
-              variant="h4"
-              color={getColorForPuttsPerRound(totalPutts / numGames)}
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Paper
+              sx={{
+                width: "250px",
+                height: "125px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              {(totalPutts / numGames).toFixed(2)}
-            </Typography>
-          </Paper>
+              <Typography noWrap fontWeight={"bold"}>
+                Putts Per 18 Holes
+              </Typography>
+              <Typography
+                noWrap
+                variant="h4"
+                color={getColorForPuttsPerRound(
+                  totalEighteenHolePutts / numEighteenHolesGames
+                )}
+              >
+                {(totalEighteenHolePutts / numEighteenHolesGames).toFixed(2)}
+              </Typography>
+            </Paper>
+            <Paper
+              sx={{
+                width: "250px",
+                height: "125px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography noWrap fontWeight={"bold"}>
+                Putts Per 9 Holes
+              </Typography>
+              <Typography
+                noWrap
+                variant="h4"
+                color={getColorForPuttsPerRound(
+                  totalNineHolePutts / numNineHolesGames
+                )}
+              >
+                {(totalNineHolePutts / numNineHolesGames).toFixed(2)}
+              </Typography>
+            </Paper>
+          </Box>
         </Paper>
       </Box>
       <Box
@@ -311,25 +361,48 @@ const OverviewView = ({
           <Typography fontWeight="bold" variant="h6">
             Scoring
           </Typography>
-          <Paper
-            sx={{
-              width: "200px",
-              height: "200px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography noWrap fontWeight={"bold"}>
-              Greens Per Round
-            </Typography>
-            <Typography noWrap variant="h4">
-              {(
-                getCountAnd(currentHoles, { approachShot: "GIR" }) / numGames
-              ).toFixed(2)}
-            </Typography>
-          </Paper>
+          <Box sx={{ display: "flex", gap: 3 }}>
+            <Paper
+              sx={{
+                width: "200px",
+                height: "200px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography noWrap fontWeight={"bold"}>
+                Greens Per 18 holes
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(
+                  getCountAnd(currentEighteenHoles, { approachShot: "GIR" }) /
+                  numEighteenHolesGames
+                ).toFixed(2)}
+              </Typography>
+            </Paper>
+            <Paper
+              sx={{
+                width: "200px",
+                height: "200px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography noWrap fontWeight={"bold"}>
+                Greens Per 9 holes
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(
+                  getCountAnd(currentNineHoles, { approachShot: "GIR" }) /
+                  numNineHolesGames
+                ).toFixed(2)}
+              </Typography>
+            </Paper>
+          </Box>
           <Paper
             sx={{
               width: "200px",

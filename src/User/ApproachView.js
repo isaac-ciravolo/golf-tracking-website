@@ -13,7 +13,7 @@ const ApproachView = ({
   currentNineHoles,
   numNineHolesGames,
   currentEighteenHoles,
-  numEighteenHoleGames,
+  numEighteenHolesGames,
 }) => {
   const [selectedClub, setSelectedClub] = useState("-");
   const [selectedData, setSelectedData] = useState([]);
@@ -22,6 +22,7 @@ const ApproachView = ({
   const [allTotal, setAllTotal] = useState(0);
 
   useEffect(() => {
+    console.log(numEighteenHolesGames);
     const newSelectedData = [];
     let newSelectedTotal = 0;
     approachShots.slice(1, approachShots.length).forEach((shot) => {
@@ -128,7 +129,7 @@ const ApproachView = ({
       <Box sx={{ display: "flex", gap: 3 }}>
         <Paper
           sx={{
-            width: "500px",
+            width: "auto",
             height: "500px",
             display: "flex",
             flexDirection: "column",
@@ -138,25 +139,48 @@ const ApproachView = ({
             p: 3,
           }}
         >
-          <Paper
-            sx={{
-              width: "300px",
-              height: "125px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography noWrap fontWeight={"bold"}>
-              {"GIRs per Round"}
-            </Typography>
-            <Typography noWrap variant="h4">
-              {(
-                getCountAnd(currentHoles, { approachShot: "GIR" }) / numGames
-              ).toFixed(2)}
-            </Typography>
-          </Paper>
+          <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+            <Paper
+              sx={{
+                width: "300px",
+                height: "125px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography noWrap fontWeight={"bold"}>
+                {"GIRs per 18 Holes"}
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(
+                  getCountAnd(currentEighteenHoles, { approachShot: "GIR" }) /
+                  numEighteenHolesGames
+                ).toFixed(2)}
+              </Typography>
+            </Paper>
+            <Paper
+              sx={{
+                width: "300px",
+                height: "125px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography noWrap fontWeight={"bold"}>
+                {"GIRs per 9 Holes"}
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(
+                  getCountAnd(currentNineHoles, { approachShot: "GIR" }) /
+                  numNineHolesGames
+                ).toFixed(2)}
+              </Typography>
+            </Paper>
+          </Box>
           <Paper
             sx={{
               width: "300px",

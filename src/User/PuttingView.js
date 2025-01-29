@@ -13,7 +13,7 @@ const PuttingView = ({
   currentNineHoles,
   numNineHolesGames,
   currentEighteenHoles,
-  numEighteenHoleGames,
+  numEighteenHolesGames,
 }) => {
   const [selectedClub, setSelectedClub] = useState("-");
   const [selectedData, setSelectedData] = useState([]);
@@ -21,11 +21,14 @@ const PuttingView = ({
   const [allData, setAllData] = useState([]);
   const [allTotal, setAllTotal] = useState(0);
   const [totalPutts, setTotalPutts] = useState(0);
+  const [totalNineHolePutts, setTotalNineHolePutts] = useState(0);
+  const [totalEighteenHolePutts, setTotalEighteenHolePutts] = useState(0);
   const [parCounts, setParCounts] = useState({});
   const [clubFirstPuttDistData, setClubFirstPuttDistData] = useState([]);
   const [maxDistance, setMaxDistance] = useState(0);
 
   useEffect(() => {
+    console.log(numEighteenHolesGames);
     const newSelectedData = [];
     let newSelectedTotal = 0;
     yesAndNo.slice(1, yesAndNo.length).forEach((shot) => {
@@ -55,6 +58,18 @@ const PuttingView = ({
     });
     setAllData(newAllData);
     setAllTotal(newAllTotal);
+
+    let newNineTotalPutts = 0;
+    currentNineHoles.forEach((hole) => {
+      newNineTotalPutts += hole.totalPutts;
+    });
+    setTotalNineHolePutts(newNineTotalPutts);
+
+    let newEighteenTotalPutts = 0;
+    currentEighteenHoles.forEach((hole) => {
+      newEighteenTotalPutts += hole.totalPutts;
+    });
+    setTotalEighteenHolePutts(newEighteenTotalPutts);
 
     let newTotalPutts = 0;
     currentHoles.forEach((hole) => {
@@ -168,23 +183,42 @@ const PuttingView = ({
               {(totalPutts / currentHoles.length).toFixed(2)}
             </Typography>
           </Paper>
-          <Paper
-            sx={{
-              width: "300px",
-              height: "125px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography noWrap fontWeight={"bold"}>
-              {"Putts per Round"}
-            </Typography>
-            <Typography noWrap variant="h4">
-              {(totalPutts / numGames).toFixed(2)}
-            </Typography>
-          </Paper>
+          <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+            <Paper
+              sx={{
+                width: "300px",
+                height: "125px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography noWrap fontWeight={"bold"}>
+                {"Putts per 9 Holes"}
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(totalNineHolePutts / numNineHolesGames).toFixed(2)}
+              </Typography>
+            </Paper>
+            <Paper
+              sx={{
+                width: "300px",
+                height: "125px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography noWrap fontWeight={"bold"}>
+                {"Putts per 18 Holes"}
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(totalEighteenHolePutts / numEighteenHolesGames).toFixed(2)}
+              </Typography>
+            </Paper>
+          </Box>
         </Paper>
       </Box>
       <Box sx={{ display: "flex", gap: 3 }}>
