@@ -88,6 +88,7 @@ const OverviewView = ({
       newNineTotalPutts += hole.totalPutts;
       newNineTotalScore += hole.score;
     });
+    console.log(newNineTotalScore);
     setTotalNineHolePutts(newNineTotalPutts);
     setTotalNineHoleScore(newNineTotalScore);
 
@@ -106,7 +107,7 @@ const OverviewView = ({
     });
 
     setTotalPars(newTotalPars);
-  }, [currentHoles]);
+  }, [currentHoles, currentNineHoles, currentEighteenHoles]);
 
   const getColorFromScore = (score, par) => {
     const green = { r: 144, g: 238, b: 144 }; // Light green

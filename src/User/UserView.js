@@ -40,23 +40,25 @@ const UserView = () => {
 
   useEffect(() => {
     const newSelectedGames = [];
-    const newSelectedNineHoleGames = [];
-    const newSelectedEighteenHoleGames = [];
     if (games) {
       for (let i = 0; i < games.length; i++)
-        if (validGame(games[i])) {
-          newSelectedGames.push(games[i]);
-          if (games[i].holes.length === 9)
-            newSelectedNineHoleGames.push(games[i]);
-          else if (games[i].holes.length === 18)
-            newSelectedEighteenHoleGames.push(games[i]);
-        }
+        if (validGame(games[i])) newSelectedGames.push(games[i]);
       setSelectedGames(newSelectedGames);
-      setSelectedNineHoleGames(newSelectedNineHoleGames);
-      setSelectedEighteenHoleGames(newSelectedEighteenHoleGames);
       setLoading(false);
     }
   }, [games]);
+
+  useEffect(() => {
+    const newSelectedNineHoleGames = [];
+    const newSelectedEighteenHoleGames = [];
+    selectedGames.forEach((game) => {
+      if (game.holes.length === 9) newSelectedNineHoleGames.push(game);
+      else if (game.holes.length === 18)
+        newSelectedEighteenHoleGames.push(game);
+    });
+    setSelectedNineHoleGames(newSelectedNineHoleGames);
+    setSelectedEighteenHoleGames(newSelectedEighteenHoleGames);
+  }, [selectedGames]);
 
   useEffect(() => {
     const temp = async () => {
@@ -89,6 +91,7 @@ const UserView = () => {
         });
     });
     setCurrentNineHoles(newNineHoles);
+    console.log(newNineHoles);
   }, [selectedNineHoleGames]);
 
   useEffect(() => {
