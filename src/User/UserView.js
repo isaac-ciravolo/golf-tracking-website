@@ -14,8 +14,8 @@ import {
   Icon,
 } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter.js";
-import { fetchGames } from "../firebase/DatabaseFunctions.js";
-import { useNavigate } from "react-router-dom";
+import { fetchGames, fetchUserById } from "../firebase/DatabaseFunctions.js";
+import { useNavigate, useParams } from "react-router-dom";
 import LoadingView from "../views/LoadingView.js";
 import ClassesView from "./ClassesView.js";
 import ShortGameView from "./ShortGameView.js";
@@ -25,6 +25,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 
 const UserView = () => {
   const { currentUser: user } = useAuth();
+  const [readOnlyUser, setReadOnlyUser] = useState(null);
   const [games, setGames] = useState([]);
   const [value, setValue] = useState(0);
   const [currentHoles, setCurrentHoles] = useState([]);
@@ -37,6 +38,17 @@ const UserView = () => {
   const [currentEighteenHoles, setCurrentEighteenHoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      const temp = async () => {
+        const newUser = await fetchUserById(id);
+        setReadOnlyUser(newUser);
+      };
+      temp();
+    }
+  }, []);
 
   useEffect(() => {
     const newSelectedGames = [];
@@ -62,14 +74,19 @@ const UserView = () => {
 
   useEffect(() => {
     const temp = async () => {
-      if (user) {
+      console.log("readOnlyUser:", readOnlyUser);
+      if (user && !id) {
         const newGames = await fetchGames(user.id, setGames);
+        setGames(newGames);
+      }
+      if (readOnlyUser && id) {
+        const newGames = await fetchGames(id, setGames);
         setGames(newGames);
       }
     };
 
     temp();
-  }, [user]);
+  }, [user, id, readOnlyUser]);
 
   useEffect(() => {
     const newHoles = [];

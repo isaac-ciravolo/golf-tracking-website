@@ -88,7 +88,6 @@ const OverviewView = ({
       newNineTotalPutts += hole.totalPutts;
       newNineTotalScore += hole.score;
     });
-    console.log(newNineTotalScore);
     setTotalNineHolePutts(newNineTotalPutts);
     setTotalNineHoleScore(newNineTotalScore);
 

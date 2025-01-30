@@ -59,7 +59,7 @@ const App = () => {
               path="/analysis"
               element={isCoach ? <CoachView /> : <UserView />}
             />
-            <Route path="/analysis/:id" element={<ReadOnlyUserView />} />
+            <Route path="/analysis/:id" element={<UserView />} />
             <Route path="/editGames/*" element={<GamesView />} />
             <Route
               path="/settings"
