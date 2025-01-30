@@ -9,7 +9,6 @@ import UserView from "./User/UserView.js";
 import LoginView from "./views/LoginView.js";
 import SignUpView from "./views/SignUpView.js";
 import CoachView from "./Coach/CoachView.js";
-import ReadOnlyUserView from "./Coach/ReadOnlyUserView.js";
 import UserSettings from "./User/UserSettings.js";
 import CoachSettings from "./Coach/CoachSettings.js";
 import GamesView from "./Games/GamesView.js";
