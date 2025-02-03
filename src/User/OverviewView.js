@@ -169,6 +169,18 @@ const OverviewView = ({
     else return "rgb(255, 0, 0)";
   };
 
+  const getScramblingPercentage = () => {
+    let count = 0;
+    let total = 0;
+    currentHoles.forEach((hole) => {
+      if (hole.approachShot !== "GIR") {
+        total += 1;
+        if (hole.score <= hole.par) count += 1;
+      }
+    });
+    return (count / total) * 100;
+  };
+
   return (
     <>
       <Box
@@ -372,14 +384,11 @@ const OverviewView = ({
                 alignItems: "center",
               }}
             >
-              <Typography noWrap fontWeight={"bold"}>
-                Greens Per 18 holes
+              <Typography fontWeight={"bold"} align="center">
+                AVG Shots Inside 100 Yards
               </Typography>
               <Typography noWrap variant="h4">
-                {(
-                  getCountAnd(currentEighteenHoles, { approachShot: "GIR" }) /
-                  numEighteenHolesGames
-                ).toFixed(2)}
+                {}
               </Typography>
             </Paper>
             <Paper
@@ -393,13 +402,10 @@ const OverviewView = ({
               }}
             >
               <Typography noWrap fontWeight={"bold"}>
-                Greens Per 9 holes
+                Scrambling %
               </Typography>
               <Typography noWrap variant="h4">
-                {(
-                  getCountAnd(currentNineHoles, { approachShot: "GIR" }) /
-                  numNineHolesGames
-                ).toFixed(2)}
+                {getScramblingPercentage().toFixed(2) + "%"}
               </Typography>
             </Paper>
           </Box>

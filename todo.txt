@@ -1,7 +1,11 @@
-Make top left logo as button
-Separate 9 hole vs 18 holes
+Move Appraoch Club First Dist To ApproachView
+Rename Approach Club First Dist to Proximity To Hole When GIR
+Same kind of data for up and down Club + First Putt Dist Put it on Short Game Tab
+Make Coach Student View Scrollable
 
-Wish List
-If Fairway > 70% make it green
-between 60-70 make it orange
-<60 red
+Make a Class Page
+With Assignments and Messages
+Assignment:
+Drill Title
+Link
+Completion Box (Know when the user clicked the box)
