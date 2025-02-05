@@ -21,11 +21,22 @@ const StudentsView = ({ studentIds }) => {
 
   const navigate = useNavigate();
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        overflowY: "auto",
+        maxHeight: "80vh",
+      }}
+    >
       {students.map((student) => {
         return (
-          <Box key={student.id} sx={{ display: "flex", flexDirection: "row" }}>
+          <Box
+            key={student.id}
+            sx={{ display: "flex", flexDirection: "row", overflowY: "auto" }}
+          >
             <Typography>{student.name}</Typography>
+
             <Button onClick={() => navigate("/analysis/" + student.id)}>
               View
             </Button>

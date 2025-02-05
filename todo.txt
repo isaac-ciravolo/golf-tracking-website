@@ -1,6 +1,3 @@
-Move Appraoch Club First Dist To ApproachView
-Rename Approach Club First Dist to Proximity To Hole When GIR
-Same kind of data for up and down Club + First Putt Dist Put it on Short Game Tab
 Make Coach Student View Scrollable
 
 Make a Class Page
