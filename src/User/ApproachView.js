@@ -20,9 +20,10 @@ const ApproachView = ({
   const [selectedTotal, setSelectedTotal] = useState(0);
   const [allData, setAllData] = useState([]);
   const [allTotal, setAllTotal] = useState(0);
+  const [clubFirstPuttDistData, setClubFirstPuttDistData] = useState([]);
+  const [maxDistance, setMaxDistance] = useState(0);
 
   useEffect(() => {
-    console.log(numEighteenHolesGames);
     const newSelectedData = [];
     let newSelectedTotal = 0;
     approachShots.slice(1, approachShots.length).forEach((shot) => {
@@ -52,7 +53,44 @@ const ApproachView = ({
     });
     setAllData(newAllData);
     setAllTotal(newAllTotal);
+
+    const newClubFirstPuttDistData = [];
+    let newMaxDistance = 0;
+
+    clubs.forEach((club) => {
+      if (club === "-") return;
+      let dist = 0;
+      const holes = currentHoles.filter(
+        (hole) => hole.approachClub === club && hole.approachShot === "GIR"
+      );
+      if (holes.length === 0) return;
+      holes.forEach((hole) => {
+        dist += hole.firstPuttDist;
+      });
+      newClubFirstPuttDistData.push({
+        club: club,
+        dist: dist / holes.length,
+        count: holes.length,
+      });
+      newMaxDistance = Math.max(newMaxDistance, dist / holes.length);
+    });
+
+    newClubFirstPuttDistData.sort((a, b) => a.dist - b.dist);
+    setClubFirstPuttDistData(newClubFirstPuttDistData);
+    setMaxDistance(newMaxDistance);
   }, [currentHoles, selectedClub]);
+
+  const getColorFromDistance = (distanceRatio) => {
+    const green = { r: 144, g: 238, b: 144 }; // light green
+    const orange = { r: 255, g: 165, b: 0 }; // orange
+
+    // Interpolation
+    const r = Math.round(green.r + (orange.r - green.r) * distanceRatio);
+    const g = Math.round(green.g + (orange.g - green.g) * distanceRatio);
+    const b = Math.round(green.b + (orange.b - green.b) * distanceRatio);
+
+    return `rgb(${r},${g},${b})`;
+  };
 
   return (
     <Box
@@ -126,7 +164,57 @@ const ApproachView = ({
           )}
         </Paper>
       </Box>
-      <Box sx={{ display: "flex", gap: 3 }}>
+      <Box sx={{ display: "flex", gap: 3, marginBottom: "10px" }}>
+        <Paper
+          sx={{
+            width: "500px",
+            minHeight: "500px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            p: 3,
+          }}
+        >
+          <Typography gutterBottom textAlign={"center"} fontWeight={"bold"}>
+            Approach Club First Putt Distance when GIR
+          </Typography>
+          <Grid2 sx={{ marginBottom: "10px" }} container>
+            <Grid2 size={4}>
+              <Typography fontWeight={"bold"} noWrap>
+                Club
+              </Typography>
+            </Grid2>
+            <Grid2 size={4}>
+              <Typography fontWeight={"bold"} noWrap>
+                Distance
+              </Typography>
+            </Grid2>
+            <Grid2 size={4}>
+              <Typography fontWeight={"bold"} noWrap>
+                Count
+              </Typography>
+            </Grid2>
+          </Grid2>
+          {clubFirstPuttDistData.map((data, index) => {
+            const color = getColorFromDistance(data.dist / maxDistance); // Get interpolated color
+
+            return (
+              <Grid2 container spacing={1} key={index}>
+                <Grid2 size={4}>
+                  <Typography noWrap>{data.club}</Typography>
+                </Grid2>
+                <Grid2 size={4}>
+                  <Typography noWrap>
+                    {data.dist.toFixed(2) + " feet"}
+                  </Typography>
+                </Grid2>
+                <Grid2 size={4}>
+                  <Typography noWrap>{data.count + " holes"}</Typography>
+                </Grid2>
+              </Grid2>
+            );
+          })}
+        </Paper>
         <Paper
           sx={{
             width: "auto",

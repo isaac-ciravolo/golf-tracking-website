@@ -72,7 +72,7 @@ const ShortGameView = ({ currentHoles }) => {
       if (club === "-") return;
       let dist = 0;
       const holes = currentHoles.filter(
-        (hole) => hole.approachClub === club && hole.approachShot === "GIR"
+        (hole) => hole.upAndDownClub === club && hole.upAndDown === "Yes"
       );
       if (holes.length === 0) return;
       holes.forEach((hole) => {
@@ -228,7 +228,7 @@ const ShortGameView = ({ currentHoles }) => {
           }}
         >
           <Typography gutterBottom textAlign={"center"} fontWeight={"bold"}>
-            Approach Club First Putt Distance when GIR
+            Approach Club First Putt Distance when Up and Down
           </Typography>
           <Grid2 sx={{ marginBottom: "10px" }} container>
             <Grid2 size={4}>
