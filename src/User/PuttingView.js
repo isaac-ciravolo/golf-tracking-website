@@ -110,7 +110,7 @@ const PuttingView = ({
     setParCounts(newParCounts);
     setClubFirstPuttDistData(newClubFirstPuttDistData);
     setMaxDistance(newMaxDistance);
-  }, [currentHoles, selectedClub]);
+  }, [currentHoles, selectedClub, currentNineHoles, currentEighteenHoles]);
 
   const getColorFromDistance = (distanceRatio) => {
     const green = { r: 144, g: 238, b: 144 }; // light green
