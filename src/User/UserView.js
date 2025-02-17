@@ -40,6 +40,8 @@ const UserView = () => {
   const { userId } = useParams();
 
   useEffect(() => {
+    console.log(userId);
+
     if (userId) {
       const temp = async () => {
         const newUser = await fetchUserById(userId);
@@ -48,6 +50,10 @@ const UserView = () => {
       temp();
     }
   }, []);
+
+  useEffect(() => {
+    console.log(readOnlyUser);
+  }, [readOnlyUser]);
 
   useEffect(() => {
     const newSelectedGames = [];
@@ -274,10 +280,10 @@ const UserView = () => {
                 <Tab label="Approach" index={2} />
                 <Tab label="Short Game" index={3} />
                 <Tab label="Putting" index={4} />
-                {userId === null && readOnlyUser === null && (
+                {userId === undefined && readOnlyUser === null && (
                   <Tab label="Classes" index={5} />
                 )}
-                {userId === null && readOnlyUser === null && (
+                {userId === undefined && readOnlyUser === null && (
                   <Tab label="Assignments" index={6} />
                 )}
               </Tabs>
@@ -355,7 +361,7 @@ const UserView = () => {
                 numEighteenHolesGames={selectedEighteenHoleGames.length}
               />
             </Box>
-            {userId === null && readOnlyUser === null && (
+            {userId === undefined && readOnlyUser === null && (
               <Box
                 sx={{
                   width: "100%",
@@ -365,7 +371,7 @@ const UserView = () => {
                 <ClassesView />
               </Box>
             )}
-            {userId === null && readOnlyUser === null && (
+            {userId === undefined && readOnlyUser === null && (
               <Box
                 sx={{
                   width: "100%",
