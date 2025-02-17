@@ -70,6 +70,7 @@ const App = () => {
                       path="/assignments/:assignmentId"
                       element={<CoachAssignmentView />}
                     />
+                    <Route path="/view/:userId" element={<UserView />} />
                   </Routes>
                 ) : (
                   <UserView />

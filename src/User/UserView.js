@@ -37,12 +37,12 @@ const UserView = () => {
   const [currentEighteenHoles, setCurrentEighteenHoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { userId } = useParams();
 
   useEffect(() => {
-    if (id) {
+    if (userId) {
       const temp = async () => {
-        const newUser = await fetchUserById(id);
+        const newUser = await fetchUserById(userId);
         setReadOnlyUser(newUser);
       };
       temp();
@@ -73,18 +73,18 @@ const UserView = () => {
 
   useEffect(() => {
     const temp = async () => {
-      if (user && !id) {
+      if (user && !userId) {
         const newGames = await fetchGames(user.id, setGames);
         setGames(newGames);
       }
-      if (readOnlyUser && id) {
-        const newGames = await fetchGames(id, setGames);
+      if (readOnlyUser && userId) {
+        const newGames = await fetchGames(userId, setGames);
         setGames(newGames);
       }
     };
 
     temp();
-  }, [user, id, readOnlyUser]);
+  }, [user, userId, readOnlyUser]);
 
   useEffect(() => {
     const newHoles = [];
@@ -274,8 +274,12 @@ const UserView = () => {
                 <Tab label="Approach" index={2} />
                 <Tab label="Short Game" index={3} />
                 <Tab label="Putting" index={4} />
-                <Tab label="Classes" index={5} />
-                <Tab label="Assignments" index={6} />
+                {userId === null && readOnlyUser === null && (
+                  <Tab label="Classes" index={5} />
+                )}
+                {userId === null && readOnlyUser === null && (
+                  <Tab label="Assignments" index={6} />
+                )}
               </Tabs>
             </Box>
           </Box>
@@ -351,22 +355,26 @@ const UserView = () => {
                 numEighteenHolesGames={selectedEighteenHoleGames.length}
               />
             </Box>
-            <Box
-              sx={{
-                width: "100%",
-                ...(value !== 5 && { display: "none" }),
-              }}
-            >
-              <ClassesView />
-            </Box>
-            <Box
-              sx={{
-                width: "100%",
-                ...(value !== 6 && { display: "none" }),
-              }}
-            >
-              <AssignmentsView />
-            </Box>
+            {userId === null && readOnlyUser === null && (
+              <Box
+                sx={{
+                  width: "100%",
+                  ...(value !== 5 && { display: "none" }),
+                }}
+              >
+                <ClassesView />
+              </Box>
+            )}
+            {userId === null && readOnlyUser === null && (
+              <Box
+                sx={{
+                  width: "100%",
+                  ...(value !== 6 && { display: "none" }),
+                }}
+              >
+                <AssignmentsView />
+              </Box>
+            )}
           </Box>
         </Box>
       </Box>

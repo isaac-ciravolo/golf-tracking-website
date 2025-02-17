@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { fetchStudent } from "../firebase/DatabaseFunctions";
+import { useParams } from "react-router-dom";
 const StudentsView = ({ studentIds }) => {
   const [students, setStudents] = useState([]);
+  const { id: classCode } = useParams();
 
   useEffect(() => {
     const temp = async () => {
@@ -37,7 +39,9 @@ const StudentsView = ({ studentIds }) => {
           >
             <Typography>{student.name}</Typography>
 
-            <Button onClick={() => navigate("/home/" + student.id)}>
+            <Button
+              onClick={() => navigate(`/home/${classCode}/view/${student.id}`)}
+            >
               View
             </Button>
           </Box>
