@@ -16,7 +16,7 @@ import ForgotPasswordView from "./views/ForgotPasswordView.js";
 import { useAuth } from "./firebase/AuthContext.js";
 import VerificationView from "./views/VerificationView.js";
 import CoachClassesView from "./Coach/CoachClassesView.js";
-import AssignmentView from "./Coach/AssignmentView.js";
+import CoachAssignmentView from "./Coach/CoachAssignmentView.js";
 
 const theme = createTheme({
   components: {
@@ -68,7 +68,7 @@ const App = () => {
                     <Route path="" element={<CoachView />} />
                     <Route
                       path="/assignments/:assignmentId"
-                      element={<AssignmentView />}
+                      element={<CoachAssignmentView />}
                     />
                   </Routes>
                 ) : (

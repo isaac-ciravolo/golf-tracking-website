@@ -28,7 +28,6 @@ const PuttingView = ({
   const [maxDistance, setMaxDistance] = useState(0);
 
   useEffect(() => {
-    console.log(numEighteenHolesGames);
     const newSelectedData = [];
     let newSelectedTotal = 0;
     yesAndNo.slice(1, yesAndNo.length).forEach((shot) => {

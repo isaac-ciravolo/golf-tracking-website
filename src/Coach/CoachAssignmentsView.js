@@ -23,7 +23,7 @@ import {
   fetchClassAssignments,
 } from "../firebase/DatabaseFunctions";
 
-const AssignmentsView = ({ studentIds }) => {
+const CoachAssignmentsView = ({ studentIds }) => {
   const { id: classCode } = useParams();
   const [open, setOpen] = useState(false);
   const [drillTitle, setDrillTitle] = useState("");
@@ -207,4 +207,4 @@ const AssignmentsView = ({ studentIds }) => {
   );
 };
 
-export default AssignmentsView;
+export default CoachAssignmentsView;

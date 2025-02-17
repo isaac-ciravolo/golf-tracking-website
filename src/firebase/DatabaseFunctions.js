@@ -420,3 +420,21 @@ export const createAssignment = async (classCode, assignmentData) => {
     return error.message;
   }
 };
+
+export const fetchUserAssignments = async (userId) => {
+  try {
+    if (!userId) {
+      return "Please provide a user ID.";
+    }
+    const response = await fetch(
+      `https://fetchassignments-2uga654xhq-uc.a.run.app/?id=${userId}`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch assignments.");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return error.message;
+  }
+};

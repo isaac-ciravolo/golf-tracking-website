@@ -14,7 +14,7 @@ import RequestsView from "./RequestsView";
 import StudentsView from "./StudentsView";
 import { fetchClass } from "../firebase/DatabaseFunctions";
 import { useAuth } from "../firebase/AuthContext";
-import AssignmentsView from "./AssignmentsView";
+import CoachAssignmentsView from "./CoachAssignmentsView";
 import { useParams } from "react-router-dom";
 import LoadingView from "../views/LoadingView";
 
@@ -116,7 +116,7 @@ const CoachView = () => {
               }}
             >
               {selectedClass && (
-                <AssignmentsView studentIds={selectedClass.students} />
+                <CoachAssignmentsView studentIds={selectedClass.students} />
               )}
             </Box>
           </Box>

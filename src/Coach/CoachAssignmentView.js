@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../firebase/AuthContext";
 import { fetchClassAssignments } from "../firebase/DatabaseFunctions";
 import { useParams } from "react-router-dom";
-const AssignmentView = () => {
+const CoachAssignmentView = () => {
   const { id: classCode, assignmentId } = useParams();
   const [assignment, setAssignment] = useState(null);
   useEffect(() => {
@@ -17,4 +17,4 @@ const AssignmentView = () => {
 
   return <>{assignment && JSON.stringify(assignment)}</>;
 };
-export default AssignmentView;
+export default CoachAssignmentView;

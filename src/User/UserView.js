@@ -3,7 +3,6 @@ import OverviewView from "./OverviewView.js";
 import DrivingView from "./DrivingView.js";
 import ApproachView from "./ApproachView.js";
 import PuttingView from "./PuttingView.js";
-import CardView from "./CardView.js";
 import {
   Box,
   Tab,
@@ -16,12 +15,12 @@ import {
 import formatDateFromMilliseconds from "../util/DateConverter.js";
 import { fetchGames, fetchUserById } from "../firebase/DatabaseFunctions.js";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingView from "../views/LoadingView.js";
 import ClassesView from "./ClassesView.js";
 import ShortGameView from "./ShortGameView.js";
 import { useAuth } from "../firebase/AuthContext.js";
 import { validGame } from "../util/ValidChecker.js";
 import WarningIcon from "@mui/icons-material/Warning";
+import AssignmentsView from "./AssignmentsView.js";
 
 const UserView = () => {
   const { currentUser: user } = useAuth();
@@ -74,7 +73,6 @@ const UserView = () => {
 
   useEffect(() => {
     const temp = async () => {
-      console.log("readOnlyUser:", readOnlyUser);
       if (user && !id) {
         const newGames = await fetchGames(user.id, setGames);
         setGames(newGames);
@@ -108,7 +106,6 @@ const UserView = () => {
         });
     });
     setCurrentNineHoles(newNineHoles);
-    console.log(newNineHoles);
   }, [selectedNineHoleGames]);
 
   useEffect(() => {
@@ -278,6 +275,7 @@ const UserView = () => {
                 <Tab label="Short Game" index={3} />
                 <Tab label="Putting" index={4} />
                 <Tab label="Classes" index={5} />
+                <Tab label="Assignments" index={6} />
               </Tabs>
             </Box>
           </Box>
@@ -360,6 +358,14 @@ const UserView = () => {
               }}
             >
               <ClassesView />
+            </Box>
+            <Box
+              sx={{
+                width: "100%",
+                ...(value !== 6 && { display: "none" }),
+              }}
+            >
+              <AssignmentsView />
             </Box>
           </Box>
         </Box>
