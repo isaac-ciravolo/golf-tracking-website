@@ -52,7 +52,7 @@ export function AuthProvider({ children }) {
           location.pathname === "/forgotpassword" ||
           location.pathname === "/verify"
         )
-          navigate("/analysis");
+          navigate("/home");
         return;
       }
 
@@ -79,7 +79,7 @@ export function AuthProvider({ children }) {
           location.pathname === "/forgotpassword" ||
           location.pathname === "/verify"
         )
-          navigate("/analysis");
+          navigate("/home");
 
         return;
       }

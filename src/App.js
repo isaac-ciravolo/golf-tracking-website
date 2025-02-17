@@ -15,6 +15,8 @@ import GamesView from "./Games/GamesView.js";
 import ForgotPasswordView from "./views/ForgotPasswordView.js";
 import { useAuth } from "./firebase/AuthContext.js";
 import VerificationView from "./views/VerificationView.js";
+import CoachClassesView from "./Coach/CoachClassesView.js";
+import AssignmentView from "./Coach/AssignmentView.js";
 
 const theme = createTheme({
   components: {
@@ -49,17 +51,35 @@ const App = () => {
           }}
         >
           <Routes>
-            <Route path="/" element={<Navigate to="/analysis" />} />
+            <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/login" element={<LoginView />} />
             <Route path="/signup" element={<SignUpView />} />
             <Route path="/forgotpassword" element={<ForgotPasswordView />} />
             <Route path="/verify" element={<VerificationView />} />
             <Route
-              path="/analysis"
-              element={isCoach ? <CoachView /> : <UserView />}
+              path="/home"
+              element={isCoach ? <CoachClassesView /> : <UserView />}
             />
-            <Route path="/analysis/:id" element={<UserView />} />
-            <Route path="/editGames/*" element={<GamesView />} />
+            <Route
+              path="/home/:id/*"
+              element={
+                isCoach ? (
+                  <Routes>
+                    <Route path="" element={<CoachView />} />
+                    <Route
+                      path="/assignments/:assignmentId"
+                      element={<AssignmentView />}
+                    />
+                  </Routes>
+                ) : (
+                  <UserView />
+                )
+              }
+            />
+            <Route
+              path="/editGames/*"
+              element={isCoach ? <Navigate to="/home" /> : <GamesView />}
+            />
             <Route
               path="/settings"
               element={!isCoach ? <UserSettings /> : <CoachSettings />}

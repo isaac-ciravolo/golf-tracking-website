@@ -39,7 +39,7 @@ export const doPasswordReset = async (email) => {
 export const doSendEmailVerification = async () => {
   try {
     sendEmailVerification(auth.currentUser, {
-      url: `${window.location.origin}/analysis`,
+      url: `${window.location.origin}/home`,
     });
     return "Success!";
   } catch (error) {

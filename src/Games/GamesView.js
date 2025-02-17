@@ -29,7 +29,7 @@ const GamesView = () => {
           variant="contained"
           sx={{ width: "90%", height: "48.5px" }}
           onClick={() => {
-            navigate("/analysis");
+            navigate("/home");
           }}
         >
           ANALYSIS

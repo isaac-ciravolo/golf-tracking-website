@@ -12,213 +12,116 @@ import {
 import { LoadingButton } from "@mui/lab";
 import RequestsView from "./RequestsView";
 import StudentsView from "./StudentsView";
-import { fetchClasses, createClass } from "../firebase/DatabaseFunctions";
+import { fetchClass } from "../firebase/DatabaseFunctions";
 import { useAuth } from "../firebase/AuthContext";
+import AssignmentsView from "./AssignmentsView";
+import { useParams } from "react-router-dom";
+import LoadingView from "../views/LoadingView";
 
 const CoachView = () => {
   const { currentUser: user } = useAuth();
-  const [coachClasses, setCoachClasses] = useState([]);
+
   const [value, setValue] = useState(0);
   const [selectedClass, setSelectedClass] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [className, setClassName] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { id } = useParams();
 
   useEffect(() => {
     if (user) {
       const temp = async () => {
-        const newClasses = await fetchClasses(user.id);
-        setCoachClasses(newClasses);
+        const newClass = await fetchClass(id);
+        setSelectedClass(newClass);
       };
 
       temp();
     }
   }, [user]);
 
-  useEffect(() => {
-    if (coachClasses.length > 0) {
-      setSelectedClass(coachClasses[0]);
-    }
-  }, [coachClasses]);
-
   return (
-    <Box sx={{ display: "flex", width: "100%", height: "100%" }}>
-      <Box
-        sx={{
-          width: "200px",
-          height: "100vh",
-          backgroundColor: "lightGray",
-          position: "fixed",
-          paddingTop: 3,
-          display: "flex",
-          flexDirection: "column",
-          gap: 3,
-          zIndex: 100,
-        }}
-      >
-        <Typography textAlign="center" fontWeight={"bold"}>
-          Select A Class
-        </Typography>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        height: "100%",
+        justifyContent: "center",
+        backgroundColor: "lightGray",
+      }}
+    >
+      {selectedClass === null ? (
+        <LoadingView />
+      ) : (
         <Box
           sx={{
-            width: "100%",
-            height: "90%",
-            overflow: "scroll",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            gap: 1,
+            width: "80%",
+            height: "100%",
           }}
         >
-          <Button
-            variant="contained"
-            sx={{ width: "90%", height: "48.5px" }}
-            onClick={() => {
-              setOpen(true);
+          <Box
+            sx={{
+              width: "100%",
+              height: "130px",
+              backgroundColor: "rgb(240, 240, 240)",
             }}
           >
-            Add a Class
-          </Button>
-          {coachClasses.length > 0 &&
-            coachClasses.map((_class) => {
-              return (
-                <Box
-                  key={_class.id}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <ToggleButton
-                    color="primary"
-                    value={_class === selectedClass}
-                    selected={_class === selectedClass}
-                    onClick={() => setSelectedClass(_class)}
-                    sx={{ width: "90%" }}
-                  >
-                    {_class.name}
-                  </ToggleButton>
-                </Box>
-              );
-            })}
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          marginLeft: "200px",
-          position: "relative",
-        }}
-      >
-        <Box
-          sx={{
-            position: "fixed",
-            width: "100%",
-            height: "130px",
-            backgroundColor: "rgb(240, 240, 240)",
-            zIndex: 10,
-          }}
-        >
-          <Box sx={{ p: 3 }}>
-            <Box sx={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-              <Typography variant="h3" fontWeight="bold">
-                {user.name.toUpperCase()}
-              </Typography>
-              {selectedClass && (
-                <Typography>
-                  {selectedClass.name} ({selectedClass.id})
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+                <Typography variant="h3" fontWeight="bold">
+                  {selectedClass.name}
                 </Typography>
+                {selectedClass && <Typography>{selectedClass.id}</Typography>}
+              </Box>
+              <Tabs
+                value={value}
+                onChange={(event, newValue) => setValue(newValue)}
+              >
+                <Tab label="Students" index={0} />
+                <Tab label="Requests" index={0} />
+                <Tab label="Assignments" index={0} />
+              </Tabs>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              width: "100%",
+              backgroundColor: "white",
+              height: "calc(100% - 130px)",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                p: 3,
+                ...(value !== 0 && { display: "none" }),
+              }}
+            >
+              {selectedClass && (
+                <StudentsView studentIds={selectedClass.students} />
               )}
             </Box>
-            <Tabs
-              value={value}
-              onChange={(event, newValue) => setValue(newValue)}
+            <Box
+              sx={{
+                width: "100%",
+                p: 3,
+                ...(value !== 1 && { display: "none" }),
+              }}
             >
-              <Tab label="Students" index={0} />
-              <Tab label="Requests" index={0} />
-            </Tabs>
+              {selectedClass && <RequestsView classCode={selectedClass.id} />}
+            </Box>
+            <Box
+              sx={{
+                width: "100%",
+                p: 3,
+                ...(value !== 2 && { display: "none" }),
+              }}
+            >
+              {selectedClass && (
+                <AssignmentsView studentIds={selectedClass.students} />
+              )}
+            </Box>
           </Box>
         </Box>
-        <Box sx={{ marginTop: "130px", width: "1200px" }}>
-          <Box
-            sx={{
-              width: "100%",
-              p: 3,
-              ...(value !== 0 && { display: "none" }),
-            }}
-          >
-            {selectedClass && (
-              <StudentsView studentIds={selectedClass.students} />
-            )}
-          </Box>
-          <Box
-            sx={{
-              width: "100%",
-              p: 3,
-              ...(value !== 1 && { display: "none" }),
-            }}
-          >
-            {selectedClass && <RequestsView classCode={selectedClass.id} />}
-          </Box>
-        </Box>
-      </Box>
-      <Dialog
-        open={open}
-        onClose={() => {
-          if (!loading) setOpen(false);
-        }}
-      >
-        <Box
-          sx={{
-            width: "500px",
-            p: 3,
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-          }}
-        >
-          <Typography variant="h3" fontWeight="bold">
-            Create a Class
-          </Typography>
-          <TextField
-            label="Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            placeholder="Enter name"
-            value={className}
-            sx={{ width: "100%" }}
-            onChange={(e) => {
-              setClassName(e.target.value);
-              setErrorMessage("");
-            }}
-          />
-          <LoadingButton
-            variant="contained"
-            fullWidth
-            sx={{ height: "50px", width: "100%", fontSize: "20px" }}
-            loading={loading}
-            onClick={async () => {
-              setLoading(true);
-              const error = await createClass(className, user.id);
-              setLoading(false);
-
-              if (error) {
-                setErrorMessage(error);
-              } else {
-                setOpen(false);
-              }
-            }}
-          >
-            CREATE CLASS
-          </LoadingButton>
-          <Typography color="error">{errorMessage}</Typography>
-        </Box>
-      </Dialog>
+      )}
     </Box>
   );
 };

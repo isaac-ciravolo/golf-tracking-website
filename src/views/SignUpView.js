@@ -69,6 +69,7 @@ function SignUpView() {
             joined: new Date().getTime() / 1000,
             sortBy: sortingOptions[0],
             classes: [],
+            assignments: [],
           });
         } else {
           await setDoc(doc(db, "coaches", user.uid), {

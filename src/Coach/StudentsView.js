@@ -37,7 +37,7 @@ const StudentsView = ({ studentIds }) => {
           >
             <Typography>{student.name}</Typography>
 
-            <Button onClick={() => navigate("/analysis/" + student.id)}>
+            <Button onClick={() => navigate("/home/" + student.id)}>
               View
             </Button>
           </Box>

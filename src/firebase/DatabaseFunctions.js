@@ -377,3 +377,46 @@ export const fetchGame = async (userId, gameId) => {
     return error.message;
   }
 };
+
+export const fetchClassAssignments = async (classCode) => {
+  try {
+    const classDocRef = doc(db, "classes", classCode);
+    const classDocSnap = await getDoc(classDocRef);
+
+    if (!classDocSnap.exists()) {
+      return "Class not found.";
+    }
+
+    const assignmentsCollectionRef = collection(classDocRef, "assignments");
+    const assignmentsSnapshot = await getDocs(assignmentsCollectionRef);
+
+    const assignments = [];
+    assignmentsSnapshot.forEach((assignmentDoc) => {
+      assignments.push({
+        id: assignmentDoc.id,
+        ...assignmentDoc.data(),
+      });
+    });
+
+    return assignments;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const createAssignment = async (classCode, assignmentData) => {
+  try {
+    const classDocRef = doc(db, "classes", classCode);
+    const classDocSnap = await getDoc(classDocRef);
+
+    if (!classDocSnap.exists()) {
+      return "Class not found.";
+    }
+
+    const assignmentsCollectionRef = collection(classDocRef, "assignments");
+    await addDoc(assignmentsCollectionRef, assignmentData);
+    return "Success!";
+  } catch (error) {
+    return error.message;
+  }
+};

@@ -26,7 +26,7 @@ function LoginView() {
       setIsSigningIn(true);
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        navigate("/analysis");
+        navigate("/home");
       } catch (error) {
         if (error.message === "Firebase: Error (auth/invalid-email).")
           setErrorMessage("Invalid email");
@@ -44,7 +44,7 @@ function LoginView() {
       setIsSigningIn(true);
       try {
         await doSignInWithGoogle();
-        navigate("/analysis");
+        navigate("/home");
       } catch (error) {
         setErrorMessage(error.message);
         setIsSigningIn(false);
@@ -71,7 +71,7 @@ function LoginView() {
         style={{ width: "548px", paddingRight: "100px" }}
       />
 
-      {userLoggedIn && <Navigate to={"/analysis"} replace={true} />}
+      {userLoggedIn && <Navigate to={"/home"} replace={true} />}
       <Paper
         sx={{
           display: "flex",

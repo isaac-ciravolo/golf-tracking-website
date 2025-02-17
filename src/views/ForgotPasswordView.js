@@ -41,7 +41,7 @@ function ForgotPasswordView() {
         overflowY: "auto",
       }}
     >
-      {userLoggedIn && <Navigate to={"/analysis"} replace={true} />}
+      {userLoggedIn && <Navigate to={"/home"} replace={true} />}
       <Paper
         sx={{
           display: "flex",
