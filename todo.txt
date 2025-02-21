@@ -1,8 +1,6 @@
+Mkae a completion button
+Record the timestamp
 
+Make a Drill Library
 
-Make a Class Page
-With Assignments and Messages
-Assignment:
-Drill Title
-Link
-Completion Box (Know when the user clicked the box)
+Try Syncing with Google Drive
