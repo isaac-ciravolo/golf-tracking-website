@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchUserAssignments } from "../firebase/DatabaseFunctions";
 import { useAuth } from "../firebase/AuthContext";
-import { Paper, Button, Typography } from "@mui/material";
+import { Paper, Button, Typography, Checkbox } from "@mui/material";
 const AssignmentsView = () => {
   const [assignments, setAssignments] = useState([]);
   const { currentUser: user } = useAuth();
@@ -22,22 +22,31 @@ const AssignmentsView = () => {
             key={assignment.id}
             sx={{
               p: 2,
-              m: 2,
-              display: "flex",
-              justifyContent: "space-between",
+              marginLeft: "auto",
+              marginRight: "auto",
+              marginTop: 2,
+              marginBottom: 2,
+
+              display: "grid",
+              gridTemplateColumns: "8fr 1fr 1fr",
+
               alignItems: "center",
-              width: 400,
+              width: "50%",
+              columnGap: "1rem",
             }}
           >
             <Typography>{assignment.title}</Typography>
+
             <Button
               variant="contained"
               href={assignment.link}
               target="_blank"
               rel="noopener noreferrer"
+              sx={{ width: "80px" }}
             >
               GO
             </Button>
+            <Checkbox></Checkbox>
           </Paper>
         ))}
       </div>
