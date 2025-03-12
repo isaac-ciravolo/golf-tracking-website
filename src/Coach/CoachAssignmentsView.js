@@ -193,6 +193,7 @@ const CoachAssignmentsView = ({ studentIds }) => {
                 title: drillTitle,
                 link: drillLink,
                 students: selectedStudentIds,
+                completed: [],
               });
               setLoading(false);
               if (res === "Success!") setOpen(false);
