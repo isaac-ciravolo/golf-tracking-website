@@ -3,14 +3,23 @@ import { useAuth } from "../firebase/AuthContext";
 import { fetchClassAssignments } from "../firebase/DatabaseFunctions";
 import { useParams } from "react-router-dom";
 import { Paper, Button, Typography } from "@mui/material";
+import formatDateFromMilliseconds from "../util/DateConverter";
+import { fetchUserById } from "../firebase/DatabaseFunctions";
 const CoachAssignmentView = () => {
   const { id: classCode, assignmentId } = useParams();
   const [assignment, setAssignment] = useState(null);
+  const [userNameLookup, setUserNameLookup] = useState({});
   useEffect(() => {
     const temp = async () => {
       const data = await fetchClassAssignments(classCode);
       const foundAssignment = data.find((item) => item.id === assignmentId);
       setAssignment(foundAssignment);
+      const newUserNames = {};
+      for (const student of foundAssignment.students) {
+        const user = await fetchUserById(student);
+        newUserNames[student] = user.name;
+      }
+      setUserNameLookup(newUserNames);
     };
 
     temp();
@@ -18,7 +27,6 @@ const CoachAssignmentView = () => {
 
   return (
     <>
-      {/* {assignment && JSON.stringify(assignment)} */}
       <Paper
         sx={{
           p: 2,
@@ -40,8 +48,19 @@ const CoachAssignmentView = () => {
           GO
         </Button>
       </Paper>
-      {assignment?.students.map((student) => (
-        <Typography key={student}>{student}</Typography>
+      <Typography>Students:</Typography>
+      {assignment?.students.map((studentId) => (
+        <Typography key={studentId}>{userNameLookup[studentId]}</Typography>
+      ))}
+      <br></br>
+      <Typography>Completed:</Typography>
+      {assignment?.completed.map((student) => (
+        <>
+          <Typography key={student.userId}>
+            {userNameLookup[student.userId]} | Completed on:{" "}
+            {formatDateFromMilliseconds(student.timeStamp)}
+          </Typography>
+        </>
       ))}
     </>
   );
