@@ -22,16 +22,13 @@ const AssignmentsView = () => {
             key={assignment.id}
             sx={{
               p: 2,
-              marginLeft: "auto",
-              marginRight: "auto",
-              marginTop: 2,
+              marginLeft: "1vw",
+              marginTop: "1vh",
               marginBottom: 2,
-
               display: "grid",
               gridTemplateColumns: "8fr 1fr 1fr",
-
               alignItems: "center",
-              width: "50%",
+              maxWidth: "30%",
               columnGap: "1rem",
             }}
           >
