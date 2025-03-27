@@ -79,17 +79,25 @@ const AssignmentsView = () => {
             key={assignment.id}
             sx={{
               p: 2,
-              marginLeft: "1vw",
-              marginTop: "1vh",
+              marginLeft: "auto",
+              marginRight: "auto",
               marginBottom: 2,
               display: "grid",
               gridTemplateColumns: "8fr 1fr 1fr",
               alignItems: "center",
-              maxWidth: "30%",
+              maxWidth: "50%",
               columnGap: "1rem",
             }}
           >
-            <Typography>{assignment.title}</Typography>
+            <Typography
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              title={assignment.title}
+            >
+              {assignment.title}
+            </Typography>
 
             <Button
               variant="contained"
