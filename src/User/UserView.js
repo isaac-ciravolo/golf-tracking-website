@@ -40,8 +40,6 @@ const UserView = () => {
   const { userId } = useParams();
 
   useEffect(() => {
-    console.log(userId);
-
     if (userId) {
       const temp = async () => {
         const newUser = await fetchUserById(userId);
@@ -50,10 +48,6 @@ const UserView = () => {
       temp();
     }
   }, []);
-
-  useEffect(() => {
-    console.log(readOnlyUser);
-  }, [readOnlyUser]);
 
   useEffect(() => {
     const newSelectedGames = [];
