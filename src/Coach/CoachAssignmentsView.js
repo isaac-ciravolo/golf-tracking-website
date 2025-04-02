@@ -101,7 +101,7 @@ const CoachAssignmentsView = ({ studentIds }) => {
             </ListItem>
           ))}
       </List>
-      <Dialog open={open}>
+      <Dialog open={open} onClose={() => setOpen(false)}>
         <Box
           sx={{
             width: "500px",

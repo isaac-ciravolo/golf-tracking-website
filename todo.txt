@@ -1,7 +1,5 @@
 Make assignments editable (delete students)
 
-make create assignment be able to click out of
-
 Make Coach Students View scrollable (isaac)
 
 Make students deletable from coach end
