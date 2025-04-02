@@ -58,7 +58,7 @@ const CoachAssignmentView = () => {
         <>
           <Typography key={student.userId}>
             {userNameLookup[student.userId]} | Completed on:{" "}
-            {formatDateFromMilliseconds(student.timeStamp)}
+            {formatDateFromMilliseconds(student.timeStamp / 1000)}
           </Typography>
         </>
       ))}

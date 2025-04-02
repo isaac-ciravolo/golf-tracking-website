@@ -1,6 +1,13 @@
-Mkae a completion button
-Record the timestamp
+Make assignments editable (delete students)
 
-Make a Drill Library
+make create assignment be able to click out of
 
-Try Syncing with Google Drive
+Make Coach Students View scrollable (isaac)
+
+Make students deletable from coach end
+
+Make accounts disabled if they are not in a class
+
+Sync with google drive (coach end)
+
+Messaging System (make non respondable)
