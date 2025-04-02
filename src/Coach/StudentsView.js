@@ -27,7 +27,7 @@ const StudentsView = ({ studentIds }) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        overflowY: "auto",
+        overflowY: "scroll",
         maxHeight: "80vh",
       }}
     >

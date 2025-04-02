@@ -81,18 +81,23 @@ const AssignmentsView = () => {
               p: 2,
               marginLeft: "auto",
               marginRight: "auto",
-              marginTop: 2,
               marginBottom: 2,
-
               display: "grid",
               gridTemplateColumns: "8fr 1fr 1fr",
-
               alignItems: "center",
-              width: "50%",
+              maxWidth: "50%",
               columnGap: "1rem",
             }}
           >
-            <Typography>{assignment.title}</Typography>
+            <Typography
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              title={assignment.title}
+            >
+              {assignment.title}
+            </Typography>
 
             <Button
               variant="contained"
