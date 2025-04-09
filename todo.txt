@@ -1,5 +1,3 @@
-Make assignments editable (delete students)
-
 Make Coach Students View scrollable (isaac)
 
 Make students deletable from coach end
@@ -9,3 +7,6 @@ Make accounts disabled if they are not in a class
 Sync with google drive (coach end)
 
 Messaging System (make non respondable)
+
+Done:
+Make assignments editable (delete students)

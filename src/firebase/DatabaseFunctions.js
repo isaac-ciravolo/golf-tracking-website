@@ -421,6 +421,22 @@ export const createAssignment = async (classCode, assignmentData) => {
   }
 };
 
+export const editAssignment = async (
+  classCode,
+  assignmentId,
+  updatedAssignmentData
+) => {
+  try {
+    const classDocRef = doc(db, "classes", classCode);
+    const assignmentDocRef = doc(classDocRef, "assignments", assignmentId);
+
+    await setDoc(assignmentDocRef, updatedAssignmentData);
+    return "Success!";
+  } catch (error) {
+    return error.message;
+  }
+};
+
 export const fetchUserAssignments = async (userId) => {
   try {
     if (!userId) {
