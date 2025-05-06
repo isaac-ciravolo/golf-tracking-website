@@ -20,7 +20,8 @@ function SignUpView() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [accountType, setAccountType] = useState("user");
   const navigate = useNavigate();
@@ -53,8 +54,12 @@ function SignUpView() {
         setErrorMessage("Password must be at least 7 characters long");
         return;
       }
-      if (name === "") {
-        setErrorMessage("Please enter a name");
+      if (firstName === "") {
+        setErrorMessage("Please enter a first name");
+        return;
+      }
+      if (lastName === "") {
+        setErrorMessage("Please enter a last name");
         return;
       }
 
@@ -65,7 +70,8 @@ function SignUpView() {
           await setDoc(doc(db, "users", user.uid), {
             id: user.uid,
             email: user.email,
-            name: name,
+            firstName: firstName,
+            lastName: lastName,
             joined: new Date().getTime() / 1000,
             sortBy: sortingOptions[0],
             classes: [],
@@ -75,13 +81,15 @@ function SignUpView() {
           await setDoc(doc(db, "coaches", user.uid), {
             id: user.uid,
             email: user.email,
-            name: name,
+            firstName: firstName,
+            lastName: lastName,
             joined: new Date().getTime() / 1000,
             classes: [],
           });
         }
       }
-      //navigate("/verify");
+
+      navigate("/verify");
     } catch (error) {
       if (error.message === "Firebase: Error (auth/email-already-in-use).")
         setErrorMessage("Email already in use");
@@ -148,15 +156,29 @@ function SignUpView() {
             </Typography>
 
             <TextField
-              label="Name"
+              label="First name"
               type="text"
               fullWidth
               variant="outlined"
-              placeholder="Enter name"
-              value={name}
+              placeholder="Enter first name"
+              value={firstName}
               sx={{ width: "100%" }}
               onChange={(e) => {
-                setName(e.target.value);
+                setFirstName(e.target.value);
+                setErrorMessage("");
+              }}
+            />
+
+            <TextField
+              label="Last name"
+              type="text"
+              fullWidth
+              variant="outlined"
+              placeholder="Enter last name"
+              value={lastName}
+              sx={{ width: "100%" }}
+              onChange={(e) => {
+                setLastName(e.target.value);
                 setErrorMessage("");
               }}
             />

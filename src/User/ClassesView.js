@@ -118,10 +118,17 @@ const ClassesView = () => {
             loading={loading}
             onClick={async () => {
               setLoading(true);
-              const error = await addRequest(classCode, user.id, user.name);
+              console.log(user);
+              const error = await addRequest(
+                classCode,
+                user.id,
+                user.firstName,
+                user.lastName
+              );
               setLoading(false);
               if (error === "Success!") {
                 setOpenJoinClass(false);
+                alert("Request sent successfully!");
               } else {
                 setErrorMessage(error);
               }

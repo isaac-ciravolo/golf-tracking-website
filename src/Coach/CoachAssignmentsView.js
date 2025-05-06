@@ -162,14 +162,18 @@ const CoachAssignmentsView = ({ studentIds }) => {
                 selected
                   .map((studentId) => {
                     const student = students.find((s) => s.id === studentId);
-                    return student ? student.name : "";
+                    return student
+                      ? student.firstName + " " + student.lastName
+                      : "";
                   })
                   .join(", ")
               }
             >
               {students.map((student) => (
                 <MenuItem key={student.id} value={student.id}>
-                  <ListItemText primary={student.name} />
+                  <ListItemText
+                    primary={student.firstName + " " + student.lastName}
+                  />
                 </MenuItem>
               ))}
             </Select>
@@ -196,8 +200,14 @@ const CoachAssignmentsView = ({ studentIds }) => {
                 completed: [],
               });
               setLoading(false);
-              if (res === "Success!") setOpen(false);
-              else alert("Failed to create assignment:", res);
+              if (res === "Success!") {
+                setOpen(false);
+                setDrillTitle("");
+                setDrillLink("");
+                setSelectedStudents([]);
+                const data = await fetchClassAssignments(classCode);
+                setAssignments(data);
+              } else alert("Failed to create assignment:", res);
             }}
           >
             CREATE ASSIGNMENT

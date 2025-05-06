@@ -23,7 +23,9 @@ const UserSettings = () => {
       }}
     >
       <Typography variant="h4">User Settings</Typography>
-      <Typography variant="h6">{user.name}</Typography>
+      <Typography variant="h6">
+        {user.firstName} {user.lastName}
+      </Typography>
       <Typography variant="h6">{user.email}</Typography>
       <Button
         variant="contained"
@@ -64,6 +66,7 @@ const UserSettings = () => {
             color="error"
             onClick={async () => {
               const res = await logOut();
+              await new Promise((resolve) => setTimeout(resolve, 500));
               if (res === "Success!") navigate("/login");
               else setLogOutError(res);
             }}

@@ -255,7 +255,8 @@ const UserView = () => {
             <Box sx={{ p: 3 }}>
               <Box sx={{ display: "flex", alignItems: "baseline", gap: 4 }}>
                 <Typography variant="h3" fontWeight="bold">
-                  {user.name && user.name.toUpperCase()}
+                  {user.firstName && user.firstName.toUpperCase()}{" "}
+                  {user.lastName && user.lastName.toUpperCase()}
                 </Typography>
                 <Typography color="gray" fontWeight={"bold"} variant="h4">
                   {selectedGames.length === 1

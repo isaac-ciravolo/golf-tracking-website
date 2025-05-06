@@ -23,7 +23,9 @@ const CoachSettings = () => {
       }}
     >
       <Typography variant="h4">Coach Settings</Typography>
-      <Typography variant="h6">{coach.name}</Typography>
+      <Typography variant="h6">
+        {coach.firstName} {coach.lastName}
+      </Typography>
       <Typography variant="h6">{coach.email}</Typography>
       <Button
         variant="contained"
@@ -64,6 +66,7 @@ const CoachSettings = () => {
             color="error"
             onClick={async () => {
               const res = await logOut();
+              await new Promise((resolve) => setTimeout(resolve, 500));
               if (res === "Success!") navigate("/login");
               else setLogOutError(res);
             }}

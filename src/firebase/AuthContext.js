@@ -27,61 +27,46 @@ export function AuthProvider({ children }) {
 
   const initializeUser = async (user) => {
     setLoading(true);
+    console.log(user);
     if (user) {
-      console.log(user);
-      const userDocRef = doc(db, "users", user.uid);
-      const userDocSnap = await getDoc(userDocRef);
-
-      if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
-        setCurrentUser({ ...userData });
-        setUserLoggedIn(true);
-        setIsCoach(false);
+      if (!user.emailVerified) {
+        if (location.pathname !== "/verify") {
+          navigate("/verify");
+        }
         setLoading(false);
-        // if (
-        //   !user.emailVerified &&
-        //   (location.pathname !== "/verify" ||
-        //     location.pathname !== "/login" ||
-        //     location.pathname !== "/signup")
-        // ) {
-        //   navigate("/verify");
-        // } else
-        if (
-          location.pathname === "/login" ||
-          location.pathname === "/signup" ||
-          location.pathname === "/forgotpassword" ||
-          location.pathname === "/verify"
-        )
-          navigate("/home");
         return;
       }
 
-      const coachDocRef = doc(db, "coaches", user.uid);
-      const coachDocSnap = await getDoc(coachDocRef);
+      try {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
 
-      if (coachDocSnap.exists()) {
-        const coachData = coachDocSnap.data();
-        setCurrentUser({ ...coachData });
-        setUserLoggedIn(true);
-        setIsCoach(true);
-        setLoading(false);
-        // if (
-        //   !user.emailVerified &&
-        //   (location.pathname !== "/verify" ||
-        //     location.pathname !== "/login" ||
-        //     location.pathname !== "/signup")
-        // ) {
-        //   navigate("/verify");
-        // } else
-        if (
-          location.pathname === "/login" ||
-          location.pathname === "/signup" ||
-          location.pathname === "/forgotpassword" ||
-          location.pathname === "/verify"
-        )
-          navigate("/home");
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          setCurrentUser({ ...userData });
+          setUserLoggedIn(true);
+          setIsCoach(false);
+          setLoading(false);
+          return;
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
 
-        return;
+      try {
+        const coachDocRef = doc(db, "coaches", user.uid);
+        const coachDocSnap = await getDoc(coachDocRef);
+
+        if (coachDocSnap.exists()) {
+          const coachData = coachDocSnap.data();
+          setCurrentUser({ ...coachData });
+          setUserLoggedIn(true);
+          setIsCoach(true);
+          setLoading(false);
+          return;
+        }
+      } catch (error) {
+        console.error("Error fetching coach data:", error);
       }
     }
     setCurrentUser(null);

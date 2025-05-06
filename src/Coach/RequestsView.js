@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, Paper } from "@mui/material";
-import { fetchRequests, acceptRequest } from "../firebase/DatabaseFunctions";
+import {
+  fetchRequests,
+  acceptRequest,
+  rejectRequest,
+} from "../firebase/DatabaseFunctions";
 const RequestsView = ({ classCode }) => {
   const [requests, setRequests] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -32,7 +36,7 @@ const RequestsView = ({ classCode }) => {
           >
             <Box sx={{ display: "flex", width: "100%" }}>
               <Typography variant="h6" fontWeight={"bold"}>
-                {request.name}
+                {request.firstName} {request.lastName}
               </Typography>
               <Box sx={{ flexGrow: 1 }}></Box>
               <Button
@@ -47,6 +51,21 @@ const RequestsView = ({ classCode }) => {
                 }}
               >
                 Accept
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={async () => {
+                  const res = await rejectRequest(classCode, request.userId);
+                  if (res) {
+                    setErrorMessage(res);
+                  } else {
+                    window.location.reload();
+                  }
+                }}
+                sx={{ ml: 2 }}
+              >
+                Reject
               </Button>
             </Box>
             {errorMessage && (

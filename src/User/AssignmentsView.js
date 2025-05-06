@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { fetchUserAssignments } from "../firebase/DatabaseFunctions";
+import {
+  fetchUserAssignments,
+  fetchClass,
+} from "../firebase/DatabaseFunctions";
 import { useAuth } from "../firebase/AuthContext";
 import {
   Paper,
@@ -23,19 +26,28 @@ const AssignmentsView = () => {
 
   useEffect(() => {
     if (!user || !user.id) return;
-    fetchUserAssignments(user.id).then((assignments) => {
-      const incomplete = assignments.filter(
-        (assignment) =>
-          !assignment.completed.some(
-            (completion) => completion.userId === user.id
-          )
-      );
-      const completed = assignments.filter((assignment) =>
-        assignment.completed.some((completion) => completion.userId === user.id)
-      );
+
+    const temp = async () => {
+      let completed = {};
+      let incomplete = {};
+      const assignments = await fetchUserAssignments(user.id);
+      for (const classId of Object.keys(assignments)) {
+        const classData = await fetchClass(classId);
+        completed[classData.name] = [];
+        incomplete[classData.name] = [];
+        assignments[classId].forEach((assignment) => {
+          if (assignment.completed.length > 0) {
+            completed[classData.name].push(assignment);
+          } else {
+            incomplete[classData.name].push(assignment);
+          }
+        });
+      }
       setIncompleteAssignment(incomplete);
       setCompletedAssignments(completed);
-    });
+    };
+
+    temp();
   }, [user]);
 
   const getAssignmentDate = (assignment) => {
@@ -74,51 +86,66 @@ const AssignmentsView = () => {
   return (
     <>
       <div>
-        {incompleteAssignments.map((assignment) => (
-          <Paper
-            key={assignment.id}
-            sx={{
-              p: 2,
-              marginLeft: "auto",
-              marginRight: "auto",
-              marginBottom: 2,
-              display: "grid",
-              gridTemplateColumns: "8fr 1fr 1fr",
-              alignItems: "center",
-              maxWidth: "50%",
-              columnGap: "1rem",
-            }}
-          >
+        {Object.keys(incompleteAssignments).map((className) => (
+          <div key={className}>
             <Typography
+              variant="h5"
               sx={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+                marginTop: 2,
+                marginBottom: 1,
+                textAlign: "center",
+                fontWeight: "bold",
               }}
-              title={assignment.title}
             >
-              {assignment.title}
+              {className}
             </Typography>
+            {incompleteAssignments[className].map((assignment) => (
+              <Paper
+                key={assignment.id}
+                sx={{
+                  p: 2,
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  marginBottom: 2,
+                  display: "grid",
+                  gridTemplateColumns: "8fr 1fr 1fr",
+                  alignItems: "center",
+                  maxWidth: "50%",
+                  columnGap: "1rem",
+                }}
+              >
+                <Typography
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                  title={assignment.title}
+                >
+                  {assignment.title}
+                </Typography>
 
-            <Button
-              variant="contained"
-              href={assignment.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{ width: "80px" }}
-            >
-              GO
-            </Button>
-            <Button
-              variant="contained"
-              sx={{ width: "200px" }}
-              onClick={() => {
-                setDialogOpen(true);
-                setSelectedAssignment(assignment);
-              }}
-            >
-              Mark as Completed
-            </Button>
-          </Paper>
+                <Button
+                  variant="contained"
+                  href={assignment.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{ width: "80px" }}
+                >
+                  GO
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{ width: "200px" }}
+                  onClick={() => {
+                    setDialogOpen(true);
+                    setSelectedAssignment(assignment);
+                  }}
+                >
+                  Mark as Completed
+                </Button>
+              </Paper>
+            ))}
+          </div>
         ))}
       </div>
 
@@ -134,39 +161,52 @@ const AssignmentsView = () => {
         </Button>
         {showCompleted && (
           <div>
-            {completedAssignments.map((assignment) => (
-              <Paper
-                key={assignment.id}
-                sx={{
-                  p: 2,
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  marginTop: 2,
-                  marginBottom: 2,
-
-                  display: "grid",
-                  gridTemplateColumns: "8fr 1fr 1fr",
-
-                  alignItems: "center",
-                  width: "50%",
-                  columnGap: "1rem",
-                }}
-              >
-                <Typography>{assignment.title}</Typography>
-
-                <Button
-                  variant="contained"
-                  href={assignment.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{ width: "80px" }}
+            {Object.keys(completedAssignments).map((className) => (
+              <div key={className}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    marginTop: 2,
+                    marginBottom: 1,
+                    textAlign: "center",
+                    fontWeight: "bold",
+                  }}
                 >
-                  GO
-                </Button>
-                <Typography sx={{ width: "200px" }}>
-                  Completed {getAssignmentDate(assignment)}
+                  {className}
                 </Typography>
-              </Paper>
+                {completedAssignments[className].map((assignment) => (
+                  <Paper
+                    key={assignment.id}
+                    sx={{
+                      p: 2,
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                      marginTop: 2,
+                      marginBottom: 2,
+                      display: "grid",
+                      gridTemplateColumns: "8fr 1fr 1fr",
+                      alignItems: "center",
+                      width: "50%",
+                      columnGap: "1rem",
+                    }}
+                  >
+                    <Typography>{assignment.title}</Typography>
+
+                    <Button
+                      variant="contained"
+                      href={assignment.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{ width: "80px" }}
+                    >
+                      GO
+                    </Button>
+                    <Typography sx={{ width: "200px" }}>
+                      Completed {getAssignmentDate(assignment)}
+                    </Typography>
+                  </Paper>
+                ))}
+              </div>
             ))}
           </div>
         )}

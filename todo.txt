@@ -8,5 +8,7 @@ Sync with google drive (coach end)
 
 Messaging System (make non respondable)
 
+AVG Shots Inside 100 Yards (isaac)
+
 Done:
 Make assignments editable (delete students)

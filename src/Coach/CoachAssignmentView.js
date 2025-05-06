@@ -46,7 +46,7 @@ const CoachAssignmentView = () => {
       const newUserNames = {};
       for (const student of foundAssignment.students) {
         const user = await fetchUserById(student);
-        newUserNames[student] = user.name;
+        newUserNames[student] = user.firstName + " " + user.lastName;
       }
       setUserNameLookup(newUserNames);
     };
@@ -180,7 +180,9 @@ const CoachAssignmentView = () => {
                         const student = students.find(
                           (s) => s.id === studentId
                         );
-                        return student ? student.name : "";
+                        return student
+                          ? student.firstName + " " + student.lastName
+                          : "";
                       })
                       .join(", ")
                   }
@@ -188,7 +190,9 @@ const CoachAssignmentView = () => {
                   {students &&
                     students.map((student) => (
                       <MenuItem key={student.id} value={student.id}>
-                        <ListItemText primary={student.name} />
+                        <ListItemText
+                          primary={student.firstName + " " + student.lastName}
+                        />
                       </MenuItem>
                     ))}
                 </Select>

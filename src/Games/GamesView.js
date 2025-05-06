@@ -68,7 +68,9 @@ const GamesView = () => {
               }}
             >
               <Typography variant="h3" fontWeight="bold">
-                {user && user.name && user.name.toUpperCase()}
+                {user && user.firstName && user.lastName
+                  ? `${user.firstName.toUpperCase()} ${user.lastName.toUpperCase()}`
+                  : "User"}
               </Typography>
               <Typography variant="h6" fontWeight="bold" color="gray">
                 Edit Games

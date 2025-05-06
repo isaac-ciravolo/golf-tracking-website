@@ -168,7 +168,7 @@ const ApproachView = ({
         <Paper
           sx={{
             width: "500px",
-            minHeight: "500px",
+            height: "500px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -217,7 +217,7 @@ const ApproachView = ({
         </Paper>
         <Paper
           sx={{
-            width: "auto",
+            width: "500px",
             height: "500px",
             display: "flex",
             flexDirection: "column",
@@ -230,7 +230,7 @@ const ApproachView = ({
           <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
             <Paper
               sx={{
-                width: "300px",
+                width: "200px",
                 height: "125px",
                 display: "flex",
                 flexDirection: "column",
@@ -250,7 +250,7 @@ const ApproachView = ({
             </Paper>
             <Paper
               sx={{
-                width: "300px",
+                width: "200px",
                 height: "125px",
                 display: "flex",
                 flexDirection: "column",

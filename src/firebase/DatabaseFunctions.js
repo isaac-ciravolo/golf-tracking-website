@@ -80,7 +80,7 @@ export const leaveClass = async (classCode, userId) => {
   }
 };
 
-export const addRequest = async (classCode, userId, userName) => {
+export const addRequest = async (classCode, userId, firstName, lastName) => {
   try {
     const classDocRef = doc(db, "classes", classCode);
     const classDocSnap = await getDoc(classDocRef);
@@ -101,7 +101,7 @@ export const addRequest = async (classCode, userId, userName) => {
       return "You have already requested to join this class.";
     }
 
-    await setDoc(requestDocRef, { userId, name: userName });
+    await setDoc(requestDocRef, { userId, firstName, lastName });
     return "Success!";
   } catch (error) {
     return error.message;
@@ -130,6 +130,30 @@ export const acceptRequest = async (classCode, userId) => {
     const classData = classDocSnap.data();
     classData["students"].push(userId);
     await setDoc(classDocRef, classData);
+    return "Success!";
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const rejectRequest = async (classCode, userId) => {
+  try {
+    const classDocRef = doc(db, "classes", classCode);
+    const classDocSnap = await getDoc(classDocRef);
+
+    if (!classDocSnap.exists()) {
+      return "Class not found.";
+    }
+
+    const requestsCollectionRef = collection(classDocRef, "requests");
+    const requestDocRef = doc(requestsCollectionRef, userId);
+    const requestDocSnap = await getDoc(requestDocRef);
+
+    if (!requestDocSnap.exists()) {
+      return "Request not found.";
+    }
+
+    await deleteDoc(requestDocRef);
     return "Success!";
   } catch (error) {
     return error.message;
@@ -293,7 +317,7 @@ export const fetchStudent = async (studentId) => {
   }
 };
 
-export const logOut = () => {
+export const logOut = async () => {
   try {
     const auth = getAuth();
     signOut(auth);
@@ -442,9 +466,15 @@ export const fetchUserAssignments = async (userId) => {
     if (!userId) {
       return "Please provide a user ID.";
     }
-    const response = await fetch(
-      `https://fetchassignments-2uga654xhq-uc.a.run.app/?id=${userId}`
-    );
+    let response = null;
+    if (process.env.NODE_ENV === "development") {
+      response = await fetch(
+        "https://fetchassignments-lkef4bolkq-uc.a.run.app/?id=" + userId
+      );
+    } else
+      response = await fetch(
+        `https://fetchassignments-2uga654xhq-uc.a.run.app/?id=${userId}`
+      );
     if (!response.ok) {
       throw new Error("Failed to fetch assignments.");
     }

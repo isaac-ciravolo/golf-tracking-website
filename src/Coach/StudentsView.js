@@ -33,11 +33,10 @@ const StudentsView = ({ studentIds }) => {
     >
       {students.map((student) => {
         return (
-          <Box
-            key={student.id}
-            sx={{ display: "flex", flexDirection: "row", overflowY: "auto" }}
-          >
-            <Typography>{student.name}</Typography>
+          <Box key={student.id} sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography>
+              {student.firstName} {student.lastName}
+            </Typography>
 
             <Button
               onClick={() => navigate(`/home/${classCode}/view/${student.id}`)}
