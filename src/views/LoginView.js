@@ -71,7 +71,6 @@ function LoginView() {
         style={{ width: "548px", paddingRight: "100px" }}
       />
 
-      {userLoggedIn && <Navigate to={"/home"} replace={true} />}
       <Paper
         sx={{
           display: "flex",

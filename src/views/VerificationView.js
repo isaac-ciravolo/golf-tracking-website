@@ -7,8 +7,9 @@ import { Typography, Paper, Box, Button, TextField, Link } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { doSendEmailVerification } from "../firebase/auth.js";
 import { useAuth } from "../firebase/AuthContext.js";
+import { logOut } from "../firebase/DatabaseFunctions.js";
 const VerificationView = () => {
-  const { userLoggedIn, currentUser } = useAuth();
+  const { authUser } = useAuth();
   const [sendingEmail, setSendingEmail] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -23,10 +24,11 @@ const VerificationView = () => {
         width: "100%",
         height: "100%",
         display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
+        justifyContent: "flex-start",
+        alignItems: "center",
         paddingTop: 10,
         overflowY: "auto",
+        flexDirection: "column",
       }}
     >
       <Paper
@@ -62,6 +64,7 @@ const VerificationView = () => {
                 setSendingEmail(true);
                 const res = await doSendEmailVerification();
                 if (res !== "Success!") alert("Error: " + res);
+                else alert(`Verification email sent to ${authUser.email}!`);
                 setSendingEmail(false);
               }}
             >
@@ -70,6 +73,21 @@ const VerificationView = () => {
           </Box>
         </form>
       </Paper>
+      <Button
+        variant="contained"
+        style={{
+          marginTop: "40px",
+          height: "70px",
+          width: "350px",
+          fontSize: "28px",
+        }}
+        onClick={async () => {
+          await logOut();
+          navigate("/login");
+        }}
+      >
+        Log Out
+      </Button>
     </Box>
   );
 };

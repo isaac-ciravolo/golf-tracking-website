@@ -24,9 +24,9 @@ const UserSettings = () => {
     >
       <Typography variant="h4">User Settings</Typography>
       <Typography variant="h6">
-        {user.firstName} {user.lastName}
+        {user?.firstName} {user?.lastName}
       </Typography>
-      <Typography variant="h6">{user.email}</Typography>
+      <Typography variant="h6">{user?.email}</Typography>
       <Button
         variant="contained"
         color="primary"
@@ -105,7 +105,7 @@ const UserSettings = () => {
             variant="contained"
             color="error"
             onClick={async () => {
-              const res = await deleteAccount(user.id);
+              const res = await deleteAccount(user?.id);
               if (res === "Success!") navigate("/login");
               else setDeleteAccountError(res);
             }}

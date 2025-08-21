@@ -13,8 +13,10 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
+  const [authUser, setAuthUser] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const [userVerified, setUserVerified] = useState(false);
   const [isCoach, setIsCoach] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -25,63 +27,99 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-  const initializeUser = async (user) => {
-    setLoading(true);
-    console.log(user);
-    if (user) {
-      if (!user.emailVerified) {
-        if (location.pathname !== "/verify") {
-          navigate("/verify");
-        }
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const userDocRef = doc(db, "users", user.uid);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          setCurrentUser({ ...userData });
-          setUserLoggedIn(true);
-          setIsCoach(false);
-          setLoading(false);
-          return;
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-
-      try {
-        const coachDocRef = doc(db, "coaches", user.uid);
-        const coachDocSnap = await getDoc(coachDocRef);
-
-        if (coachDocSnap.exists()) {
-          const coachData = coachDocSnap.data();
-          setCurrentUser({ ...coachData });
-          setUserLoggedIn(true);
-          setIsCoach(true);
-          setLoading(false);
-          return;
-        }
-      } catch (error) {
-        console.error("Error fetching coach data:", error);
-      }
+  useEffect(() => {
+    if (!loading) {
+      handleNavigation();
     }
-    setCurrentUser(null);
-    setUserLoggedIn(false);
-    setLoading(false);
-    if (
-      location.pathname !== "/login" &&
-      location.pathname !== "/signup" &&
-      location.pathname !== "/forgotpassword"
-    ) {
-      navigate("/login");
+  }, [userLoggedIn, loading, location.pathname]);
+
+  const handleNavigation = () => {
+    if (!userLoggedIn) {
+      if (
+        location.pathname !== "/login" &&
+        location.pathname !== "/signup" &&
+        location.pathname !== "/forgotpassword"
+      ) {
+        navigate("/login");
+      }
+    } else if (!userVerified) {
+      if (
+        location.pathname !== "/verify" &&
+        location.pathname !== "/login" &&
+        location.pathname !== "/signup" &&
+        location.pathname !== "/forgotpassword"
+      ) {
+        navigate("/verify");
+      }
+    } else {
+      if (location.pathname === "/verify") {
+        navigate("/home");
+      }
     }
   };
 
+  const initializeUser = async (user) => {
+    setLoading(true);
+
+    if (user) {
+      setUserLoggedIn(true);
+      setAuthUser(user);
+      if (user.emailVerified) {
+        setUserVerified(true);
+        let isUser = false;
+        let isCoach = false;
+
+        try {
+          const userDocRef = doc(db, "users", user.uid);
+          const userDocSnap = await getDoc(userDocRef);
+
+          if (userDocSnap.exists()) {
+            const userData = userDocSnap.data();
+            setCurrentUser({ ...userData });
+            setIsCoach(false);
+
+            isUser = true;
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+
+        if (!isUser) {
+          try {
+            const coachDocRef = doc(db, "coaches", user.uid);
+            const coachDocSnap = await getDoc(coachDocRef);
+
+            if (coachDocSnap.exists()) {
+              const coachData = coachDocSnap.data();
+              setCurrentUser({ ...coachData });
+              setIsCoach(true);
+
+              isCoach = true;
+            }
+          } catch (error) {
+            console.error("Error fetching coach data:", error);
+          }
+        }
+
+        if (!isUser && !isCoach) {
+          setCurrentUser(null);
+        }
+      } else {
+        setUserVerified(false);
+        setCurrentUser(null);
+      }
+    } else {
+      setUserLoggedIn(false);
+      setAuthUser(null);
+      setUserVerified(false);
+      setCurrentUser(null);
+    }
+
+    setLoading(false);
+  };
+
   const value = {
+    authUser,
     currentUser,
     userLoggedIn,
     loading,

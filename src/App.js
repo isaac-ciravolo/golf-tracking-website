@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import "./styles.css";
 
 import { Box, createTheme, ThemeProvider } from "@mui/material";
@@ -35,13 +35,19 @@ const theme = createTheme({
 
 const App = () => {
   const { isCoach, userLoggedIn } = useAuth();
+  const location = useLocation();
+
   return (
     <Box
       className="App"
       style={{ width: "100vw", height: "100vh", overflow: "hidden" }}
     >
       <ThemeProvider theme={theme}>
-        {userLoggedIn && <Header />}
+        {userLoggedIn &&
+          location.pathname !== "/login" &&
+          location.pathname !== "/signup" &&
+          location.pathname !== "/forgotpassword" &&
+          location.pathname !== "/verify" && <Header />}
         <Box
           sx={{
             width: "100vw",

@@ -66,155 +66,159 @@ const GamesListView = () => {
           </Typography>
         </Button>
 
-        <Button
-          variant="contained"
-          sx={{
-            height: "100px",
-            width: "90%",
-          }}
-          onClick={async () => {
-            const newHoles = [];
-            for (let i = 0; i < 9; i++) {
-              const newHole = {};
-              newHole.par = [3, 4, 5][Math.floor(Math.random() * 3)];
-              if (newHole.par === 3)
-                newHole.yardage =
-                  Math.floor(Math.random() * (200 - 140 + 1)) + 140;
-              if (newHole.par === 4)
-                newHole.yardage =
-                  Math.floor(Math.random() * (450 - 300 + 1)) + 300;
-              if (newHole.par === 5)
-                newHole.yardage =
-                  Math.floor(Math.random() * (700 - 500 + 1)) + 500;
-              newHole.score = newHole.par + Math.floor(Math.random() * 3); // 0-2 over/under par
-              if (newHole.par > 3) {
-                newHole.teeClub =
+        {process.env.NODE_ENV === "development" && (
+          <Button
+            variant="contained"
+            sx={{
+              height: "100px",
+              width: "90%",
+            }}
+            onClick={async () => {
+              const newHoles = [];
+              for (let i = 0; i < 9; i++) {
+                const newHole = {};
+                newHole.par = [3, 4, 5][Math.floor(Math.random() * 3)];
+                if (newHole.par === 3)
+                  newHole.yardage =
+                    Math.floor(Math.random() * (200 - 140 + 1)) + 140;
+                if (newHole.par === 4)
+                  newHole.yardage =
+                    Math.floor(Math.random() * (450 - 300 + 1)) + 300;
+                if (newHole.par === 5)
+                  newHole.yardage =
+                    Math.floor(Math.random() * (700 - 500 + 1)) + 500;
+                newHole.score = newHole.par + Math.floor(Math.random() * 3); // 0-2 over/under par
+                if (newHole.par > 3) {
+                  newHole.teeClub =
+                    clubs[Math.floor(Math.random() * (clubs.length - 1)) + 1];
+                  newHole.teeShot =
+                    teeShots[
+                      Math.floor(Math.random() * (teeShots.length - 1)) + 1
+                    ];
+                } else {
+                  newHole.teeClub = clubs[0];
+                  newHole.teeShot = teeShots[0];
+                }
+                newHole.approachClub =
                   clubs[Math.floor(Math.random() * (clubs.length - 1)) + 1];
-                newHole.teeShot =
-                  teeShots[
-                    Math.floor(Math.random() * (teeShots.length - 1)) + 1
+                newHole.approachShot =
+                  approachShots[
+                    Math.floor(Math.random() * (approachShots.length - 1)) + 1
                   ];
-              } else {
-                newHole.teeClub = clubs[0];
-                newHole.teeShot = teeShots[0];
-              }
-              newHole.approachClub =
-                clubs[Math.floor(Math.random() * (clubs.length - 1)) + 1];
-              newHole.approachShot =
-                approachShots[
-                  Math.floor(Math.random() * (approachShots.length - 1)) + 1
-                ];
 
-              if (newHole.approachShot !== "GIR") {
-                newHole.upAndDown = ["Yes", "No"][
-                  Math.floor(Math.random() * 2)
-                ];
-                newHole.upAndDownClub =
-                  clubs[Math.floor(Math.random() * (clubs.length - 1)) + 1];
-              } else {
-                newHole.upAndDown = "-";
-                newHole.upAndDownClub = "-";
-              }
-              newHole.totalPutts = Math.floor(Math.random() * 3) + 1; // 1-3 putts
-              newHole.firstPuttDist = Math.floor(Math.random() * 30); // 0-30 feet
-              newHole.penaltyStrokes = Math.floor(Math.random() * 2); // 0-1 penalty strokes
-              newHole.shotsInside100 = Math.floor(Math.random() * 3); // 0-2 shots inside 100 yards
-              newHoles.push(newHole);
-            }
-            const newGame = {
-              createdDate: new Date().getTime() / 1000,
-              title: "Random Round",
-              holes: newHoles,
-              gameDate: new Date().getTime() / 1000,
-            };
-
-            console.log(user.id, newGame);
-
-            const res = await addGame(user.id, newGame);
-
-            if (res === "Success!") window.location.reload();
-            else alert("Error adding game: " + res);
-          }}
-        >
-          <Typography fontSize="40px" fontWeight={"bold"}>
-            Add Random 9 Hole Game
-          </Typography>
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{
-            height: "100px",
-            width: "90%",
-          }}
-          onClick={async () => {
-            const newHoles = [];
-            for (let i = 0; i < 18; i++) {
-              const newHole = {};
-              newHole.par = [3, 4, 5][Math.floor(Math.random() * 3)];
-              if (newHole.par === 3)
-                newHole.yardage =
-                  Math.floor(Math.random() * (200 - 140 + 1)) + 140;
-              if (newHole.par === 4)
-                newHole.yardage =
-                  Math.floor(Math.random() * (450 - 300 + 1)) + 300;
-              if (newHole.par === 5)
-                newHole.yardage =
-                  Math.floor(Math.random() * (700 - 500 + 1)) + 500;
-              newHole.score = newHole.par + Math.floor(Math.random() * 3); // 0-2 over/under par
-              if (newHole.par > 3) {
-                newHole.teeClub =
-                  clubs[Math.floor(Math.random() * (clubs.length - 1)) + 1];
-                newHole.teeShot =
-                  teeShots[
-                    Math.floor(Math.random() * (teeShots.length - 1)) + 1
+                if (newHole.approachShot !== "GIR") {
+                  newHole.upAndDown = ["Yes", "No"][
+                    Math.floor(Math.random() * 2)
                   ];
-              } else {
-                newHole.teeClub = clubs[0];
-                newHole.teeShot = teeShots[0];
+                  newHole.upAndDownClub =
+                    clubs[Math.floor(Math.random() * (clubs.length - 1)) + 1];
+                } else {
+                  newHole.upAndDown = "-";
+                  newHole.upAndDownClub = "-";
+                }
+                newHole.totalPutts = Math.floor(Math.random() * 3) + 1; // 1-3 putts
+                newHole.firstPuttDist = Math.floor(Math.random() * 30); // 0-30 feet
+                newHole.penaltyStrokes = Math.floor(Math.random() * 2); // 0-1 penalty strokes
+                newHole.shotsInside100 = Math.floor(Math.random() * 3); // 0-2 shots inside 100 yards
+                newHoles.push(newHole);
               }
-              newHole.approachClub =
-                clubs[Math.floor(Math.random() * (clubs.length - 1)) + 1];
-              newHole.approachShot =
-                approachShots[
-                  Math.floor(Math.random() * (approachShots.length - 1)) + 1
-                ];
+              const newGame = {
+                createdDate: new Date().getTime() / 1000,
+                title: "Random Round",
+                holes: newHoles,
+                gameDate: new Date().getTime() / 1000,
+              };
 
-              if (newHole.approachShot !== "GIR") {
-                newHole.upAndDown = ["Yes", "No"][
-                  Math.floor(Math.random() * 2)
-                ];
-                newHole.upAndDownClub =
+              console.log(user.id, newGame);
+
+              const res = await addGame(user.id, newGame);
+
+              if (res === "Success!") window.location.reload();
+              else alert("Error adding game: " + res);
+            }}
+          >
+            <Typography fontSize="40px" fontWeight={"bold"}>
+              Add Random 9 Hole Game
+            </Typography>
+          </Button>
+        )}
+
+        {process.env.NODE_ENV === "development" && (
+          <Button
+            variant="contained"
+            sx={{
+              height: "100px",
+              width: "90%",
+            }}
+            onClick={async () => {
+              const newHoles = [];
+              for (let i = 0; i < 18; i++) {
+                const newHole = {};
+                newHole.par = [3, 4, 5][Math.floor(Math.random() * 3)];
+                if (newHole.par === 3)
+                  newHole.yardage =
+                    Math.floor(Math.random() * (200 - 140 + 1)) + 140;
+                if (newHole.par === 4)
+                  newHole.yardage =
+                    Math.floor(Math.random() * (450 - 300 + 1)) + 300;
+                if (newHole.par === 5)
+                  newHole.yardage =
+                    Math.floor(Math.random() * (700 - 500 + 1)) + 500;
+                newHole.score = newHole.par + Math.floor(Math.random() * 3); // 0-2 over/under par
+                if (newHole.par > 3) {
+                  newHole.teeClub =
+                    clubs[Math.floor(Math.random() * (clubs.length - 1)) + 1];
+                  newHole.teeShot =
+                    teeShots[
+                      Math.floor(Math.random() * (teeShots.length - 1)) + 1
+                    ];
+                } else {
+                  newHole.teeClub = clubs[0];
+                  newHole.teeShot = teeShots[0];
+                }
+                newHole.approachClub =
                   clubs[Math.floor(Math.random() * (clubs.length - 1)) + 1];
-              } else {
-                newHole.upAndDown = "-";
-                newHole.upAndDownClub = "-";
+                newHole.approachShot =
+                  approachShots[
+                    Math.floor(Math.random() * (approachShots.length - 1)) + 1
+                  ];
+
+                if (newHole.approachShot !== "GIR") {
+                  newHole.upAndDown = ["Yes", "No"][
+                    Math.floor(Math.random() * 2)
+                  ];
+                  newHole.upAndDownClub =
+                    clubs[Math.floor(Math.random() * (clubs.length - 1)) + 1];
+                } else {
+                  newHole.upAndDown = "-";
+                  newHole.upAndDownClub = "-";
+                }
+                newHole.totalPutts = Math.floor(Math.random() * 3) + 1; // 1-3 putts
+                newHole.firstPuttDist = Math.floor(Math.random() * 30); // 0-30 feet
+                newHole.penaltyStrokes = Math.floor(Math.random() * 2); // 0-1 penalty strokes
+                newHole.shotsInside100 = Math.floor(Math.random() * 3); // 0-2 shots inside 100 yards
+                newHoles.push(newHole);
               }
-              newHole.totalPutts = Math.floor(Math.random() * 3) + 1; // 1-3 putts
-              newHole.firstPuttDist = Math.floor(Math.random() * 30); // 0-30 feet
-              newHole.penaltyStrokes = Math.floor(Math.random() * 2); // 0-1 penalty strokes
-              newHole.shotsInside100 = Math.floor(Math.random() * 3); // 0-2 shots inside 100 yards
-              newHoles.push(newHole);
-            }
-            const newGame = {
-              createdDate: new Date().getTime() / 1000,
-              title: "Random Round",
-              holes: newHoles,
-              gameDate: new Date().getTime() / 1000,
-            };
+              const newGame = {
+                createdDate: new Date().getTime() / 1000,
+                title: "Random Round",
+                holes: newHoles,
+                gameDate: new Date().getTime() / 1000,
+              };
 
-            console.log(user.id, newGame);
+              console.log(user.id, newGame);
 
-            const res = await addGame(user.id, newGame);
+              const res = await addGame(user.id, newGame);
 
-            if (res === "Success!") window.location.reload();
-            else alert("Error adding game: " + res);
-          }}
-        >
-          <Typography fontSize="40px" fontWeight={"bold"}>
-            Add Random 18 Hole Game
-          </Typography>
-        </Button>
+              if (res === "Success!") window.location.reload();
+              else alert("Error adding game: " + res);
+            }}
+          >
+            <Typography fontSize="40px" fontWeight={"bold"}>
+              Add Random 18 Hole Game
+            </Typography>
+          </Button>
+        )}
 
         <List
           sx={{

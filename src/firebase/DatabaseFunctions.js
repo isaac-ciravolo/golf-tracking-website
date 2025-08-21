@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 import generateClassCode from "../util/ClassCode";
+const DATABASE_KEY = process.env.REACT_APP_DATABASE_KEY;
 
 export const createClass = async (className, coachId) => {
   try {
@@ -466,20 +467,31 @@ export const fetchUserAssignments = async (userId) => {
     if (!userId) {
       return "Please provide a user ID.";
     }
-    let response = null;
-    if (process.env.NODE_ENV === "development") {
-      response = await fetch(
-        "https://fetchassignments-lkef4bolkq-uc.a.run.app/?id=" + userId
-      );
-    } else
-      response = await fetch(
-        `https://fetchassignments-2uga654xhq-uc.a.run.app/?id=${userId}`
-      );
+    const response = await fetch(
+      `https://fetchassignments-${DATABASE_KEY}-uc.a.run.app/?id=${userId}`
+    );
+
     if (!response.ok) {
       throw new Error("Failed to fetch assignments.");
     }
     const data = await response.json();
     return data;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const removeStudentFromClass = async (classCode, studentId) => {
+  try {
+    const response = await fetch(
+      `https://coachremovestudentfromclass-${DATABASE_KEY}-uc.a.run.app/?id=${studentId}&classId=${classCode}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to remove student.");
+    }
+
+    return "Success!";
   } catch (error) {
     return error.message;
   }
