@@ -63,7 +63,7 @@ function SignUpView() {
         setErrorMessage("Please enter a last name");
         return;
       }
-
+      console.log(accountType === "user");
       const res = await createUser(
         email,
         password,
