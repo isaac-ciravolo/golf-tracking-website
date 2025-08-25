@@ -1,7 +1,6 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { auth, db } from "../firebase/firebase";
-import { setDoc, doc } from "firebase/firestore";
+import { auth } from "../firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import {
   Typography,
@@ -13,8 +12,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import { sortingOptions } from "../util/Constants";
-import { useAuth } from "../firebase/AuthContext";
+import { LoadingButton } from "@mui/lab";
 import { createUser } from "../database/UserFunctions";
 
 function SignUpView() {
@@ -25,6 +23,7 @@ function SignUpView() {
   const [lastName, setLastName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [accountType, setAccountType] = useState("user");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   function isValidEmail(email) {
@@ -33,6 +32,7 @@ function SignUpView() {
   }
 
   const handleRegister = async (e) => {
+    setLoading(true);
     e.preventDefault();
     try {
       if (email === "") {
@@ -75,7 +75,7 @@ function SignUpView() {
       if (res.status != 201)
         setErrorMessage(`Error ${res.status}: ${res.message}`);
       else {
-        await auth.signInWithEmailAndPassword(email, password);
+        await signInWithEmailAndPassword(auth, email, password);
         navigate("/verify");
       }
     } catch (error) {
@@ -83,6 +83,7 @@ function SignUpView() {
         setErrorMessage("Email already in use");
       else setErrorMessage(error.message);
     }
+    setLoading(false);
   };
 
   return (
@@ -212,14 +213,15 @@ function SignUpView() {
               }}
             />
 
-            <Button
+            <LoadingButton
               type="submit"
               variant="contained"
               fullWidth
               sx={{ height: "50px", width: "100%", fontSize: "20px" }}
+              loading={loading}
             >
               SIGN UP
-            </Button>
+            </LoadingButton>
 
             <Typography>
               Already Have an Account? <Link href="/login">Login Here</Link>
