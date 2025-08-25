@@ -106,8 +106,10 @@ const CoachSettings = () => {
             color="error"
             onClick={async () => {
               const res = await deleteAccount(coach.id);
-              if (res === "Success!") navigate("/login");
-              else setDeleteAccountError(res);
+              if (res === "Success!") {
+                await logOut();
+                navigate("/login");
+              } else setDeleteAccountError(res);
             }}
           >
             Delete Account

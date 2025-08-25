@@ -10,8 +10,6 @@ import { useAuth } from "../firebase/AuthContext.js";
 import { logOut } from "../firebase/DatabaseFunctions.js";
 const VerificationView = () => {
   const { authUser } = useAuth();
-  const [sendingEmail, setSendingEmail] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const onSubmit = async (e) => {
@@ -54,40 +52,28 @@ const VerificationView = () => {
               Click To Send Email To Your Inbox!
             </Typography>
 
-            <LoadingButton
+            <Button
               type="submit"
               variant="contained"
               fullWidth
               sx={{ height: "50px", width: "100%", fontSize: "20px" }}
-              loading={sendingEmail}
               onClick={async () => {
-                setSendingEmail(true);
                 const res = await doSendEmailVerification();
                 if (res !== "Success!") alert("Error: " + res);
-                else alert(`Verification email sent to ${authUser.email}!`);
-                setSendingEmail(false);
+                else {
+                  alert(`Verification email sent to ${authUser.email}!`);
+                  const logOutRes = await logOut();
+                  if (logOutRes !== "Success!")
+                    alert("Error during logout: " + logOutRes);
+                  else navigate("/login");
+                }
               }}
             >
-              SEND EMAIL
-            </LoadingButton>
+              SEND EMAIL AND LOG OUT
+            </Button>
           </Box>
         </form>
       </Paper>
-      <Button
-        variant="contained"
-        style={{
-          marginTop: "40px",
-          height: "70px",
-          width: "350px",
-          fontSize: "28px",
-        }}
-        onClick={async () => {
-          await logOut();
-          navigate("/login");
-        }}
-      >
-        Log Out
-      </Button>
     </Box>
   );
 };

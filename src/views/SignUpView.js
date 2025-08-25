@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { sortingOptions } from "../util/Constants";
 import { useAuth } from "../firebase/AuthContext";
+import { createUser } from "../database/UserFunctions";
 
 function SignUpView() {
   const [email, setEmail] = useState("");
@@ -63,33 +64,20 @@ function SignUpView() {
         return;
       }
 
-      await createUserWithEmailAndPassword(auth, email, password);
-      const user = auth.currentUser;
-      if (user) {
-        if (accountType === "user") {
-          await setDoc(doc(db, "users", user.uid), {
-            id: user.uid,
-            email: user.email,
-            firstName: firstName,
-            lastName: lastName,
-            joined: new Date().getTime() / 1000,
-            sortBy: sortingOptions[0],
-            classes: [],
-            assignments: [],
-          });
-        } else {
-          await setDoc(doc(db, "coaches", user.uid), {
-            id: user.uid,
-            email: user.email,
-            firstName: firstName,
-            lastName: lastName,
-            joined: new Date().getTime() / 1000,
-            classes: [],
-          });
-        }
-      }
+      const res = await createUser(
+        email,
+        password,
+        firstName,
+        lastName,
+        accountType === "user"
+      );
 
-      navigate("/verify");
+      if (res.status != 201)
+        setErrorMessage(`Error ${res.status}: ${res.message}`);
+      else {
+        await auth.signInWithEmailAndPassword(email, password);
+        navigate("/verify");
+      }
     } catch (error) {
       if (error.message === "Firebase: Error (auth/email-already-in-use).")
         setErrorMessage("Email already in use");
@@ -151,7 +139,7 @@ function SignUpView() {
 
             <Typography textAlign={"center"}>
               {accountType === "user"
-                ? "Users have the ability to input vata and view their progress."
+                ? "Users have the ability to input data and view their progress."
                 : "Coaches have the ability to create classes for users to join."}
             </Typography>
 
