@@ -9,7 +9,7 @@ import { createClass } from "../firebase/DatabaseFunctions";
 
 const CoachClassesView = () => {
   const [coachClasses, setCoachClasses] = useState([]);
-  const { currentUser: user } = useAuth();
+  const { userData: user } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [className, setClassName] = useState("");

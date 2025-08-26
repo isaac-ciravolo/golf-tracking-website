@@ -23,7 +23,6 @@ import formatDateFromMilliseconds from "../util/DateConverter";
 import { fetchUserById, editAssignment } from "../firebase/DatabaseFunctions";
 import { LoadingButton } from "@mui/lab";
 const CoachAssignmentView = () => {
-  const { currentUser: user } = useAuth();
   const { id: classCode, assignmentId } = useParams();
   const [assignment, setAssignment] = useState(null);
   const [userNameLookup, setUserNameLookup] = useState({});

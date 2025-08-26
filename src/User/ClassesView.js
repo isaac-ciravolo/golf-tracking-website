@@ -9,7 +9,7 @@ import {
 import { useAuth } from "../firebase/AuthContext.js";
 
 const ClassesView = () => {
-  const { currentUser: user } = useAuth();
+  const { userData: user } = useAuth();
   const [openJoinClass, setOpenJoinClass] = useState(false);
   const [openLeaveClass, setOpenLeaveClass] = useState(false);
   const [classToLeave, setClassToLeave] = useState("");

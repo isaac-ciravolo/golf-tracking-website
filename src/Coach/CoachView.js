@@ -19,7 +19,7 @@ import { useParams } from "react-router-dom";
 import LoadingView from "../views/LoadingView";
 
 const CoachView = () => {
-  const { currentUser: user } = useAuth();
+  const { userData: user } = useAuth();
 
   const [value, setValue] = useState(0);
   const [selectedClass, setSelectedClass] = useState(null);

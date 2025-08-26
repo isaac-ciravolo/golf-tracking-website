@@ -20,7 +20,7 @@ import { clubs, teeShots, approachShots } from "../util/Constants";
 import { useAuth } from "../firebase/AuthContext";
 
 const GamesListView = () => {
-  const { currentUser: user } = useAuth();
+  const { userData: user } = useAuth();
   const navigate = useNavigate();
   const [games, setGames] = useState([]);
   const [open, setOpen] = useState(false);

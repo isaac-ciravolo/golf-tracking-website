@@ -21,6 +21,7 @@ export const createUser = async (
       `https://createuser-${DATABASE_KEY}-uc.a.run.app/`,
       {
         method: "POST",
+        mode: "no-cors",
         headers: {
           "Content-Type": "application/json",
         },
@@ -35,6 +36,24 @@ export const createUser = async (
     );
 
     return { status: res.status, message: await res.text() };
+  } catch (error) {
+    return { status: 500, error: error.message };
+  }
+};
+
+export const fetchUserData = async (token) => {
+  try {
+    const res = await fetch(
+      `https://fetchuserdata-${DATABASE_KEY}-uc.a.run.app/`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return { status: res.status, data: await res.json() };
   } catch (error) {
     return { status: 500, error: error.message };
   }

@@ -7,7 +7,7 @@ import GameRouter from "./GameRouter";
 import { useAuth } from "../firebase/AuthContext";
 
 const GamesView = () => {
-  const { currentUser: user } = useAuth();
+  const { userData: user } = useAuth();
   const navigate = useNavigate();
 
   return (

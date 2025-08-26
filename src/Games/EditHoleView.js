@@ -24,7 +24,7 @@ const EditHoleView = () => {
   const [shotsInside100, setShotsInside100] = useState(null);
   const [game, setGame] = useState(null);
   const { gameId, holeIndex } = useParams();
-  const { currentUser: user } = useAuth();
+  const { userData: user } = useAuth();
 
   const navigate = useNavigate();
 

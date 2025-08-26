@@ -4,7 +4,7 @@ import { logOut, deleteAccount } from "../firebase/DatabaseFunctions";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../firebase/AuthContext";
 const CoachSettings = () => {
-  const { currentUser: coach } = useAuth();
+  const { userData: coach } = useAuth();
   const [showLogOutDialog, setShowLogOutDialog] = useState(false);
   const [logOutError, setLogOutError] = useState(null);
   const [showDeleteAccountDialog, setShowDeleteAccountDialog] = useState(false);

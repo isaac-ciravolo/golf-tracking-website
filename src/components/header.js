@@ -5,7 +5,7 @@ import { useAuth } from "../firebase/AuthContext";
 
 function Header() {
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { userData } = useAuth();
   return (
     <AppBar
       sx={{
@@ -49,11 +49,8 @@ function Header() {
             }}
           />
         </Box>
-        {/* <Typography variant="h4" fontWeight={"bold"}>
-          Eagle Eye Analytics
-        </Typography> */}
       </Link>
-      {currentUser != null && (
+      {userData != null && (
         <Button
           sx={{
             position: "absolute",

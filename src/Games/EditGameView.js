@@ -21,7 +21,7 @@ const EditGameView = () => {
   const [game, setGame] = useState(null);
   const navigate = useNavigate();
   const { gameId } = useParams();
-  const { currentUser: user } = useAuth();
+  const { userData: user } = useAuth();
   const [validGame, setValidGame] = useState(false);
   const [validNumHoles, setValidNumHoles] = useState(false);
 

@@ -23,7 +23,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import AssignmentsView from "./AssignmentsView.js";
 
 const UserView = () => {
-  const { currentUser: user } = useAuth();
+  const { userData: user } = useAuth();
   const [readOnlyUser, setReadOnlyUser] = useState(null);
   const [games, setGames] = useState([]);
   const [value, setValue] = useState(0);

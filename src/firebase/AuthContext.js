@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { db, auth } from "./firebase.js";
+import { auth } from "./firebase.js";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
 import LoadingView from "../views/LoadingView.js";
 import { useNavigate, useLocation } from "react-router-dom";
-import { doSendEmailVerification } from "./auth.js";
+import { fetchUserData } from "../database/UserFunctions.js";
 
 const AuthContext = React.createContext();
 
@@ -14,7 +13,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [authUser, setAuthUser] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [userVerified, setUserVerified] = useState(false);
   const [isCoach, setIsCoach] = useState(false);
@@ -66,53 +65,23 @@ export function AuthProvider({ children }) {
       setAuthUser(user);
       if (user.emailVerified) {
         setUserVerified(true);
-        let isUser = false;
-        let isCoach = false;
 
-        try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userDocSnap = await getDoc(userDocRef);
-
-          if (userDocSnap.exists()) {
-            const userData = userDocSnap.data();
-            setCurrentUser({ ...userData });
-            setIsCoach(false);
-
-            isUser = true;
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-
-        if (!isUser) {
-          try {
-            const coachDocRef = doc(db, "coaches", user.uid);
-            const coachDocSnap = await getDoc(coachDocRef);
-
-            if (coachDocSnap.exists()) {
-              const coachData = coachDocSnap.data();
-              setCurrentUser({ ...coachData });
-              setIsCoach(true);
-
-              isCoach = true;
-            }
-          } catch (error) {
-            console.error("Error fetching coach data:", error);
-          }
-        }
-
-        if (!isUser && !isCoach) {
-          setCurrentUser(null);
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetchUserData(token);
+        if (res.status !== 200) console.error(res.error);
+        else {
+          setUserData(res.data);
+          setIsCoach(res.data.isCoach);
         }
       } else {
         setUserVerified(false);
-        setCurrentUser(null);
+        setUserData(null);
       }
     } else {
       setUserLoggedIn(false);
       setAuthUser(null);
       setUserVerified(false);
-      setCurrentUser(null);
+      setUserData(null);
     }
 
     setLoading(false);
@@ -120,7 +89,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     authUser,
-    currentUser,
+    userData,
     userLoggedIn,
     loading,
     isCoach,

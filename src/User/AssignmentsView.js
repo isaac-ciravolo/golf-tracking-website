@@ -18,7 +18,7 @@ import { LoadingButton } from "@mui/lab";
 const AssignmentsView = () => {
   const [incompleteAssignments, setIncompleteAssignment] = useState([]);
   const [completedAssignments, setCompletedAssignments] = useState([]);
-  const { currentUser: user } = useAuth();
+  const { userData: user } = useAuth();
   const [showCompleted, setShowCompleted] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
