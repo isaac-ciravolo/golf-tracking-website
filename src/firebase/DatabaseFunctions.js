@@ -187,38 +187,6 @@ export const fetchRequests = async (classCode) => {
   }
 };
 
-export const fetchUser = async (callback) => {
-  try {
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        callback(null, null);
-        return;
-      }
-      const userDocRef = doc(db, "users", user.uid);
-      const userDocSnap = await getDoc(userDocRef);
-
-      if (userDocSnap.exists()) {
-        callback(userDocSnap.data(), false);
-        return;
-      }
-
-      const coachDocRef = doc(db, "coaches", user.uid);
-      const coachDocSnap = await getDoc(coachDocRef);
-
-      if (coachDocSnap.exists()) {
-        callback(null, coachDocSnap.data());
-        return;
-      }
-
-      console.error("User not found in Firestore.");
-      callback(null, null);
-    });
-  } catch (error) {
-    console.error(error.message);
-    callback(null, null);
-  }
-};
-
 export const fetchUserById = async (userId) => {
   try {
     const userDocRef = doc(db, "users", userId);
