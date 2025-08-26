@@ -63,13 +63,12 @@ function SignUpView() {
         setErrorMessage("Please enter a last name");
         return;
       }
-      console.log(accountType === "user");
       const res = await createUser(
         email,
         password,
         firstName,
         lastName,
-        accountType === "user"
+        accountType !== "user"
       );
 
       if (res.status != 201)

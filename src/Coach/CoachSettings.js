@@ -24,9 +24,9 @@ const CoachSettings = () => {
     >
       <Typography variant="h4">Coach Settings</Typography>
       <Typography variant="h6">
-        {coach.firstName} {coach.lastName}
+        {coach?.firstName} {coach?.lastName}
       </Typography>
-      <Typography variant="h6">{coach.email}</Typography>
+      <Typography variant="h6">{coach?.email}</Typography>
       <Button
         variant="contained"
         color="primary"
@@ -105,7 +105,7 @@ const CoachSettings = () => {
             variant="contained"
             color="error"
             onClick={async () => {
-              const res = await deleteAccount(coach.id);
+              const res = await deleteAccount(coach?.id);
               if (res === "Success!") {
                 await logOut();
                 navigate("/login");
