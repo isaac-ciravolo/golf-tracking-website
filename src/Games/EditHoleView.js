@@ -34,7 +34,6 @@ const EditHoleView = () => {
 
       if (newGame && newGame.holes[holeIndex]) {
         const hole = newGame.holes[holeIndex];
-        console.log(hole.par);
         setPar(hole.par);
         setYardage(hole.yardage);
         setScore(hole.score);

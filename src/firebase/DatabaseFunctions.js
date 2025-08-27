@@ -296,16 +296,6 @@ export const logOut = async () => {
   return "Success!";
 };
 
-export const addGame = async (userId, gameData) => {
-  try {
-    const gamesCollectionRef = collection(db, "users", userId, "games");
-    await addDoc(gamesCollectionRef, gameData);
-    return "Success!";
-  } catch (error) {
-    return error.message;
-  }
-};
-
 export const listenToGames = (userId, setGames) => {
   const gamesCollectionRef = collection(db, "users", userId, "games");
 
