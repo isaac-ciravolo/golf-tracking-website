@@ -9,15 +9,13 @@ import {
   Icon,
 } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter";
-import { updateGame } from "../firebase/DatabaseFunctions";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchGame } from "../firebase/DatabaseFunctions";
 import LoadingView from "../views/LoadingView";
 import { useAuth } from "../firebase/AuthContext";
 import { validHole } from "../util/ValidChecker";
 import WarningIcon from "@mui/icons-material/Warning";
 import { auth } from "../firebase/firebase.js";
-import { deleteGame } from "../database/GameFunctions";
+import { deleteGame, updateGame, fetchGame } from "../database/GameFunctions";
 
 const EditGameView = () => {
   const [game, setGame] = useState(null);
@@ -30,8 +28,17 @@ const EditGameView = () => {
   useEffect(() => {
     if (!user) return;
     const fetchData = async () => {
-      const newGame = await fetchGame(user.id, gameId);
+      const token = await auth.currentUser.getIdToken();
+      const res = await fetchGame(token, gameId);
+
+      if (res.status !== 200) {
+        alert("Error fetching game: " + res.error);
+        return;
+      }
+
+      const newGame = res.data;
       setGame(newGame);
+
       for (let i = 0; i < newGame.holes.length; i++) {
         if (!validHole(newGame.holes[i])) {
           setValidGame(false);
@@ -46,7 +53,7 @@ const EditGameView = () => {
       }
     };
     fetchData();
-  }, [user]);
+  }, [user, gameId]);
 
   const addHole = async () => {
     const newHole = {
@@ -64,11 +71,12 @@ const EditGameView = () => {
       shotsInside100: 0,
     };
     game.holes.push(newHole);
-    const res = await updateGame(user.id, gameId, game);
-    if (res !== "Success!") {
-      alert("Error adding hole: " + res);
-    }
-    window.location.reload();
+
+    const token = await auth.currentUser.getIdToken();
+    const res = await updateGame(token, gameId, game);
+
+    if (res.status !== 200) alert("Error adding hole: " + res.error);
+    else window.location.reload();
   };
 
   return game ? (

@@ -5,9 +5,10 @@ import {
 } from "../components/CustomComponents";
 import { Box, Button } from "@mui/material";
 import { clubs, teeShots, approachShots, yesAndNo } from "../util/Constants";
-import { fetchGame, updateGame } from "../firebase/DatabaseFunctions";
+import { fetchGame, updateGame } from "../database/GameFunctions.js";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../firebase/AuthContext";
+import { auth } from "../firebase/firebase.js";
 const EditHoleView = () => {
   const [par, setPar] = useState(null);
   const [yardage, setYardage] = useState(null);
@@ -30,10 +31,16 @@ const EditHoleView = () => {
 
   useEffect(() => {
     const fetchHole = async () => {
-      const newGame = await fetchGame(user.id, gameId);
+      const token = await auth.currentUser.getIdToken();
+      const res = await fetchGame(token, gameId);
 
-      if (newGame && newGame.holes[holeIndex]) {
-        const hole = newGame.holes[holeIndex];
+      if (res.status !== 200) {
+        alert("Error fetching game: " + res.error);
+        return;
+      }
+
+      if (res.data && res.data.holes[holeIndex]) {
+        const hole = res.data.holes[holeIndex];
         setPar(hole.par);
         setYardage(hole.yardage);
         setScore(hole.score);
@@ -47,7 +54,7 @@ const EditHoleView = () => {
         setFirstPuttDist(hole.firstPuttDist);
         setPenaltyStrokes(hole.penaltyStrokes);
         setShotsInside100(hole.shotsInside100);
-        setGame(newGame);
+        setGame(res.data);
       }
     };
 
@@ -73,21 +80,22 @@ const EditHoleView = () => {
     };
     game.holes[holeIndex] = newHole;
 
-    const res = await updateGame(user.id, gameId, game);
+    const token = await auth.currentUser.getIdToken();
+    const res = await updateGame(token, gameId, game);
 
-    if (res !== "Success!") {
-      alert("Error saving hole " + res);
+    if (res.status !== 200) {
+      alert("Error saving hole " + res.error);
       game.holes[holeIndex] = oldHole;
     }
-
     navigate("/editGames/" + gameId);
   };
 
   const deleteHole = async (e) => {
     const oldHole = game.holes[holeIndex];
     game.holes.splice(holeIndex, 1);
-    const res = await updateGame(user.id, gameId, game);
-    if (res !== "Success!") {
+    const token = await auth.currentUser.getIdToken();
+    const res = await updateGame(token, gameId, game);
+    if (res.status !== 200) {
       alert("Error deleting hole " + res);
       game.holes.splice(holeIndex, 0, oldHole);
     }

@@ -14,9 +14,9 @@ export const createGame = async (token, gameData) => {
       }
     );
 
-    if (res.status != 200)
+    if (res.status !== 200)
       return { status: res.status, error: await res.text() };
-    return { status: res.status, data: await res.json() };
+    return { status: res.status, data: await res.text() };
   } catch (error) {
     return { status: 500, error: error.message };
   }
@@ -34,9 +34,9 @@ export const createRandom9HoleGame = async (token) => {
       }
     );
 
-    if (res.status != 200)
+    if (res.status !== 200)
       return { status: res.status, error: await res.text() };
-    return { status: res.status, data: await res.json() };
+    return { status: res.status, data: await res.text() };
   } catch (error) {
     return { status: 500, error: error.message };
   }
@@ -54,9 +54,9 @@ export const createRandom18HoleGame = async (token) => {
       }
     );
 
-    if (res.status != 200)
+    if (res.status !== 200)
       return { status: res.status, error: await res.text() };
-    return { status: res.status, data: await res.json() };
+    return { status: res.status, data: await res.text() };
   } catch (error) {
     return { status: 500, error: error.message };
   }
@@ -74,9 +74,51 @@ export const deleteGame = async (token, gameId) => {
       }
     );
 
-    if (res.status != 200)
+    if (res.status !== 200)
       return { status: res.status, error: await res.text() };
     return { status: res.status, data: await res.text() };
+  } catch (error) {
+    return { status: 500, error: error.message };
+  }
+};
+
+export const updateGame = async (token, gameId, gameData) => {
+  try {
+    const res = await fetch(
+      `https://updategame-${DATABASE_KEY}-uc.a.run.app/?gameId=${gameId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(gameData),
+      }
+    );
+
+    if (res.status !== 200)
+      return { status: res.status, error: await res.text() };
+    return { status: res.status, data: await res.text() };
+  } catch (error) {
+    return { status: 500, error: error.message };
+  }
+};
+
+export const fetchGame = async (token, gameId) => {
+  try {
+    const res = await fetch(
+      `https://fetchgame-${DATABASE_KEY}-uc.a.run.app/?gameId=${gameId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (res.status !== 200)
+      return { status: res.status, error: await res.text() };
+    return { status: res.status, data: await res.json() };
   } catch (error) {
     return { status: 500, error: error.message };
   }
