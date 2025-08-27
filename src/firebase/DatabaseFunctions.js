@@ -326,16 +326,6 @@ export const deleteAccount = async (userId) => {
   }
 };
 
-export const deleteGame = async (userId, gameId) => {
-  try {
-    const gameDocRef = doc(db, "users", userId, "games", gameId);
-    await deleteDoc(gameDocRef);
-    return "Success!";
-  } catch (error) {
-    return error.message;
-  }
-};
-
 export const updateGame = async (userId, gameId, gameData) => {
   try {
     const gameDocRef = doc(db, "users", userId, "games", gameId);

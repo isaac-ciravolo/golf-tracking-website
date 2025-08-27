@@ -61,3 +61,23 @@ export const createRandom18HoleGame = async (token) => {
     return { status: 500, error: error.message };
   }
 };
+
+export const deleteGame = async (token, gameId) => {
+  try {
+    const res = await fetch(
+      `https://deletegame-${DATABASE_KEY}-uc.a.run.app/?gameId=${gameId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (res.status != 200)
+      return { status: res.status, error: await res.text() };
+    return { status: res.status, data: await res.text() };
+  } catch (error) {
+    return { status: 500, error: error.message };
+  }
+};

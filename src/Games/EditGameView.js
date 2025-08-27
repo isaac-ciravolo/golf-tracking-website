@@ -9,13 +9,15 @@ import {
   Icon,
 } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter";
-import { deleteGame, updateGame } from "../firebase/DatabaseFunctions";
+import { updateGame } from "../firebase/DatabaseFunctions";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchGame } from "../firebase/DatabaseFunctions";
 import LoadingView from "../views/LoadingView";
 import { useAuth } from "../firebase/AuthContext";
 import { validHole } from "../util/ValidChecker";
 import WarningIcon from "@mui/icons-material/Warning";
+import { auth } from "../firebase/firebase.js";
+import { deleteGame } from "../database/GameFunctions";
 
 const EditGameView = () => {
   const [game, setGame] = useState(null);
@@ -111,9 +113,10 @@ const EditGameView = () => {
         <Button
           variant="contained"
           onClick={async () => {
-            const res = await deleteGame(user.id, gameId);
-            if (res !== "Success!") {
-              alert("Error deleting game");
+            const token = await auth.currentUser.getIdToken();
+            const res = await deleteGame(token, gameId);
+            if (res.status !== 200) {
+              alert(res.error);
             } else {
               navigate("/editGames");
             }
