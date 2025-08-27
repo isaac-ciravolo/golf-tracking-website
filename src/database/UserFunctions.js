@@ -21,7 +21,7 @@ export const createUser = async (
       `https://createuser-${DATABASE_KEY}-uc.a.run.app/`,
       {
         method: "POST",
-        mode: "no-cors",
+
         headers: {
           "Content-Type": "application/json",
         },
