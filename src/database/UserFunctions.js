@@ -58,3 +58,21 @@ export const fetchUserData = async (token) => {
     return { status: 500, error: error.message };
   }
 };
+
+export const deleteUser = async (token) => {
+  try {
+    const res = await fetch(
+      `https://deleteuser-${DATABASE_KEY}-uc.a.run.app/`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return { status: res.status, message: await res.text() };
+  } catch (error) {
+    return { status: 500, message: error.message };
+  }
+};

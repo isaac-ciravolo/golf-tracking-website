@@ -3,6 +3,8 @@ import { Box, Typography, Button, Dialog } from "@mui/material";
 import { logOut, deleteAccount } from "../firebase/DatabaseFunctions";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../firebase/AuthContext";
+import { deleteUser } from "../database/UserFunctions";
+import { auth } from "../firebase/firebase";
 const UserSettings = () => {
   const { userData: user } = useAuth();
   const [showLogOutDialog, setShowLogOutDialog] = useState(false);
@@ -105,9 +107,10 @@ const UserSettings = () => {
             variant="contained"
             color="error"
             onClick={async () => {
-              const res = await deleteAccount(user?.id);
-              if (res === "Success!") navigate("/login");
-              else setDeleteAccountError(res);
+              const token = await auth.currentUser.getIdToken();
+              const res = await deleteUser(token);
+              if (res.status === 200) navigate("/login");
+              else setDeleteAccountError(res.message);
             }}
           >
             Delete Account
