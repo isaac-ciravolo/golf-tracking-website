@@ -15,8 +15,8 @@ export const createGame = async (token, gameData) => {
     );
 
     if (res.status !== 200)
-      return { status: res.status, error: await res.text() };
-    return { status: res.status, data: await res.text() };
+      return { status: res.status, error: await res.json() };
+    return { status: res.status, data: await res.json() };
   } catch (error) {
     return { status: 500, error: error.message };
   }
@@ -35,8 +35,8 @@ export const createRandom9HoleGame = async (token) => {
     );
 
     if (res.status !== 200)
-      return { status: res.status, error: await res.text() };
-    return { status: res.status, data: await res.text() };
+      return { status: res.status, error: await res.json() };
+    return { status: res.status, data: await res.json() };
   } catch (error) {
     return { status: 500, error: error.message };
   }
@@ -55,8 +55,8 @@ export const createRandom18HoleGame = async (token) => {
     );
 
     if (res.status !== 200)
-      return { status: res.status, error: await res.text() };
-    return { status: res.status, data: await res.text() };
+      return { status: res.status, error: await res.json() };
+    return { status: res.status, data: await res.json() };
   } catch (error) {
     return { status: 500, error: error.message };
   }
@@ -75,8 +75,8 @@ export const deleteGame = async (token, gameId) => {
     );
 
     if (res.status !== 200)
-      return { status: res.status, error: await res.text() };
-    return { status: res.status, data: await res.text() };
+      return { status: res.status, error: await res.json() };
+    return { status: res.status, data: await res.json() };
   } catch (error) {
     return { status: 500, error: error.message };
   }
@@ -97,8 +97,8 @@ export const updateGame = async (token, gameId, gameData) => {
     );
 
     if (res.status !== 200)
-      return { status: res.status, error: await res.text() };
-    return { status: res.status, data: await res.text() };
+      return { status: res.status, error: await res.json() };
+    return { status: res.status, data: await res.json() };
   } catch (error) {
     return { status: 500, error: error.message };
   }
@@ -117,7 +117,7 @@ export const fetchGame = async (token, gameId) => {
     );
 
     if (res.status !== 200)
-      return { status: res.status, error: await res.text() };
+      return { status: res.status, error: await res.json() };
     return { status: res.status, data: await res.json() };
   } catch (error) {
     return { status: 500, error: error.message };

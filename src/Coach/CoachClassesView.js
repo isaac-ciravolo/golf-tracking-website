@@ -1,11 +1,16 @@
 import { Box, Button, Dialog, TextField, Typography } from "@mui/material";
 import { useAuth } from "../firebase/AuthContext";
 import { useState, useEffect } from "react";
-import { fetchClasses } from "../firebase/DatabaseFunctions";
+// import { fetchClasses } from "../firebase/DatabaseFunctions";
 import { List, ListItem, ListItemButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
-import { createClass } from "../firebase/DatabaseFunctions";
+// import { createClass } from "../firebase/DatabaseFunctions";
+import {
+  createClass,
+  fetchCoachClasses,
+  deleteClass,
+} from "../database/ClassFunctions.js";
 
 const CoachClassesView = () => {
   const [coachClasses, setCoachClasses] = useState([]);
@@ -19,7 +24,7 @@ const CoachClassesView = () => {
   useEffect(() => {
     if (user) {
       const temp = async () => {
-        const newClasses = await fetchClasses(user.id);
+        const newClasses = await fetchCoachClasses(user.id);
         setCoachClasses(newClasses);
       };
 
@@ -124,7 +129,7 @@ const CoachClassesView = () => {
               if (error !== "Success!") {
                 setErrorMessage(error);
               } else {
-                const newClasses = await fetchClasses(user.id);
+                const newClasses = await fetchCoachClasses(user.id);
                 setCoachClasses(newClasses);
                 setOpen(false);
               }

@@ -17,6 +17,7 @@ import { useAuth } from "../firebase/AuthContext";
 import CoachAssignmentsView from "./CoachAssignmentsView";
 import { useParams } from "react-router-dom";
 import LoadingView from "../views/LoadingView";
+// import { createClass, fetchCoachClasses, deleteClass } from "../database/ClassFunctions.js";
 
 const CoachView = () => {
   const { userData: user } = useAuth();

@@ -1,50 +1,29 @@
 const DATABASE_KEY = process.env.REACT_APP_DATABASE_KEY;
 
-export const createUser = async (
-  email,
-  password,
-  firstName,
-  lastName,
-  isCoach
-) => {
-  console.log(
-    JSON.stringify({
-      email,
-      password,
-      firstName,
-      lastName,
-      isCoach: isCoach,
-    })
-  );
+export const createClass = async (token, className) => {
   try {
     const res = await fetch(
-      `https://createuser-${DATABASE_KEY}-uc.a.run.app/`,
+      `https://createclass-$[DATABASE-KEY}-uc.a.run.app/`,
       {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          email,
-          password,
-          firstName,
-          lastName,
-          isCoach: isCoach,
-        }),
+        body: JSON.stringify(className),
       }
     );
 
-    return { status: res.status, message: await res.json() };
+    return { status: res.status, data: await res.json() };
   } catch (error) {
     return { status: 500, error: error.message };
   }
 };
 
-export const fetchUserData = async (token) => {
+export const fetchCoachClasses = async (token) => {
   try {
     const res = await fetch(
-      `https://fetchuserdata-${DATABASE_KEY}-uc.a.run.app/`,
+      `https://fetchcoachclasses-$[DATABASE-KEY}-uc.a.run.app/`,
       {
         method: "GET",
         headers: {
@@ -59,10 +38,10 @@ export const fetchUserData = async (token) => {
   }
 };
 
-export const deleteUser = async (token) => {
+export const deleteClass = async (token, classId) => {
   try {
     const res = await fetch(
-      `https://deleteuser-${DATABASE_KEY}-uc.a.run.app/`,
+      `https://deleteclass-$[DATABASE-KEY}-uc.a.run.app/?classId=${classId}`,
       {
         method: "DELETE",
         headers: {
