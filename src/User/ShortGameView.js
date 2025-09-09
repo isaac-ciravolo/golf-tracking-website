@@ -7,7 +7,13 @@ import HalfPizzaGraph from "../components/HalfPizzaGraph.js";
 import { clubs, yesAndNo, colors, approachShots } from "../util/Constants.js";
 import { getCountAnd, getCountOr } from "../util/GetCount.js";
 
-const ShortGameView = ({ currentHoles }) => {
+const ShortGameView = ({
+  currentHoles,
+  currentNineHoles,
+  numNineHolesGames,
+  currentEighteenHoles,
+  numEighteenHolesGames,
+}) => {
   const [selectedClub, setSelectedClub] = useState("-");
   const [selectedData, setSelectedData] = useState([]);
   const [selectedTotal, setSelectedTotal] = useState(0);
@@ -18,6 +24,9 @@ const ShortGameView = ({ currentHoles }) => {
   const [clubFirstPuttDistData, setClubFirstPuttDistData] = useState([]);
   const [maxDistance, setMaxDistance] = useState(0);
   const [sandSave, setSandSave] = useState(0);
+  const [totalEighteenShotsInside100, setTotalEighteenShotsInside100] =
+    useState(0);
+  const [totalNineShotsInside100, setTotalNineShotsInside100] = useState(0);
 
   useEffect(() => {
     const newSelectedData = [];
@@ -51,6 +60,7 @@ const ShortGameView = ({ currentHoles }) => {
     setAllTotal(newAllTotal);
 
     let newTotalPutts = 0;
+
     currentHoles.forEach((hole) => {
       newTotalPutts += hole.totalPutts;
     });
@@ -90,7 +100,19 @@ const ShortGameView = ({ currentHoles }) => {
     setParCounts(newParCounts);
     setClubFirstPuttDistData(newClubFirstPuttDistData);
     setMaxDistance(newMaxDistance);
-  }, [currentHoles, selectedClub]);
+
+    // let newEighteenTotalShotsInside100 = 0;
+    // currentEighteenHoles.forEach((hole) => {
+    //   newEighteenTotalShotsInside100 += hole.shotsInside100;
+    // });
+    // setTotalEighteenShotsInside100(newEighteenTotalShotsInside100);
+
+    // let newNineTotalShotsInside100 = 0;
+    // currentNineHoles.forEach((hole) => {
+    //   newNineTotalShotsInside100 += hole.shotsInside100;
+    // });
+    // setTotalNineShotsInside100(newNineTotalShotsInside100);
+  }, [currentHoles, selectedClub, currentNineHoles, currentEighteenHoles]);
 
   const getColorFromDistance = (distanceRatio) => {
     const green = { r: 144, g: 238, b: 144 }; // light green
@@ -322,6 +344,63 @@ const ShortGameView = ({ currentHoles }) => {
               {getScramblingPercentage().toFixed(2) + "%"}
             </Typography>
           </Paper>
+        </Paper>
+      </Box>
+      <Box sx={{ display: "flex", gap: 3 }}>
+        <Paper
+          sx={{
+            width: "500px",
+            height: "500px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 3,
+            paddingLeft: 3,
+            paddingRight: 3,
+          }}
+        >
+          <Typography fontWeight="bold" variant="h6">
+            Shots Inside 100 Yards
+          </Typography>
+          <Box sx={{ display: "flex", gap: 3 }}>
+            <Paper
+              sx={{
+                width: "200px",
+                height: "200px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography fontWeight={"bold"} align="center">
+                AVG Shots Inside 100 Yards per 18 Hole
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(totalEighteenShotsInside100 / numEighteenHolesGames).toFixed(
+                  2
+                )}
+              </Typography>
+            </Paper>
+            <Paper
+              sx={{
+                width: "200px",
+                height: "200px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography fontWeight={"bold"} align="center">
+                AVG Shots Inside 100 Yards per 9 Hole
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(totalNineShotsInside100 / numNineHolesGames).toFixed(2)}
+              </Typography>
+            </Paper>
+          </Box>
         </Paper>
       </Box>
     </Box>

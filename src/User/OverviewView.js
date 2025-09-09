@@ -21,6 +21,9 @@ const OverviewView = ({
   const [totalScore, setTotalScore] = useState(0);
   const [totalPars, setTotalPars] = useState(0);
   const [totalGIR, setTotalGIR] = useState(0);
+  const [totalEighteenShotsInside100, setTotalEighteenShotsInside100] =
+    useState(0);
+  const [totalNineShotsInside100, setTotalNineShotsInside100] = useState(0);
 
   const ParPaper = ({ par }) => {
     return (
@@ -104,6 +107,18 @@ const OverviewView = ({
     currentHoles.forEach((hole) => {
       newTotalPars += hole.par;
     });
+
+    let newEighteenTotalShotsInside100 = 0;
+    currentEighteenHoles.forEach((hole) => {
+      newEighteenTotalShotsInside100 += hole.shotsInside100;
+    });
+    setTotalEighteenShotsInside100(newEighteenTotalShotsInside100);
+
+    let newNineTotalShotsInside100 = 0;
+    currentNineHoles.forEach((hole) => {
+      newNineTotalShotsInside100 += hole.shotsInside100;
+    });
+    setTotalNineShotsInside100(newNineTotalShotsInside100);
 
     setTotalPars(newTotalPars);
   }, [currentHoles, currentNineHoles, currentEighteenHoles]);
@@ -385,10 +400,12 @@ const OverviewView = ({
               }}
             >
               <Typography fontWeight={"bold"} align="center">
-                AVG Shots Inside 100 Yards
+                AVG Shots Inside 100 Yards per 18 Hole
               </Typography>
               <Typography noWrap variant="h4">
-                {}
+                {(totalEighteenShotsInside100 / numEighteenHolesGames).toFixed(
+                  2
+                )}
               </Typography>
             </Paper>
             <Paper
@@ -409,29 +426,48 @@ const OverviewView = ({
               </Typography>
             </Paper>
           </Box>
-          <Paper
-            sx={{
-              width: "200px",
-              height: "200px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography noWrap fontWeight={"bold"}>
-              Up and Down %
-            </Typography>
-            <Typography noWrap variant="h4">
-              {(
-                (getCountAnd(currentHoles, { upAndDown: "Yes" }) /
-                  (getCountAnd(currentHoles, { upAndDown: "Yes" }) +
-                    getCountAnd(currentHoles, { upAndDown: "No" }))) *
-                100
-              ).toFixed(2)}
-              %
-            </Typography>
-          </Paper>
+          <Box sx={{ display: "flex", gap: 3 }}>
+            <Paper
+              sx={{
+                width: "200px",
+                height: "200px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography fontWeight={"bold"} align="center">
+                AVG Shots Inside 100 Yards per 9 Hole
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(totalNineShotsInside100 / numNineHolesGames).toFixed(2)}
+              </Typography>
+            </Paper>
+            <Paper
+              sx={{
+                width: "200px",
+                height: "200px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography noWrap fontWeight={"bold"}>
+                Up and Down %
+              </Typography>
+              <Typography noWrap variant="h4">
+                {(
+                  (getCountAnd(currentHoles, { upAndDown: "Yes" }) /
+                    (getCountAnd(currentHoles, { upAndDown: "Yes" }) +
+                      getCountAnd(currentHoles, { upAndDown: "No" }))) *
+                  100
+                ).toFixed(2)}
+                %
+              </Typography>
+            </Paper>
+          </Box>
         </Paper>
       </Box>
     </>

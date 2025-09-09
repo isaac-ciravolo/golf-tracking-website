@@ -1,9 +1,14 @@
 const DATABASE_KEY = process.env.REACT_APP_DATABASE_KEY;
 
 export const createClass = async (token, className) => {
+  console.log(
+    JSON.stringify({
+      className,
+    })
+  );
   try {
     const res = await fetch(
-      `https://createclass-$[DATABASE-KEY}-uc.a.run.app/`,
+      `https://createclass-${DATABASE_KEY}-uc.a.run.app/`,
       {
         method: "POST",
         headers: {
@@ -14,7 +19,7 @@ export const createClass = async (token, className) => {
       }
     );
 
-    return { status: res.status, data: await res.json() };
+    return { status: res.status, message: await res.json() };
   } catch (error) {
     return { status: 500, error: error.message };
   }
