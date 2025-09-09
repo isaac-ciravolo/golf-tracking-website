@@ -101,17 +101,17 @@ const ShortGameView = ({
     setClubFirstPuttDistData(newClubFirstPuttDistData);
     setMaxDistance(newMaxDistance);
 
-    // let newEighteenTotalShotsInside100 = 0;
-    // currentEighteenHoles.forEach((hole) => {
-    //   newEighteenTotalShotsInside100 += hole.shotsInside100;
-    // });
-    // setTotalEighteenShotsInside100(newEighteenTotalShotsInside100);
+    let newEighteenTotalShotsInside100 = 0;
+    currentEighteenHoles.forEach((hole) => {
+      newEighteenTotalShotsInside100 += hole.shotsInside100;
+    });
+    setTotalEighteenShotsInside100(newEighteenTotalShotsInside100);
 
-    // let newNineTotalShotsInside100 = 0;
-    // currentNineHoles.forEach((hole) => {
-    //   newNineTotalShotsInside100 += hole.shotsInside100;
-    // });
-    // setTotalNineShotsInside100(newNineTotalShotsInside100);
+    let newNineTotalShotsInside100 = 0;
+    currentNineHoles.forEach((hole) => {
+      newNineTotalShotsInside100 += hole.shotsInside100;
+    });
+    setTotalNineShotsInside100(newNineTotalShotsInside100);
   }, [currentHoles, selectedClub, currentNineHoles, currentEighteenHoles]);
 
   const getColorFromDistance = (distanceRatio) => {

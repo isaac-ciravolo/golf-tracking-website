@@ -339,6 +339,10 @@ const UserView = () => {
               <ShortGameView
                 currentHoles={currentHoles}
                 numGames={selectedGames.length}
+                currentNineHoles={currentNineHoles}
+                numNineHolesGames={selectedNineHoleGames.length}
+                currentEighteenHoles={currentEighteenHoles}
+                numEighteenHolesGames={selectedEighteenHoleGames.length}
               />
             </Box>
             <Box
