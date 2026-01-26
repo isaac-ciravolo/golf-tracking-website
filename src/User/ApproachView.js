@@ -61,7 +61,7 @@ const ApproachView = ({
       if (club === "-") return;
       let dist = 0;
       const holes = currentHoles.filter(
-        (hole) => hole.approachClub === club && hole.approachShot === "GIR"
+        (hole) => hole.approachClub === club && hole.approachShot === "GIR",
       );
       if (holes.length === 0) return;
       holes.forEach((hole) => {
@@ -121,7 +121,7 @@ const ApproachView = ({
           {allData.length > 0 && (
             <PizzaGraph
               sliceData={allData.filter(
-                (slice) => slice.label !== "GIR" && slice.label !== "Sand"
+                (slice) => slice.label !== "GIR" && slice.label !== "Sand",
               )}
               circleData={allData.find((slice) => slice.label === "GIR")}
               sandData={allData.find((slice) => slice.label === "Sand")}
@@ -156,7 +156,7 @@ const ApproachView = ({
           {selectedData.length > 0 && (
             <PizzaGraph
               sliceData={selectedData.filter(
-                (slice) => slice.label !== "GIR" && slice.label !== "Sand"
+                (slice) => slice.label !== "GIR" && slice.label !== "Sand",
               )}
               circleData={selectedData.find((slice) => slice.label === "GIR")}
               sandData={selectedData.find((slice) => slice.label === "Sand")}
@@ -176,7 +176,7 @@ const ApproachView = ({
           }}
         >
           <Typography gutterBottom textAlign={"center"} fontWeight={"bold"}>
-            Approach Club First Putt Distance when GIR
+            Proximity to Hole by Club
           </Typography>
           <Grid2 sx={{ marginBottom: "10px" }} container>
             <Grid2 size={4}>
