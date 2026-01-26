@@ -77,12 +77,12 @@ const OverviewView = ({
         getCountAnd(currentHoles, { teeShot: "Fairway", par: 5 })) /
         (getCountAnd(currentHoles, { par: 4 }) +
           getCountAnd(currentHoles, { par: 5 }))) *
-        100
+        100,
     );
     setGirPercentage(
       (getCountAnd(currentHoles, { approachShot: "GIR" }) /
         currentHoles.length) *
-        100
+        100,
     );
 
     let newNineTotalScore = 0;
@@ -330,7 +330,7 @@ const OverviewView = ({
                 noWrap
                 variant="h4"
                 color={getColorForPuttsPerRound(
-                  totalEighteenHolePutts / numEighteenHolesGames
+                  totalEighteenHolePutts / numEighteenHolesGames,
                 )}
               >
                 {(totalEighteenHolePutts / numEighteenHolesGames).toFixed(2)}
@@ -353,7 +353,7 @@ const OverviewView = ({
                 noWrap
                 variant="h4"
                 color={getColorForPuttsPerRound(
-                  totalNineHolePutts / numNineHolesGames
+                  totalNineHolePutts / numNineHolesGames,
                 )}
               >
                 {(totalNineHolePutts / numNineHolesGames).toFixed(2)}
@@ -400,12 +400,13 @@ const OverviewView = ({
               }}
             >
               <Typography fontWeight={"bold"} align="center">
-                AVG Shots Inside 100 Yards per 18 Hole
+                AVG Shots Inside 100 Yards
               </Typography>
               <Typography noWrap variant="h4">
-                {(totalEighteenShotsInside100 / numEighteenHolesGames).toFixed(
-                  2
-                )}
+                {(
+                  (totalEighteenShotsInside100 + totalNineShotsInside100) /
+                  (numEighteenHolesGames * 18 + numNineHolesGames * 9)
+                ).toFixed(2)}
               </Typography>
             </Paper>
             <Paper
@@ -427,23 +428,6 @@ const OverviewView = ({
             </Paper>
           </Box>
           <Box sx={{ display: "flex", gap: 3 }}>
-            <Paper
-              sx={{
-                width: "200px",
-                height: "200px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography fontWeight={"bold"} align="center">
-                AVG Shots Inside 100 Yards per 9 Hole
-              </Typography>
-              <Typography noWrap variant="h4">
-                {(totalNineShotsInside100 / numNineHolesGames).toFixed(2)}
-              </Typography>
-            </Paper>
             <Paper
               sx={{
                 width: "200px",
