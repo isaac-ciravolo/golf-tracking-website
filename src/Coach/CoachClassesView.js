@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { List, ListItem, ListItemButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
+import { auth } from "../firebase/firebase.js";
 // import { createClass } from "../firebase/DatabaseFunctions";
 import {
   createClass,
@@ -24,13 +25,22 @@ const CoachClassesView = () => {
   useEffect(() => {
     if (user) {
       const temp = async () => {
-        const newClasses = await fetchCoachClasses(user.id);
-        setCoachClasses(newClasses);
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetchCoachClasses(token);
+        if (res.status === 200) {
+          setCoachClasses(res.data.classes);
+        } else {
+          console.log(res);
+        }
       };
 
       temp();
     }
   }, [user]);
+
+  useEffect(() => {
+    console.log(coachClasses);
+  }, [coachClasses]);
 
   return (
     <Box
@@ -72,8 +82,8 @@ const CoachClassesView = () => {
         }}
       >
         {coachClasses.length > 0 &&
-          coachClasses.map((_class, index) => (
-            <ListItem key={index}>
+          coachClasses.map((_class) => (
+            <ListItem key={_class.id}>
               <ListItemButton
                 onClick={() => {
                   navigate("/home/" + _class.id);
@@ -123,14 +133,23 @@ const CoachClassesView = () => {
             loading={loading}
             onClick={async () => {
               setLoading(true);
-              const error = await createClass(className, user.id);
+              const token = await auth.currentUser.getIdToken();
+              const error = await createClass(token, className);
               setLoading(false);
 
-              if (error !== "Success!") {
-                setErrorMessage(error);
+              console.log(error);
+
+              if (error.status !== 200 && error.status !== 201) {
+                setErrorMessage(
+                  error.error || error.message || "An error occurred",
+                );
               } else {
-                const newClasses = await fetchCoachClasses(user.id);
-                setCoachClasses(newClasses);
+                const res = await fetchCoachClasses(token);
+                if (res.status === 200) {
+                  setCoachClasses(res.data.classes);
+                } else {
+                  console.log(res);
+                }
                 setOpen(false);
               }
             }}
