@@ -18,9 +18,13 @@ const CoachClassesView = () => {
   const { userData: user } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [openDeleteClass, setOpenDeleteClass] = useState(false);
   const [className, setClassName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [deleteClassError, setDeleteClassError] = useState("");
+  const [classToDelete, setClassToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -83,15 +87,26 @@ const CoachClassesView = () => {
       >
         {coachClasses.length > 0 &&
           coachClasses.map((_class) => (
-            <ListItem key={_class.id}>
+            <ListItem key={_class.id} sx={{ width: "100%", gap: 2 }}>
               <ListItemButton
                 onClick={() => {
                   navigate("/home/" + _class.id);
                 }}
-                sx={{ width: "100%", height: "50px" }}
+                sx={{ flexGrow: 1, height: "50px" }}
               >
                 {_class.name}
               </ListItemButton>
+              <Button
+                color="error"
+                variant="outlined"
+                onClick={() => {
+                  setClassToDelete(_class);
+                  setDeleteClassError("");
+                  setOpenDeleteClass(true);
+                }}
+              >
+                Delete
+              </Button>
             </ListItem>
           ))}
       </List>
@@ -157,6 +172,61 @@ const CoachClassesView = () => {
             CREATE CLASS
           </LoadingButton>
           <Typography color="error">{errorMessage}</Typography>
+        </Box>
+      </Dialog>
+      <Dialog
+        open={openDeleteClass}
+        onClose={() => {
+          if (!deleteLoading) setOpenDeleteClass(false);
+        }}
+      >
+        <Box
+          sx={{
+            width: "500px",
+            p: 3,
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <Typography variant="h3" fontWeight="bold">
+            Delete {classToDelete?.name}?
+          </Typography>
+          <LoadingButton
+            color="error"
+            variant="contained"
+            fullWidth
+            sx={{ height: "50px", width: "100%", fontSize: "20px" }}
+            loading={deleteLoading}
+            onClick={async () => {
+              if (!classToDelete) return;
+              setDeleteLoading(true);
+              const token = await auth.currentUser.getIdToken();
+              const res = await deleteClass(token, classToDelete.id);
+              setDeleteLoading(false);
+
+              if (res.status >= 200 && res.status < 300) {
+                setCoachClasses((prevCoachClasses) =>
+                  prevCoachClasses.filter(
+                    (coachClass) => coachClass.id !== classToDelete.id,
+                  ),
+                );
+                setOpenDeleteClass(false);
+                setClassToDelete(null);
+              } else {
+                const deleteError =
+                  typeof res.message === "string"
+                    ? res.message
+                    : res.error ||
+                      res.message?.error ||
+                      "Failed to delete class.";
+                setDeleteClassError(deleteError);
+              }
+            }}
+          >
+            DELETE CLASS
+          </LoadingButton>
+          <Typography color="error">{deleteClassError}</Typography>
         </Box>
       </Dialog>
     </Box>

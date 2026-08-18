@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../firebase/AuthContext";
 import {
   fetchClass,
   fetchClassAssignments,
   fetchStudent,
+  fetchUserById,
+  editAssignment,
+  deleteAssignment,
 } from "../firebase/DatabaseFunctions";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Paper,
   Button,
@@ -20,10 +22,10 @@ import {
   Box,
 } from "@mui/material";
 import formatDateFromMilliseconds from "../util/DateConverter";
-import { fetchUserById, editAssignment } from "../firebase/DatabaseFunctions";
 import { LoadingButton } from "@mui/lab";
 const CoachAssignmentView = () => {
   const { id: classCode, assignmentId } = useParams();
+  const navigate = useNavigate();
   const [assignment, setAssignment] = useState(null);
   const [userNameLookup, setUserNameLookup] = useState({});
   const [drillTitle, setDrillTitle] = useState("");
@@ -35,7 +37,7 @@ const CoachAssignmentView = () => {
     const temp = async () => {
       const classAssignments = await fetchClassAssignments(classCode);
       const foundAssignment = classAssignments.find(
-        (item) => item.id === assignmentId
+        (item) => item.id === assignmentId,
       );
       setAssignment(foundAssignment);
       setDrillTitle(foundAssignment.title);
@@ -61,7 +63,7 @@ const CoachAssignmentView = () => {
         studentIds.map(async (student) => {
           const studentData = await fetchStudent(student);
           return { ...studentData, id: student };
-        })
+        }),
       );
       setStudents(newStudents);
     };
@@ -70,6 +72,7 @@ const CoachAssignmentView = () => {
   }, []);
 
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
 
   return (
     <>
@@ -110,9 +113,18 @@ const CoachAssignmentView = () => {
       ))}
       {assignment && (
         <>
-          <Button variant="contained" onClick={() => setOpen(true)}>
-            Edit Assignment
-          </Button>
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button variant="contained" onClick={() => setOpen(true)}>
+              Edit Assignment
+            </Button>
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => setOpenDelete(true)}
+            >
+              Delete Assignment
+            </Button>
+          </Box>
           <Dialog open={open} onClose={() => setOpen(false)}>
             <Box
               sx={{
@@ -177,7 +189,7 @@ const CoachAssignmentView = () => {
                     selected
                       .map((studentId) => {
                         const student = students.find(
-                          (s) => s.id === studentId
+                          (s) => s.id === studentId,
                         );
                         return student
                           ? student.firstName + " " + student.lastName
@@ -212,7 +224,7 @@ const CoachAssignmentView = () => {
                   }
                   setLoading(true);
                   const newCompleted = assignment.completed.filter((student) =>
-                    selectedStudentIds.includes(student.userId)
+                    selectedStudentIds.includes(student.userId),
                   );
                   const res = await editAssignment(classCode, assignmentId, {
                     title: drillTitle,
@@ -230,6 +242,45 @@ const CoachAssignmentView = () => {
                 SAVE ASSIGNMENT
               </LoadingButton>
             </Box>{" "}
+          </Dialog>
+          <Dialog
+            open={openDelete}
+            onClose={() => {
+              if (!loading) setOpenDelete(false);
+            }}
+          >
+            <Box
+              sx={{
+                width: "500px",
+                p: 3,
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+              }}
+            >
+              <Typography variant="h3" fontWeight="bold">
+                Delete {assignment.title}?
+              </Typography>
+              <LoadingButton
+                color="error"
+                variant="contained"
+                fullWidth
+                sx={{ height: "50px", width: "100%", fontSize: "20px" }}
+                loading={loading}
+                onClick={async () => {
+                  setLoading(true);
+                  const res = await deleteAssignment(classCode, assignmentId);
+                  setLoading(false);
+                  if (res === "Success!") {
+                    navigate(`/home/${classCode}`);
+                  } else {
+                    alert("Failed to delete assignment:", res);
+                  }
+                }}
+              >
+                DELETE ASSIGNMENT
+              </LoadingButton>
+            </Box>
           </Dialog>
         </>
       )}

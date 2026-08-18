@@ -70,7 +70,7 @@ export const leaveClass = async (classCode, userId) => {
 
     const userData = userDocSnap.data();
     const updatedClasses = userData.classes.filter(
-      (code) => code !== classCode
+      (code) => code !== classCode,
     );
 
     await setDoc(userDocRef, { ...userData, classes: updatedClasses });
@@ -237,7 +237,7 @@ export const fetchClasses = async (id) => {
             };
           }
           return null;
-        })
+        }),
       );
 
       const filteredClasses = coachClasses.filter((cls) => cls !== null);
@@ -260,7 +260,7 @@ export const fetchClasses = async (id) => {
             };
           }
           return null;
-        })
+        }),
       );
 
       const filteredClasses = userClasses.filter((cls) => cls !== null);
@@ -372,7 +372,7 @@ export const createAssignment = async (classCode, assignmentData) => {
 export const editAssignment = async (
   classCode,
   assignmentId,
-  updatedAssignmentData
+  updatedAssignmentData,
 ) => {
   try {
     const classDocRef = doc(db, "classes", classCode);
@@ -385,13 +385,24 @@ export const editAssignment = async (
   }
 };
 
+export const deleteAssignment = async (classCode, assignmentId) => {
+  try {
+    const classDocRef = doc(db, "classes", classCode);
+    const assignmentDocRef = doc(classDocRef, "assignments", assignmentId);
+    await deleteDoc(assignmentDocRef);
+    return "Success!";
+  } catch (error) {
+    return error.message;
+  }
+};
+
 export const fetchUserAssignments = async (userId) => {
   try {
     if (!userId) {
       return "Please provide a user ID.";
     }
     const response = await fetch(
-      `https://fetchassignments-${DATABASE_KEY}-uc.a.run.app/?id=${userId}`
+      `https://fetchassignments-${DATABASE_KEY}-uc.a.run.app/?id=${userId}`,
     );
 
     if (!response.ok) {
@@ -407,7 +418,7 @@ export const fetchUserAssignments = async (userId) => {
 export const removeStudentFromClass = async (classCode, studentId) => {
   try {
     const response = await fetch(
-      `https://coachremovestudentfromclass-${DATABASE_KEY}-uc.a.run.app/?id=${studentId}&classId=${classCode}`
+      `https://coachremovestudentfromclass-${DATABASE_KEY}-uc.a.run.app/?id=${studentId}&classId=${classCode}`,
     );
 
     if (!response.ok) {

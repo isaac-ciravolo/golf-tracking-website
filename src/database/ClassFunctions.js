@@ -43,10 +43,10 @@ export const fetchCoachClasses = async (token) => {
   }
 };
 
-export const deleteClass = async (token, classId) => {
+export const deleteClass = async (token, classCode) => {
   try {
     const res = await fetch(
-      `https://deleteclass-${DATABASE_KEY}-uc.a.run.app/?classId=${classId}`,
+      `https://deleteclass-${DATABASE_KEY}-uc.a.run.app/?classCode=${encodeURIComponent(classCode)}`,
       {
         method: "DELETE",
         headers: {

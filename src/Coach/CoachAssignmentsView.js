@@ -2,7 +2,6 @@ import { LoadingButton } from "@mui/lab";
 import {
   Box,
   Button,
-  Checkbox,
   Dialog,
   FormControl,
   InputLabel,
@@ -21,6 +20,7 @@ import {
   fetchStudent,
   createAssignment,
   fetchClassAssignments,
+  deleteAssignment,
 } from "../firebase/DatabaseFunctions";
 
 const CoachAssignmentsView = ({ studentIds }) => {
@@ -32,6 +32,9 @@ const CoachAssignmentsView = ({ studentIds }) => {
   const [selectedStudentIds, setSelectedStudents] = useState([]);
   const [students, setStudents] = useState([]);
   const [assignments, setAssignments] = useState([]);
+  const [assignmentToDelete, setAssignmentToDelete] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,7 +44,7 @@ const CoachAssignmentsView = ({ studentIds }) => {
     };
 
     temp();
-  }, []);
+  }, [classCode]);
 
   useEffect(() => {
     const temp = async () => {
@@ -49,7 +52,7 @@ const CoachAssignmentsView = ({ studentIds }) => {
         studentIds.map(async (student) => {
           const studentData = await fetchStudent(student);
           return { ...studentData, id: student };
-        })
+        }),
       );
       setStudents(newStudents);
     };
@@ -86,18 +89,28 @@ const CoachAssignmentsView = ({ studentIds }) => {
         }}
       >
         {assignments.length > 0 &&
-          assignments.map((assignment, index) => (
-            <ListItem key={index}>
+          assignments.map((assignment) => (
+            <ListItem key={assignment.id} sx={{ width: "100%", gap: 2 }}>
               <ListItemButton
                 onClick={() => {
                   navigate(
-                    "/home/" + classCode + "/assignments/" + assignment.id
+                    "/home/" + classCode + "/assignments/" + assignment.id,
                   );
                 }}
-                sx={{ width: "100%", height: "50px" }}
+                sx={{ flexGrow: 1, height: "50px" }}
               >
                 {assignment.title}
               </ListItemButton>
+              <Button
+                color="error"
+                variant="outlined"
+                onClick={() => {
+                  setAssignmentToDelete(assignment);
+                  setOpenDeleteDialog(true);
+                }}
+              >
+                Delete
+              </Button>
             </ListItem>
           ))}
       </List>
@@ -211,6 +224,55 @@ const CoachAssignmentsView = ({ studentIds }) => {
             }}
           >
             CREATE ASSIGNMENT
+          </LoadingButton>
+        </Box>
+      </Dialog>
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => {
+          if (!deleteLoading) setOpenDeleteDialog(false);
+        }}
+      >
+        <Box
+          sx={{
+            width: "500px",
+            p: 3,
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <Typography variant="h3" fontWeight="bold">
+            Delete {assignmentToDelete?.title}?
+          </Typography>
+          <LoadingButton
+            color="error"
+            variant="contained"
+            fullWidth
+            sx={{ height: "50px", width: "100%", fontSize: "20px" }}
+            loading={deleteLoading}
+            onClick={async () => {
+              if (!assignmentToDelete) return;
+              setDeleteLoading(true);
+              const res = await deleteAssignment(
+                classCode,
+                assignmentToDelete.id,
+              );
+              setDeleteLoading(false);
+              if (res === "Success!") {
+                setAssignments((prevAssignments) =>
+                  prevAssignments.filter(
+                    (assignment) => assignment.id !== assignmentToDelete.id,
+                  ),
+                );
+                setOpenDeleteDialog(false);
+                setAssignmentToDelete(null);
+              } else {
+                alert("Failed to delete assignment:", res);
+              }
+            }}
+          >
+            DELETE ASSIGNMENT
           </LoadingButton>
         </Box>
       </Dialog>
